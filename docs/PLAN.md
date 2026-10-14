@@ -22,10 +22,11 @@ Rule: one phase per session; review and pass the gate before starting the next.
 - **Gate:** tests pass; seeded data validates and renders in the placeholder
 
 ## Phase 2 (M2): Public page and tap flow
-- [ ] Shared components: ActionRow, SaveContact, SocialGrid, FeaturedLink, Footer (+ client components for QR toggle, copy, share)
-- [ ] `/[username]` (server-rendered, cached, on-demand revalidation), `/[username]/vcard`, `/[username]/qr`
+- [x] Shared components: ActionRow, SaveContact, SocialGrid, FeaturedLink, Footer (+ client components for QR toggle, share, theme toggle)
+- [x] `/[username]` (cached with `use cache`, expired on admin save via `revalidatePage`), `/[username]/vcard`, `/[username]/qr`
 - [ ] `/c/[code]`: status checks, non-blocking tap logging, 10-minute de-dup, bot filtering, rate limit (~30/min/IP), 302 redirect
-- [ ] `/inactive`, `robots.txt`, `noindex`, Open Graph tags
+- [x] `/inactive`, `robots.txt`, `noindex`, Open Graph tags
+- [x] `/c/[code]`: status checks, non-blocking tap logging (`after`), 10-minute de-dup, bot filtering, rate limit (~30/min/IP), 302 redirect
 - [ ] Convert `pro-classic` when `starter-package-professional-template-1.html` arrives
 - [ ] Deploy `release` to Hostinger, connect domain, write a real NFC tag
 - **Gate:** tap → page → Save Contact works on a real iPhone and Android; QR scans

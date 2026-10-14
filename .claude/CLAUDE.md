@@ -22,6 +22,7 @@
 - Hide any section, grid, tile or button with no data. Never show empty icons.
 - Tap logging must never block the `/c/[code]` redirect. Store no IP addresses.
 - Secrets only in environment variables; keep `.env.example` current. Keep host-specific settings out of app code.
+- This is Next.js 16 with Cache Components on (`cacheComponents: true`). Cache data with `'use cache'` + `cacheLife` + `cacheTag`, not `unstable_cache` or `export const revalidate`. Render code cannot read the clock or runtime APIs outside `<Suspense>`. Read `node_modules/next/dist/docs/` before writing routing or caching code.
 - Never commit or push unless asked. Production branch is `release`; daily work is on `main`.
 
 # Templates

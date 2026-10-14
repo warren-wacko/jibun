@@ -1,5 +1,6 @@
+import { createElement, type ReactElement } from "react";
 import { PlaceholderTemplate } from "./placeholder";
-import type { TemplateComponent } from "./types";
+import type { TemplateComponent, TemplateProps } from "./types";
 
 /**
  * templateKey -> component. Real templates are added here only once their
@@ -17,6 +18,11 @@ export const PLACEHOLDER_KEY = "placeholder";
  */
 export function getTemplate(templateKey: string): TemplateComponent {
   return registry[templateKey] ?? PlaceholderTemplate;
+}
+
+/** Render a page's template by key. Looking the component up here keeps routes free of render-time component creation. */
+export function renderTemplate(templateKey: string, props: TemplateProps): ReactElement {
+  return createElement(getTemplate(templateKey), props);
 }
 
 export function hasTemplate(templateKey: string): boolean {

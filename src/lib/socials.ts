@@ -22,6 +22,25 @@ export const MESSAGING_TYPES = [
   "discord",
 ] as const satisfies readonly SocialType[];
 
+export const SOCIAL_LABELS: Record<SocialType, string> = {
+  linkedin: "LinkedIn",
+  facebook: "Facebook",
+  instagram: "Instagram",
+  tiktok: "TikTok",
+  youtube: "YouTube",
+  github: "GitHub",
+  behance: "Behance",
+  x: "X",
+  spotify: "Spotify",
+  pinterest: "Pinterest",
+  website: "Website",
+  messenger: "Messenger",
+  whatsapp: "WhatsApp",
+  viber: "Viber",
+  telegram: "Telegram",
+  discord: "Discord",
+};
+
 const PROFILE_SET: ReadonlySet<SocialType> = new Set(PROFILE_TYPES);
 
 export type SocialGroups = { profiles: SocialLink[]; messaging: SocialLink[] };
