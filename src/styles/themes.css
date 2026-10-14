@@ -1,0 +1,24 @@
+/*
+ * Theme tokens. Templates read colors only through these variables.
+ * Light and dark are two value sets of the same names. --accent and --on-accent
+ * are set per page (inline style) from the page's accent choice.
+ */
+[data-theme="light"] {
+  --bg: #ffffff;
+  --surface: #f4f5f7;
+  --text: #14161a;
+  --text-muted: #565d6b; /* 6.6:1 on --bg, 6.0:1 on --surface */
+  --border: #dfe2e8;
+  --accent: #2563eb;
+  --on-accent: #ffffff;
+}
+
+[data-theme="dark"] {
+  --bg: #0e1013;
+  --surface: #181b21;
+  --text: #f1f2f4;
+  --text-muted: #a3aab8; /* 8.2:1 on --bg, 7.2:1 on --surface */
+  --border: #2a2e37;
+  --accent: #60a5fa;
+  --on-accent: #0e1013;
+}

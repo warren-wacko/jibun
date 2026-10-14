@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  CLIENT
+  ORG_ADMIN
+}
+
+enum Tier {
+  STARTER
+  STANDARD
+  CUSTOM
+}
+
+enum PageStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+}
+
+enum CardStatus {
+  ACTIVE
+  DISABLED
+  LOST
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(ADMIN)
+  client       Client?  @relation(fields: [clientId], references: [id])
+  clientId     String?  @unique
+  createdAt    DateTime @default(now())
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  clients   Client[]
+  createdAt DateTime @default(now())
+}
+
+model Client {
+  id             String        @id @default(cuid())
+  name           String
+  contactEmail   String?
+  contactPhone   String?
+  notes          String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
+  pages          Page[]
+  user           User?
+  createdAt      DateTime      @default(now())
+}
+
+model Page {
+  id             String         @id @default(cuid())
+  username       String         @unique
+  client         Client         @relation(fields: [clientId], references: [id])
+  clientId       String
+  tier           Tier           @default(STARTER)
+  templateKey    String // e.g. "pro-classic", "custom-maria"
+  data           Json // PageData, validated with Zod
+  addOns         String[] // e.g. ["gallery", "pdf"]
+  status         PageStatus     @default(DRAFT)
+  paidUntil      DateTime? // end of the 4-year term; renewal extends it
+  editsUsed      Int            @default(0) // included edits used
+  reminderSentAt DateTime? // renewal reminder sent
+  lastTapAt      DateTime? // last tap on any of its cards
+  cards          Card[]
+  taps           Tap[]
+  domains        CustomDomain[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model Card {
+  id        String     @id @default(cuid())
+  code      String     @unique // 6-8 chars, written to the chip
+  page      Page       @relation(fields: [pageId], references: [id])
+  pageId    String
+  label     String? // "Main PVC", "Spare"
+  lastTapAt DateTime? // set on every logged tap
+  status    CardStatus @default(ACTIVE)
+  taps      Tap[]
+  createdAt DateTime   @default(now())
+}
+
+model Tap {
+  id        String   @id @default(cuid())
+  card      Card?    @relation(fields: [cardId], references: [id])
+  cardId    String? // null for direct page visits
+  page      Page     @relation(fields: [pageId], references: [id])
+  pageId    String
+  source    String // "nfc" | "qr" | "direct"
+  userAgent String?
+  country   String?
+  createdAt DateTime @default(now())
+
+  @@index([pageId, createdAt])
+}
+
+model CustomDomain {
+  id       String  @id @default(cuid())
+  hostname String  @unique
+  page     Page    @relation(fields: [pageId], references: [id])
+  pageId   String
+  verified Boolean @default(false)
+}
