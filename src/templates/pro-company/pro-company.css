@@ -18,7 +18,7 @@
   --map-a2: 10%;
   --map-a3: 7%;
   /* On a light page the brand colour is darkened when it is itself very light. */
-  --brand-text: color-mix(in srgb, black calc(var(--k-light) * 50%), var(--brand));
+  --brand-text: color-mix(in srgb, black calc(var(--k-light) * 62%), var(--brand));
   --brand-soft: color-mix(in srgb, var(--brand) 8%, transparent);
 }
 

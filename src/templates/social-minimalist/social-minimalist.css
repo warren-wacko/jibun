@@ -158,6 +158,12 @@
   color: var(--accent);
 }
 
+/* an accent too close to the page colour would make the dot vanish: use the text colour then */
+[data-template="social-minimalist"][data-theme="light"][data-weak-on-light="true"] .mn-name-dot,
+[data-template="social-minimalist"][data-theme="dark"][data-weak-on-dark="true"] .mn-name-dot {
+  color: var(--text);
+}
+
 /* ---------- Photo ---------- */
 .mn-photo-block {
   position: relative;
@@ -982,7 +988,7 @@
 
 .mn-org-rest {
   font-weight: 400;
-  opacity: 0.6;
+  opacity: 0.85;
 }
 
 @keyframes mn-marquee {

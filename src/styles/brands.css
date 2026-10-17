@@ -17,7 +17,7 @@
   --brand-tiktok-red: #fe2c55;
   --brand-messenger: radial-gradient(circle at 19% 100%, #0099ff 0%, #a033ff 60%, #ff5280 93%, #ff7061 100%);
   --brand-whatsapp: #25d366;
-  --brand-viber: #7360f2;
+  --brand-viber: #715eef; /* official #7360f2 is 4.48:1 under white text */
   --brand-discord: #5865f2;
   --brand-spotify: #1db954;
   --brand-x: #000000;

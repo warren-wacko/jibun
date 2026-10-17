@@ -26,11 +26,16 @@
   --highlight-amount: 45%;
 }
 
+/* white text on a mid-tone accent (such as tomato) is under 4.5:1: the ticket takes a slightly deeper shade */
+[data-template="social-scrapbook"][data-accent-tone="dark"] {
+  --ticket-bg: color-mix(in srgb, black 14%, var(--accent));
+}
+
 [data-template="social-scrapbook"] {
   --px: 0.2564cqw;
   --focus: #e8604c;
   --ink: #2a2620; /* text on the (always light) paper pieces */
-  --ink-soft: #6a6255;
+  --ink-soft: #5c5548; /* the design's #6a6255 is 4.3:1 on the kraft card */
   --black: #1b1a18;
   --cream: #f4f1ea;
   --kraft: #cfae84;
@@ -389,7 +394,7 @@
 .pk-ticket {
   display: flex;
   height: 96px;
-  background: var(--accent);
+  background: var(--ticket-bg, var(--accent));
   color: var(--on-accent);
   -webkit-mask:
     radial-gradient(circle at 0 50%, transparent 13px, #000 13.5px) left / 51% 100% no-repeat,
@@ -415,7 +420,6 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 2px;
-  opacity: 0.75;
 }
 
 .pk-ticket-title {
@@ -429,7 +433,6 @@
 
 .pk-ticket-sub {
   font-size: 12px;
-  opacity: 0.8;
   overflow-wrap: anywhere;
 }
 

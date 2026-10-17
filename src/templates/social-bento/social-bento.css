@@ -34,12 +34,14 @@
   --hero-bg: #f2f0ea;
   --hero-ink: #111111;
   --tile-ring: inset 0 0 0 1px #2c2c2c;
-  --accent-text: color-mix(in srgb, white 35%, var(--accent));
+  /* a dark accent is lightened more, so it can still be read as text on the dark page */
+  --accent-text: color-mix(in srgb, white calc(35% + var(--k-dark) * 35%), var(--accent));
   --accent-soft: color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 [data-template="social-bento"] {
   --focus: #2f54eb;
+  --k-dark: clamp(0, calc((0.35 - var(--accent-luma, 0.3)) * 1000), 1);
   --radius: 26px;
   --cell-gap: 10px;
   --saved-bg: #bfe8cc;
@@ -469,11 +471,11 @@ button.pb-tile.pb-center {
 }
 .pb-wide-solid[data-net="telegram"] {
   --solid: #229ed9;
+  color: #0f1210; /* white on this blue is 3:1 */
 }
 
 .pb-wide-solid .pb-wide-text span {
-  color: inherit;
-  opacity: 0.75;
+  color: inherit; /* full strength: at 75% the handle is under 4.5:1 on the brand colours */
 }
 
 .pb-wide-solid > svg {
