@@ -152,6 +152,8 @@ export const PageDataSchema = z.object({
     theme: z.enum(["light", "dark"]),
     accent: z.string().refine((v) => HEX.test(v) || PRESET_ID.test(v), "Use a hex color or preset id"),
     fontPair: z.string().regex(PRESET_ID).optional(),
+    /** Block ids and section kinds in display order (Standard and up). Missing = the template's default order. */
+    sectionOrder: z.array(z.string().regex(/^[a-zA-Z][a-zA-Z0-9]{1,23}$/)).max(40).optional(),
     bannerUrl: httpUrl.optional(),
   }),
 });

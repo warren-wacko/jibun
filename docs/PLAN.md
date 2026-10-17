@@ -49,10 +49,11 @@ Rule: one phase per session; review and pass the gate before starting the next.
 - [x] `social-bento` Starter converted (tile positions and sizes match the reference exactly at 390 px; the tile layout adapts to whichever links exist and never leaves a gap). Its Standard package (interests marquee, music record, photo dump, orgs & clubs) comes in Phase 4
 - [x] `social-scrapbook` Starter converted (positions match the reference to 0.1 px at 390 px; cutout-letter name scales and wraps in balanced rows for names up to 30 characters). Its Standard package (interest tape, record, photo dump, orgs) comes in Phase 4
 - [x] `social-minimalist` Starter converted (the 8th and last launch template). Its Standard package (interests marquee, record player, photo dump, orgs & clubs) comes in Phase 4
-- [ ] Accent palette and school color presets
+- [x] Accent palette and school color presets (in `lib/accents.ts`, picked in the editor)
 - [ ] Standard sections with styled variants per launch template
-- [ ] Font pairs and section reordering
-- [ ] Tier upgrade on the edit page (amount paid, reprint flag)
+- [x] Optional-section editor on the edit page: every section kind except the contact form (services, experience, skills, stats, portfolio, gallery, résumé, video, booking, interests, orgs, song) with row/line/link editing, the Standard "pick 2" rule and add-on unlocks explained in the picker, and reordering (`style.sectionOrder`, Standard and up) across a template's built-in blocks and sections. Templates do not draw sections yet; the editor says so until they are converted
+- [x] Font pairs: the pairs from the Standard designs per template (three alternatives on each of the four professional templates, none on the student and social ones), a picker in the editor (Standard and up, cleared when the template changes), and validation that a pair belongs to the template. Templates apply the chosen pair when their Standard design is converted
+- [x] Tier change on the edit page: changing an existing page's tier asks for the amount paid (whole pesos) and whether a new printed card is included, and saves them with the page in one transaction (`TierChange` history table, shown on the edit page). Content is re-checked against the new tier, so a downgrade cannot keep a custom colour
 - **Gate:** every template renders with any subset of data in both themes at 320/375 px; AA contrast
 
 ## Phase 5 (M5): Launch polish

@@ -78,6 +78,7 @@ model Page {
   cards          Card[]
   taps           Tap[]
   domains        CustomDomain[]
+  tierChanges    TierChange[]
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 }
@@ -114,4 +115,19 @@ model CustomDomain {
   page     Page    @relation(fields: [pageId], references: [id])
   pageId   String
   verified Boolean @default(false)
+}
+
+/// One tier change on a page (for example Starter to Standard): what was paid for it and whether a reprint was included.
+model TierChange {
+  id         String   @id @default(cuid())
+  page       Page     @relation(fields: [pageId], references: [id])
+  pageId     String
+  fromTier   Tier
+  toTier     Tier
+  amountPaid Int // whole pesos; the price difference
+  reprint    Boolean // a new printed card is included
+  note       String?
+  createdAt  DateTime @default(now())
+
+  @@index([pageId, createdAt])
 }

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { chipUrl, qrTargetUrl } from "@/lib/admin/card-urls";
+import { describeTierChange } from "@/lib/admin/tier-change";
+import { formatDate } from "../../../_components/badges";
 import { valuesFromPage } from "@/lib/admin/page-form";
 import { db } from "@/lib/db";
 import { safeParsePageData } from "@/lib/page-schema";
@@ -29,7 +31,7 @@ async function Editor({ params, searchParams }: Pick<PageProps<"/admin/pages/[us
 
   const row = await db.page.findUnique({
     where: { username },
-    include: { client: true, cards: { orderBy: { createdAt: "asc" }, include: { _count: { select: { taps: true } } } }, _count: { select: { taps: true } } },
+    include: { client: true, cards: { orderBy: { createdAt: "asc" }, include: { _count: { select: { taps: true } } } }, _count: { select: { taps: true } }, tierChanges: { orderBy: { createdAt: "desc" } } },
   });
   if (!row) notFound();
 
@@ -112,6 +114,7 @@ async function Editor({ params, searchParams }: Pick<PageProps<"/admin/pages/[us
           username: row.username,
           editsUsed: row.editsUsed,
           publicUrl: pageUrl(row.username),
+          tierChanges: row.tierChanges.map((c) => ({ id: c.id, text: describeTierChange(c), date: formatDate(c.createdAt), note: c.note })),
         }}
       />
       <div className="pt-6">

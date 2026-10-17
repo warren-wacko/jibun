@@ -18,11 +18,16 @@ import { SOCIAL_LABELS } from "@/lib/socials";
 import { SOCIAL_TYPES, type PageData } from "@/lib/page-schema";
 import { checkUsernameAction, savePageAction } from "../actions";
 import { EditsCounter } from "../../../_components/EditsCounter";
+import { emptyTierChangeForm, validateTierChange, type TierChangeForm } from "@/lib/admin/tier-change";
+import { findFontPair } from "@/templates/font-pairs";
 import { AccentPicker } from "./AccentPicker";
+import { FontPairPicker } from "./FontPairPicker";
 import { AddOnPicker, StatusPicker, TemplatePicker, TierPicker } from "./Pickers";
 import { ImageField } from "./ImageField";
 import { PreviewPane, type PreviewNote } from "./PreviewPane";
+import { SectionsEditor } from "./SectionsEditor";
 import { SocialsEditor } from "./SocialsEditor";
+import { TierChangePanel } from "./TierChangePanel";
 import {
   CheckField,
   EditorContext,
@@ -40,6 +45,8 @@ export type EditorPage = {
   username: string;
   editsUsed: number;
   publicUrl: string;
+  /** Earlier tier changes, newest first, already worded. */
+  tierChanges: { id: string; text: string; date: string; note: string | null }[];
 };
 
 /** Small helper for the student group, which starts open only when it is likely to be used. */
@@ -62,6 +69,7 @@ export function PageEditor({ mode, initial, page }: { mode: "create" | "edit"; i
   const router = useRouter();
   const [values, setValues] = useState<FormValues>(initial);
   const [saved, setSaved] = useState<FormValues>(initial); // what the server has, for Discard
+  const [tierForm, setTierForm] = useState<TierChangeForm>(emptyTierChangeForm());
   const [baseline, setBaseline] = useState(() => JSON.stringify(initial));
   const [touched, setTouched] = useState<Record<string, true>>({});
   const [attempted, setAttempted] = useState(false);
@@ -80,6 +88,8 @@ export function PageEditor({ mode, initial, page }: { mode: "create" | "edit"; i
   const set = useCallback(<K extends keyof FormValues>(name: K, value: FormValues[K]) => {
     setValues((prev) => {
       const next = { ...prev, [name]: value };
+      // A font pair belongs to one template: choosing another template drops a pair it does not have.
+      if (name === "templateKey" && prev.fontPair && prev.tier !== "CUSTOM" && !findFontPair(String(value), prev.fontPair)) next.fontPair = "";
       if (mode === "create" && name === "fullName") {
         if (!usernameEdited.current) next.username = suggestUsername(String(value));
         if (!clientEdited.current) next.clientName = String(value);
@@ -121,21 +131,33 @@ export function PageEditor({ mode, initial, page }: { mode: "create" | "edit"; i
     return () => clearTimeout(t);
   }, [mode, values.username, formatOk]);
 
+  // Changing an existing page's tier needs the payment recorded with it.
+  const tierChanged = mode === "edit" && values.tier !== saved.tier;
+  const tierCheck = useMemo(() => (tierChanged ? validateTierChange(tierForm) : null), [tierChanged, tierForm]);
+
   const allErrors: FieldErrors = useMemo(() => {
     const e: FieldErrors = { ...validation.errors };
+    if (tierCheck && !tierCheck.ok) {
+      if (tierCheck.errors.amount) e.tierAmount = tierCheck.errors.amount;
+      if (tierCheck.errors.note) e.tierNote = tierCheck.errors.note;
+    }
     if (mode === "create" && usernameCheck && usernameCheck.name === values.username && !usernameCheck.ok && !e.username) {
       e.username = usernameCheck.reason ?? "That username is not available";
     }
     return { ...e, ...serverErrors };
-  }, [validation.errors, serverErrors, usernameCheck, values.username, mode]);
+  }, [validation.errors, tierCheck, serverErrors, usernameCheck, values.username, mode]);
 
   const errorFor = useCallback(
     (field: string) => {
       if (serverErrors[field]) return serverErrors[field];
-      // The username check is useful feedback straight away; other errors wait until the field is left.
-      return attempted || touched[field] || (field === "username" && usernameCheck?.name === values.username) ? allErrors[field] : undefined;
+      // The username check is useful feedback straight away; the tier-change fields show a problem once something is typed;
+      // other errors wait until the field is left or a save is attempted.
+      const early =
+        (field === "username" && usernameCheck?.name === values.username) ||
+        ((field === "tierAmount" || field === "tierNote") && tierForm.amount !== "");
+      return attempted || touched[field] || early ? allErrors[field] : undefined;
     },
-    [allErrors, attempted, touched, serverErrors, usernameCheck, values.username],
+    [allErrors, attempted, touched, serverErrors, usernameCheck, values.username, tierForm.amount],
   );
 
   const ctx: EditorContextValue = useMemo(() => ({ values, set, errorFor, touch, allErrors }), [values, set, errorFor, touch, allErrors]);
@@ -182,7 +204,7 @@ export function PageEditor({ mode, initial, page }: { mode: "create" | "edit"; i
     }
     startSave(async () => {
       try {
-        const result = await savePageAction(values, page?.username);
+        const result = await savePageAction(values, page?.username, tierCheck?.ok ? tierCheck.value : undefined);
         if (!result.ok) {
           setServerErrors(result.errors);
           setBanner({ kind: "error", text: result.message });
@@ -191,6 +213,7 @@ export function PageEditor({ mode, initial, page }: { mode: "create" | "edit"; i
         }
         setBaseline(JSON.stringify(values));
         setSaved(values);
+        setTierForm(emptyTierChangeForm());
         if (result.created) {
           router.push(`/admin/pages/${result.username}?created=1`);
         } else {
@@ -206,6 +229,7 @@ export function PageEditor({ mode, initial, page }: { mode: "create" | "edit"; i
   const discard = () => {
     if (!window.confirm("Discard all changes since the last save?")) return;
     setValues(saved);
+    setTierForm(emptyTierChangeForm());
     setBaseline(JSON.stringify(saved));
     setTouched({});
     setServerErrors({});
@@ -254,7 +278,7 @@ export function PageEditor({ mode, initial, page }: { mode: "create" | "edit"; i
               </Grid>
             </FormSection>
 
-            <FormSection title="Page" description="Plan, template and when it is live." fields={["username", "tier", "templateKey", "status", "paidUntil", "addOns"]}>
+            <FormSection title="Page" description="Plan, template and when it is live." fields={["username", "tier", "tierAmount", "tierNote", "templateKey", "status", "paidUntil", "addOns"]}>
               {isCreate ? (
                 <TextField
                   name="username"
@@ -279,6 +303,7 @@ export function PageEditor({ mode, initial, page }: { mode: "create" | "edit"; i
                 </div>
               )}
               <TierPicker />
+              {tierChanged && <TierChangePanel from={saved.tier} to={values.tier} form={tierForm} onChange={setTierForm} />}
               <TemplatePicker />
               <Grid>
                 <StatusPicker />
@@ -381,20 +406,15 @@ export function PageEditor({ mode, initial, page }: { mode: "create" | "edit"; i
                 )}
               </FieldShell>
               <AccentPicker />
+              <FontPairPicker />
               {ent.customComponent && (
                 <TextField name="bannerUrl" label="Banner image link" optional type="url" inputMode="url" placeholder="https://…" hint="Custom pages only." />
               )}
             </FormSection>
 
-            {values.sections.length > 0 && (
-              <FormSection title="Optional sections" description="Kept exactly as they are." fields={["sections"]}>
-                <p className="text-sm text-neutral-700">
-                  This page has {values.sections.length} optional {values.sections.length === 1 ? "section" : "sections"} (
-                  {values.sections.map((s) => s.kind).join(", ")}). Editing them arrives with the Standard templates; saving here does not change them.
-                </p>
-                {allErrors.sections && <p className="text-xs font-medium text-red-700">{allErrors.sections}</p>}
-              </FormSection>
-            )}
+            <FormSection title="Optional sections" description="Extra blocks such as services, experience or skills, and the order of the page." fields={["sections", "sectionOrder"]}>
+              <SectionsEditor />
+            </FormSection>
 
             {page && (
               <FormSection title="Plan" description="Read only." fields={[]}>
@@ -414,6 +434,19 @@ export function PageEditor({ mode, initial, page }: { mode: "create" | "edit"; i
                     </dd>
                   </div>
                 </dl>
+                {page.tierChanges.length > 0 && (
+                  <div>
+                    <p className="mb-1 text-xs text-neutral-600">Tier changes</p>
+                    <ul className="flex flex-col gap-1 text-sm">
+                      {page.tierChanges.map((c) => (
+                        <li key={c.id}>
+                          <span className="text-neutral-600">{c.date}:</span> {c.text}
+                          {c.note && <span className="text-neutral-600"> ({c.note})</span>}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 <p className="text-xs text-neutral-600">
                   Cards, QR codes and usage are managed in <a href="#cards" className="underline">Cards and QR</a> below. Terms and reminders are on the <Link href="/admin/renewals" className="underline">Renewals</Link> screen.
                 </p>

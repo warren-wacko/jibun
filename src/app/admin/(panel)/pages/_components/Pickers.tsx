@@ -13,7 +13,7 @@ const TIER_INFO: Record<Tier, { label: string; blurb: string }> = {
 };
 
 /** One choice in a radio group: a card that shows which option is selected. */
-function RadioCard({
+export function RadioCard({
   name,
   value,
   checked,

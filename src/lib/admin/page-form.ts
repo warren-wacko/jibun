@@ -3,10 +3,12 @@ import { CUSTOM_TEMPLATE_RE, TEMPLATE_KEYS } from "@/templates/keys";
 import { displayUrl } from "@/templates/shared/model";
 import { ACCENT_PRESET_IDS } from "../accents";
 import { ADD_ONS, canUseAccent, checkSections, getEntitlements, type Tier } from "../entitlements";
-import { PageDataSchema, SOCIAL_TYPES, type PageData, type Section, type SocialType } from "../page-schema";
+import { PageDataSchema, SECTION_KINDS, SOCIAL_TYPES, type PageData, type SocialType } from "../page-schema";
 import { normalizePhone } from "../phone";
 import { buildSocialUrl } from "../socials";
 import { validateUsername } from "../usernames";
+import { findFontPair } from "@/templates/font-pairs";
+import { SECTION_SPECS, draftToCandidate, sectionToDraft, type SectionDraft } from "./section-drafts";
 
 /**
  * The admin form's values, as typed: everything is a string (or boolean) so inputs stay controlled.
@@ -68,8 +70,10 @@ export type FormValues = {
   accent: string;
   fontPair: string;
   bannerUrl: string;
-  /** Optional sections are not editable yet (they arrive with the Standard templates); they are kept as they are. */
-  sections: Section[];
+  /** Optional sections, as drafts (see section-drafts.ts). */
+  sections: SectionDraft[];
+  /** Block ids and section kinds in display order. Empty = the template's default order. */
+  sectionOrder: string[];
 };
 
 export function emptyFormValues(): FormValues {
@@ -115,6 +119,7 @@ export function emptyFormValues(): FormValues {
     fontPair: "",
     bannerUrl: "",
     sections: [],
+    sectionOrder: [],
   };
 }
 
@@ -173,7 +178,8 @@ export function valuesFromPage(p: PageRow): FormValues {
     accent: d.style.accent,
     fontPair: d.style.fontPair ?? "",
     bannerUrl: d.style.bannerUrl ?? "",
-    sections: d.sections,
+    sections: d.sections.map((sec, i) => sectionToDraft(sec, `sd${i}`)),
+    sectionOrder: d.style.sectionOrder ?? [],
   };
 }
 
@@ -193,7 +199,13 @@ function resolveHandle(r: SocialRow, url: string | null): string {
 }
 
 /** Untrusted PageData built from the form. `socialIndex[i]` is the form row that became `socials[i]`. */
-export function valuesToCandidate(v: FormValues): { data: unknown; socialIndex: number[] } {
+export function valuesToCandidate(v: FormValues): { data: unknown; socialIndex: number[]; sectionIndex: SectionIndex[] } {
+  const sectionIndex: SectionIndex[] = [];
+  const sections = v.sections.map((draft, i) => {
+    const { candidate, itemMap } = draftToCandidate(draft);
+    sectionIndex.push({ draft: i, itemMap });
+    return candidate;
+  });
   const socialIndex: number[] = [];
   const socials: unknown[] = [];
   v.socials.forEach((r, i) => {
@@ -240,10 +252,16 @@ export function valuesToCandidate(v: FormValues): { data: unknown; socialIndex: 
       ? { label: v.featuredLabel.trim(), url: v.featuredUrl.trim(), icon: v.featuredIcon || undefined }
       : undefined,
     socials,
-    sections: v.sections,
-    style: { theme: v.theme, accent: v.accent.trim(), fontPair: blank(v.fontPair), bannerUrl: blank(v.bannerUrl) },
+    sections,
+    style: {
+      theme: v.theme,
+      accent: v.accent.trim(),
+      fontPair: blank(v.fontPair),
+      bannerUrl: blank(v.bannerUrl),
+      sectionOrder: v.sectionOrder.length ? v.sectionOrder : undefined,
+    },
   };
-  return { data, socialIndex };
+  return { data, socialIndex, sectionIndex };
 }
 
 /** Form field keys that errors attach to: a value key, or `socials.<row>.<handle|url|note>`. */
@@ -305,13 +323,29 @@ function friendly(issue: z.core.$ZodIssue, field: string): string {
   }
 }
 
-function fieldFor(path: readonly PropertyKey[], socialIndex: number[]): string | null {
+/** For a stored section `i`: the draft it came from, and which draft row each stored item came from. */
+export type SectionIndex = { draft: number; itemMap: number[] };
+
+function fieldFor(path: readonly PropertyKey[], socialIndex: number[], sectionIndex: SectionIndex[], drafts: readonly SectionDraft[]): string | null {
   const [head, idx, leaf] = path;
   if (head === "socials" && typeof idx === "number") {
     const row = socialIndex[idx];
     return row === undefined ? null : `socials.${row}.${typeof leaf === "string" ? leaf : "handle"}`;
   }
   if (head === "socials") return "socials";
+  if (head === "sections" && typeof idx === "number") {
+    const at = sectionIndex[idx];
+    if (!at) return "sections";
+    const spec = SECTION_SPECS[drafts[at.draft].kind];
+    if (leaf === undefined) return `sections.${at.draft}`;
+    if (spec.mode === "rows") {
+      const [, , , item, field] = path;
+      if (typeof item === "number") return `sections.${at.draft}.items.${at.itemMap[item] ?? 0}.${typeof field === "string" ? field : "x"}`;
+      return `sections.${at.draft}.items`;
+    }
+    if (spec.mode === "lines") return `sections.${at.draft}.text`;
+    return leaf === "label" ? `sections.${at.draft}.label` : `sections.${at.draft}.url`;
+  }
   if (head === "sections") return "sections";
   return PATH_TO_FIELD[path.join(".")] ?? null;
 }
@@ -354,11 +388,11 @@ export function validateForm(v: FormValues, opts: { requireUsername?: boolean } 
     if (!u.ok) add("username", v.username ? u.reason : "Username is required");
   }
 
-  const { data: candidate, socialIndex } = valuesToCandidate(v);
+  const { data: candidate, socialIndex, sectionIndex } = valuesToCandidate(v);
   const parsed = PageDataSchema.safeParse(candidate);
   if (!parsed.success) {
     for (const issue of parsed.error.issues) {
-      const field = fieldFor(issue.path, socialIndex);
+      const field = fieldFor(issue.path, socialIndex, sectionIndex, v.sections);
       if (field) add(field, friendly(issue, field));
     }
   }
@@ -377,9 +411,18 @@ export function validateForm(v: FormValues, opts: { requireUsername?: boolean } 
   else if (!canUseAccent(v.accent.trim(), ent, ACCENT_PRESET_IDS)) {
     add("accent", "This tier uses the preset colours. Choose a preset or upgrade to Standard for any colour");
   }
-  if (v.fontPair.trim() && ent.fonts === "default") add("fontPair", "Font pairs need the Standard tier");
+  const pair = v.fontPair.trim();
+  if (pair && ent.fonts === "default") add("fontPair", "Font pairs need the Standard tier");
+  // Custom pages may name any pair (a one-off component can bring its own fonts); Standard picks the template's pairs.
+  else if (pair && ent.fonts === "pairs" && !findFontPair(v.templateKey, pair)) add("fontPair", "That font pair is not available for this template");
   if (v.bannerUrl.trim() && !ent.customComponent) add("bannerUrl", "A banner is only for Custom pages");
-  for (const violation of checkSections(v.sections, ent)) add("sections", violation.reason);
+  const kinds = v.sections.map((d) => d.kind);
+  for (const violation of checkSections(kinds.map((kind) => ({ kind })), ent)) add("sections", violation.reason);
+  kinds.forEach((kind, i) => {
+    if (kinds.indexOf(kind) !== i) add(`sections.${i}`, "Each section can be added once");
+    if (!SECTION_SPECS[kind].available) add(`sections.${i}`, SECTION_SPECS[kind].unavailableReason ?? "Not available yet");
+  });
+  if (v.sectionOrder.length > 0 && !ent.sectionReordering) add("sectionOrder", "Changing the order needs the Standard tier");
   for (const a of v.addOns) if (!(ADD_ONS as readonly string[]).includes(a)) add("addOns", `Unknown add-on "${a}"`);
 
   if (Object.keys(errors).length > 0 || !parsed.success) return { ok: false, data: null, errors };
@@ -439,7 +482,19 @@ export const formValuesSchema: z.ZodType<FormValues> = z.object({
   accent: str(40),
   fontPair: str(40),
   bannerUrl: str(),
-  sections: PageDataSchema.shape.sections,
+  sections: z
+    .array(
+      z.object({
+        id: str(60),
+        kind: z.enum(SECTION_KINDS),
+        items: z.array(z.object({ id: str(60) }).catchall(str(600))).max(40),
+        text: str(6000),
+        url: str(1000),
+        label: str(200),
+      }),
+    )
+    .max(20),
+  sectionOrder: z.array(str(30)).max(40),
 });
 
 /** The page's content for the live preview: valid PageData even when account or tier checks still fail, else null. */

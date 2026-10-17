@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const db = vi.hoisted(() => ({
   page: { findUnique: vi.fn(), update: vi.fn() },
   client: { create: vi.fn() },
+  tierChange: { create: vi.fn() },
+  $transaction: vi.fn(async (ops: Promise<unknown>[]) => Promise.all(ops)),
 }));
 const revalidatePage = vi.hoisted(() => vi.fn());
 
@@ -30,6 +32,7 @@ beforeEach(() => {
   db.page.findUnique.mockResolvedValue(null);
   db.client.create.mockResolvedValue({});
   db.page.update.mockResolvedValue({});
+  db.tierChange.create.mockResolvedValue({});
 });
 
 describe("savePage: validation", () => {
@@ -111,7 +114,7 @@ describe("savePage: create", () => {
 
 describe("savePage: edit", () => {
   it("updates the page and its client, ignores the username in the form, and expires the cache", async () => {
-    db.page.findUnique.mockResolvedValue({ id: "page1" });
+    db.page.findUnique.mockResolvedValue({ id: "page1", tier: "STARTER" });
     const r = await savePage(values({ username: "somebody-else", title: "Designer" }), "maria");
     expect(r).toEqual({ ok: true, username: "maria", created: false });
     const call = db.page.update.mock.calls[0][0];
@@ -123,7 +126,7 @@ describe("savePage: edit", () => {
   });
 
   it("does not need a valid username when editing", async () => {
-    db.page.findUnique.mockResolvedValue({ id: "page1" });
+    db.page.findUnique.mockResolvedValue({ id: "page1", tier: "STARTER" });
     expect((await savePage(values({ username: "" }), "maria")).ok).toBe(true);
   });
 
@@ -132,5 +135,51 @@ describe("savePage: edit", () => {
     const r = await savePage(values(), "gone");
     expect(r.ok).toBe(false);
     expect(db.page.update).not.toHaveBeenCalled();
+  });
+});
+
+describe("savePage: tier changes", () => {
+  const upgrade = () => values({ tier: "STANDARD" });
+
+  it("refuses a tier change without the amount paid, and saves nothing", async () => {
+    db.page.findUnique.mockResolvedValue({ id: "page1", tier: "STARTER" });
+    const r = await savePage(upgrade(), "maria");
+    expect(r.ok).toBe(false);
+    expect(!r.ok && r.errors.tierAmount).toBeTruthy();
+    expect(db.page.update).not.toHaveBeenCalled();
+    expect(db.tierChange.create).not.toHaveBeenCalled();
+  });
+
+  it("refuses an invalid amount", async () => {
+    db.page.findUnique.mockResolvedValue({ id: "page1", tier: "STARTER" });
+    const r = await savePage(upgrade(), "maria", { amountPaid: -5, reprint: false });
+    expect(r.ok).toBe(false);
+    expect(db.page.update).not.toHaveBeenCalled();
+  });
+
+  it("saves the page and records the change in one transaction", async () => {
+    db.page.findUnique.mockResolvedValue({ id: "page1", tier: "STARTER" });
+    const r = await savePage(upgrade(), "maria", { amountPaid: 800, reprint: true, note: "GCash" });
+    expect(r).toEqual({ ok: true, username: "maria", created: false });
+    expect(db.$transaction).toHaveBeenCalledTimes(1);
+    expect(db.page.update.mock.calls[0][0].data.tier).toBe("STANDARD");
+    expect(db.tierChange.create).toHaveBeenCalledWith({
+      data: { pageId: "page1", fromTier: "STARTER", toTier: "STANDARD", amountPaid: 800, reprint: true, note: "GCash" },
+    });
+    expect(revalidatePage).toHaveBeenCalledWith("maria");
+  });
+
+  it("records nothing when the tier is unchanged, even if a change was sent", async () => {
+    db.page.findUnique.mockResolvedValue({ id: "page1", tier: "STARTER" });
+    await savePage(values(), "maria", { amountPaid: 800, reprint: true });
+    expect(db.$transaction).not.toHaveBeenCalled();
+    expect(db.tierChange.create).not.toHaveBeenCalled();
+  });
+
+  it("still checks the content against the new tier (a custom colour needs Standard)", async () => {
+    db.page.findUnique.mockResolvedValue({ id: "page1", tier: "STANDARD" });
+    const r = await savePage(values({ tier: "STARTER", accent: "#123456" }), "maria", { amountPaid: 0, reprint: false });
+    expect(!r.ok && r.errors.accent).toBeTruthy();
+    expect(db.tierChange.create).not.toHaveBeenCalled();
   });
 });

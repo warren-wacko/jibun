@@ -162,7 +162,11 @@ describe("validateForm: what the tier allows", () => {
 
   it("allows font pairs from Standard up, and a banner on Custom only", () => {
     expect(validateForm(valid({ fontPair: "serif-sans" })).errors.fontPair).toBeTruthy();
-    expect(validateForm(valid({ tier: "STANDARD", fontPair: "serif-sans" })).ok).toBe(true);
+    expect(validateForm(valid({ tier: "STANDARD", fontPair: "editorial" })).ok).toBe(true);
+    // a pair has to belong to the chosen template
+    expect(validateForm(valid({ tier: "STANDARD", fontPair: "executive" })).errors.fontPair).toMatch(/not available/);
+    expect(validateForm(valid({ tier: "STANDARD", templateKey: "social-bento", fontPair: "editorial" })).errors.fontPair).toMatch(/not available/);
+    expect(validateForm(valid({ tier: "CUSTOM", templateKey: "custom-maria", fontPair: "anything-goes" })).ok).toBe(true);
     expect(validateForm(valid({ tier: "STANDARD", bannerUrl: "https://x.test/b.jpg" })).errors.bannerUrl).toBeTruthy();
     expect(validateForm(valid({ tier: "CUSTOM", bannerUrl: "https://x.test/b.jpg" })).ok).toBe(true);
   });
@@ -173,8 +177,8 @@ describe("validateForm: what the tier allows", () => {
     expect(validateForm(valid({ tier: "CUSTOM", templateKey: "nope" })).errors.templateKey).toBeTruthy();
   });
 
-  it("keeps existing sections and checks them against the tier", () => {
-    const section = { kind: "skills" as const, items: ["Figma"] };
+  it("checks sections against the tier", () => {
+    const section = { id: "s1", kind: "skills" as const, items: [], text: "Figma", url: "", label: "" };
     expect(validateForm(valid({ sections: [section] })).errors.sections).toBeTruthy(); // Starter has no free picks
     expect(validateForm(valid({ tier: "STANDARD", sections: [section] })).ok).toBe(true);
   });

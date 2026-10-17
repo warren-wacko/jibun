@@ -6,10 +6,10 @@ import { savePage, isUsernameFree, type SaveResult } from "@/lib/admin/page-save
 import { validateUsername } from "@/lib/usernames";
 
 /** Create a page, or save changes to the page with `existingUsername`. */
-export async function savePageAction(input: unknown, existingUsername?: string): Promise<SaveResult> {
+export async function savePageAction(input: unknown, existingUsername?: string, tierChange?: unknown): Promise<SaveResult> {
   await requireAdmin();
   const target = z.string().max(60).optional().parse(existingUsername);
-  return savePage(input, target);
+  return savePage(input, target, tierChange);
 }
 
 /** Live "is this username free?" check while typing. */

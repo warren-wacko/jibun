@@ -4,6 +4,7 @@ import { generateCardCode } from "../card-code";
 import { db } from "../db";
 import { revalidatePage } from "../pages";
 import { formValuesSchema, validateForm, type FieldErrors, type FormValues } from "./page-form";
+import { tierChangeSchema } from "./tier-change";
 
 export type SaveResult =
   | { ok: true; username: string; created: boolean }
@@ -23,8 +24,9 @@ const isUniqueViolation = (e: unknown, field: string) =>
  * Create a page (and its client and first card), or update an existing one. Re-validates everything:
  * the form's own checks are for the admin's convenience, not for safety.
  * `existingUsername` set = edit that page (its username never changes).
+ * Changing a page's tier needs `tierChange` (amount paid, reprint): it is saved with the page in one transaction.
  */
-export async function savePage(input: unknown, existingUsername?: string): Promise<SaveResult> {
+export async function savePage(input: unknown, existingUsername?: string, tierChange?: unknown): Promise<SaveResult> {
   const shape = formValuesSchema.safeParse(input);
   if (!shape.success) return fail("The form data was not valid. Reload the page and try again.");
   const values: FormValues = shape.data;
@@ -48,9 +50,32 @@ export async function savePage(input: unknown, existingUsername?: string): Promi
   };
 
   if (existingUsername) {
-    const existing = await db.page.findUnique({ where: { username: existingUsername }, select: { id: true } });
+    const existing = await db.page.findUnique({ where: { username: existingUsername }, select: { id: true, tier: true } });
     if (!existing) return fail("That page no longer exists.");
-    await db.page.update({ where: { id: existing.id }, data: { ...page, client: { update: client } } });
+
+    const update = () => db.page.update({ where: { id: existing.id }, data: { ...page, client: { update: client } } });
+    if (existing.tier === values.tier) {
+      await update();
+    } else {
+      // A tier change must say what was paid; check that before touching the page.
+      const change = tierChangeSchema.safeParse(tierChange);
+      if (!change.success) {
+        return fail("Record the amount paid for the tier change.", { tierAmount: change.error.issues[0]?.message ?? "Enter the amount paid" });
+      }
+      await db.$transaction([
+        update(),
+        db.tierChange.create({
+          data: {
+            pageId: existing.id,
+            fromTier: existing.tier,
+            toTier: values.tier,
+            amountPaid: change.data.amountPaid,
+            reprint: change.data.reprint,
+            note: change.data.note || null,
+          },
+        }),
+      ]);
+    }
     revalidatePage(existingUsername);
     return { ok: true, username: existingUsername, created: false };
   }
