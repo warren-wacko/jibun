@@ -13,19 +13,23 @@ const ThemeContext = createContext<{ theme: Theme; toggle: () => void } | null>(
  * `template` scopes a template's own token overrides (its CSS targets [data-template="..."]).
  * `data-accent-tone` says whether the accent is a light or dark surface. `data-weak-on-light` /
  * `data-weak-on-dark` are set when the accent is too faint to use as text on a near-white or
- * near-black page, so templates can swap in the normal text colour.
+ * near-black page, so templates can swap in the normal text colour. `data-weak-text-on-light` / `-dark` are the same
+ * idea for small text (4.5:1 instead of 3:1).
  */
 export function ThemeScope({
   theme: defaultTheme,
   accent,
   template,
   className,
+  attrs,
   children,
 }: {
   theme: Theme;
   accent: string;
   template?: string;
   className?: string;
+  /** Extra data attributes for the template's own CSS (for example the design and the font pair). */
+  attrs?: Record<`data-${string}`, string | undefined>;
   children: ReactNode;
 }) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
@@ -43,6 +47,9 @@ export function ThemeScope({
         data-accent-tone={resolved.tone}
         data-weak-on-light={resolved.readableOnLight ? undefined : "true"}
         data-weak-on-dark={resolved.readableOnDark ? undefined : "true"}
+        data-weak-text-on-light={resolved.textOnLight ? undefined : "true"}
+        data-weak-text-on-dark={resolved.textOnDark ? undefined : "true"}
+        {...attrs}
         style={style}
         className={`min-h-screen bg-bg text-ink ${className ?? ""}`}
       >

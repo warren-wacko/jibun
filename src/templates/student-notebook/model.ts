@@ -1,6 +1,8 @@
-import type { PageData } from "@/lib/page-schema";
-import { groupSocials } from "@/lib/socials";
+import type { PageData, Section, SocialType } from "@/lib/page-schema";
+import { SOCIAL_LABELS, groupSocials } from "@/lib/socials";
 import { initials, pickFeatured } from "../shared/model";
+import { resolveOrder } from "../section-order";
+import { supportedSections } from "../supported-sections";
 
 export type QuickAction = { key: "call" | "email" | "text" | "linkedin"; label: string; href: string; external?: boolean };
 
@@ -46,5 +48,46 @@ export function buildNotebookModel(data: PageData) {
     email: contact.email ?? null,
     profiles,
     messaging,
+  };
+}
+
+export type OnlineTile = { key: string; type: SocialType; label: string; url: string };
+
+/**
+ * The Standard design: a résumé button, three small facts, the optional sections (projects, skills, wins and orgs)
+ * in the page's order, and one "Find me online" grid with every link instead of the Starter's three link blocks.
+ * Empty things come back empty so the template can leave them out.
+ */
+export function buildStandardModel(data: PageData) {
+  const { profile, contact, socials } = data;
+  const student = profile.student ?? {};
+  const ok = supportedSections("student-notebook");
+  const drawn = data.sections.filter((s) => ok.includes(s.kind));
+
+  const resume = drawn.find((s): s is Extract<Section, { kind: "resume" }> => s.kind === "resume") ?? null;
+  const blocks: Partial<Record<"portfolio" | "skills" | "orgs", Section>> = {};
+  for (const s of drawn) if (s.kind === "portfolio" || s.kind === "skills" || s.kind === "orgs") blocks[s.kind] ??= s;
+  // Without a saved order the design's own order is used: projects, skills, wins and orgs.
+  const canonical = (["portfolio", "skills", "orgs"] as const).filter((k) => k in blocks);
+  const order = resolveOrder("student-notebook", canonical, data.style.sectionOrder).filter((k) => k in blocks);
+
+  const info = [
+    { label: "Studying", value: student.program },
+    { label: "Graduating", value: student.graduating },
+    { label: "Based in", value: profile.location },
+  ].filter((i): i is { label: string; value: string } => Boolean(i.value));
+
+  // Every link, in the order saved. A featured link that is not one of them (a portfolio site) goes first.
+  const { featured, used } = pickFeatured(data);
+  const tiles: OnlineTile[] = socials.map((s, i) => ({ key: `${s.type}-${i}`, type: s.type, label: SOCIAL_LABELS[s.type], url: s.url }));
+  if (featured && !used) tiles.unshift({ key: "featured", type: featured.icon ?? "website", label: featured.label, url: featured.url });
+
+  return {
+    resume: resume ? { url: resume.fileUrl, label: resume.label ?? "My résumé" } : null,
+    info,
+    blocks,
+    order,
+    tiles,
+    email: contact.email ?? null,
   };
 }

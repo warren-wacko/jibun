@@ -1,4 +1,4 @@
-import type { PageData } from "./page-schema";
+import type { PageData, Section } from "./page-schema";
 
 /**
  * The template preview (/preview) is for building and reviewing designs. It is off in
@@ -9,6 +9,59 @@ export function isPreviewEnabled(env: { NODE_ENV?: string; ENABLE_PREVIEW?: stri
 }
 
 export type PreviewVariant = "full" | "sparse";
+
+/**
+ * Sample optional sections for the Standard design preview: one of every kind, so the preview also shows which
+ * kinds a template has no design for yet (those are skipped).
+ */
+export const STANDARD_PREVIEW_SECTIONS: Section[] = [
+  { kind: "stats", items: [{ label: "Experience", value: "8+ years" }, { label: "Focus", value: "Product" }, { label: "Based in", value: "Cavite, PH" }] },
+  {
+    kind: "experience",
+    items: [
+      { role: "Senior Product Designer", org: "Northwind Studio", years: "2022 — NOW" },
+      { role: "Product Designer", org: "Brightside Labs", years: "2019 — 2022" },
+      { role: "BS Multimedia Arts", org: "Cavite State University", years: "2015 — 2019" },
+    ],
+  },
+  { kind: "skills", items: ["Product design", "Figma", "Prototyping", "User research", "Design systems", "Workshops", "Accessibility"] },
+  {
+    kind: "services",
+    items: [
+      { name: "Brand identity", price: "from ₱15,000" },
+      { name: "App design sprint", price: "from ₱40,000" },
+      { name: "Design review", price: "Ask me" },
+    ],
+  },
+  {
+    kind: "portfolio",
+    items: [
+      { title: "Northwind mobile app", desc: "Redesign of the booking flow.", url: "https://example.com/northwind", thumbUrl: "/sample/gallery-1.svg" },
+      { title: "Brightside dashboard", desc: "Analytics for small teams.", url: "https://example.com/brightside" },
+    ],
+  },
+  {
+    kind: "gallery",
+    images: [
+      { url: "/sample/gallery-1.svg", alt: "Studio visit" },
+      { url: "/sample/gallery-2.svg", alt: "Workshop" },
+      { url: "/sample/gallery-3.svg", alt: "Launch day" },
+    ],
+  },
+  { kind: "resume", fileUrl: "https://example.com/maria-santos-resume.pdf", label: "Résumé / CV" },
+  { kind: "video", url: "https://example.com/intro-video" },
+  { kind: "interests", items: ["coffee", "film photography", "board games"] },
+  {
+    kind: "orgs",
+    items: [
+      { name: "Dean's lister", role: "Cavite State University" },
+      { name: "Design Society", role: "Vice president" },
+    ],
+  },
+  { kind: "song", spotifyUrl: "https://open.spotify.com/track/example", title: "Golden Hour", artist: "JVKE" },
+];
+
+const ORDER_TOKEN = /^[a-zA-Z][a-zA-Z0-9]{1,23}$/;
 
 /** Illustrated placeholder portrait in public/sample/. Not a real person. */
 export const PREVIEW_PHOTO = "/sample/avatar.svg";
@@ -90,11 +143,24 @@ const ACCENT = /^(#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})|[a-z0-9-]{2,40})$/;
 
 export function buildPreviewData(
   templateKey: string,
-  opts: { variant?: string; theme?: string; accent?: string },
+  opts: { variant?: string; theme?: string; accent?: string; design?: string; font?: string; order?: string },
 ): PageData {
   const base = opts.variant === "sparse" ? SPARSE_PREVIEW_DATA : FULL_PREVIEW_DATA;
   const accent =
     opts.accent && ACCENT.test(opts.accent) ? opts.accent : (PREVIEW_DEFAULT_ACCENT[templateKey] ?? base.style.accent);
-  const theme = opts.theme === "dark" ? "dark" : "light";
-  return { ...base, style: { ...base.style, theme, accent } };
+  const theme: "light" | "dark" = opts.theme === "dark" ? "dark" : "light";
+  const style = { ...base.style, theme, accent };
+  if (opts.design !== "standard") return { ...base, style };
+
+  // The Standard design: optional sections, and optionally a font pair and an order (?font=bold&order=about,stats,connect).
+  const order = opts.order?.split(",").map((t) => t.trim()).filter((t) => ORDER_TOKEN.test(t)).slice(0, 40);
+  return {
+    ...base,
+    sections: STANDARD_PREVIEW_SECTIONS,
+    style: {
+      ...style,
+      fontPair: opts.font && /^[a-z0-9-]{2,40}$/.test(opts.font) ? opts.font : undefined,
+      sectionOrder: order && order.length > 0 ? order : undefined,
+    },
+  };
 }

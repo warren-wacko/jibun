@@ -344,7 +344,8 @@ function fieldFor(path: readonly PropertyKey[], socialIndex: number[], sectionIn
       return `sections.${at.draft}.items`;
     }
     if (spec.mode === "lines") return `sections.${at.draft}.text`;
-    return leaf === "label" ? `sections.${at.draft}.label` : `sections.${at.draft}.url`;
+    const extra = spec.extras?.find((x) => x.key === leaf);
+    return extra ? `sections.${at.draft}.${extra.field}` : `sections.${at.draft}.url`;
   }
   if (head === "sections") return "sections";
   return PATH_TO_FIELD[path.join(".")] ?? null;

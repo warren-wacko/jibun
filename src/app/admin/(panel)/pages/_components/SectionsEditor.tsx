@@ -12,7 +12,8 @@ import {
   type SectionDraft,
 } from "@/lib/admin/section-drafts";
 import type { SectionKind } from "@/lib/page-schema";
-import { TEMPLATES_WITH_SECTIONS, blockLabel, layoutFor, resolveOrder } from "@/templates/section-order";
+import { blockLabel, layoutFor, resolveOrder } from "@/templates/section-order";
+import { supportedSections, unsupportedSections } from "@/templates/supported-sections";
 import { CONTROL, FOCUS, useEditor } from "./ui";
 
 const ICON_BTN =
@@ -150,13 +151,13 @@ function SectionBody({ draft, index, update }: { draft: SectionDraft; index: num
           />
           <ErrorText text={errorFor(key)} />
         </label>
-        {draft.kind === "resume" && (
-          <label className="flex flex-col gap-1 text-xs font-medium text-neutral-700">
-            Button text (optional)
-            <input value={draft.label} maxLength={60} placeholder="Download my résumé" onChange={(e) => update({ ...draft, label: e.target.value })} className={`${CONTROL} ${FOCUS} font-normal`} />
-            <ErrorText text={errorFor(`sections.${index}.label`)} />
+        {(spec.extras ?? []).map((x) => (
+          <label key={x.key} className="flex flex-col gap-1 text-xs font-medium text-neutral-700">
+            {x.label}
+            <input value={draft[x.field]} maxLength={x.max} placeholder={x.placeholder} onChange={(e) => update({ ...draft, [x.field]: e.target.value })} className={`${CONTROL} ${FOCUS} font-normal`} />
+            <ErrorText text={errorFor(`sections.${index}.${x.field}`)} />
           </label>
-        )}
+        ))}
       </div>
     );
   }
@@ -235,7 +236,8 @@ export function SectionsEditor() {
   const options = SECTION_ORDER_IN_PICKER.map((kind) => ({ kind, availability: sectionAvailability(kind, kinds, ent) }));
   const anyAddable = options.some((o) => o.availability.ok);
   const free = ent.includedOptionalSections;
-  const shown = TEMPLATES_WITH_SECTIONS.has(values.templateKey);
+  const shownKinds = supportedSections(values.templateKey);
+  const hidden = unsupportedSections(values.templateKey, kinds);
 
   return (
     <div className="flex flex-col gap-4" data-field="sections">
@@ -243,10 +245,16 @@ export function SectionsEditor() {
         {free === Infinity ? "Any number of sections." : free === 0 ? "This tier has no free sections." : `${picksUsed(kinds, ent)} of ${free} free sections used.`} Gallery, video,
         résumé and booking sections come with their add-ons and do not use a free pick.
       </p>
-      {!shown && (
+      {shownKinds.length === 0 ? (
         <p className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
           This template does not show optional sections yet. They are saved with the page and will appear once its Standard design is built.
         </p>
+      ) : (
+        hidden.length > 0 && (
+          <p className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
+            This template has no design yet for {hidden.map((k) => SECTION_SPECS[k].label).join(", ")}. {hidden.length === 1 ? "It is" : "They are"} saved with the page but not shown.
+          </p>
+        )
       )}
       <ErrorText text={errorFor("sections")} />
 

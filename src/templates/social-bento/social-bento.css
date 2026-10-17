@@ -819,3 +819,332 @@ button.pb-tile.pb-center {
     animation: none;
   }
 }
+
+/* ---------- Standard design: interests band, record, photo dump, org chips ---------- */
+.pb-extras {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+.pb-hand {
+  font-family: var(--font-bento-hand), cursive;
+  font-weight: 700;
+}
+
+.pb-band {
+  display: flex;
+  align-items: center;
+  height: 64px;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--hero-bg);
+}
+
+.pb-band-track {
+  display: flex;
+  width: max-content;
+  animation: pb-marquee 24s linear infinite;
+}
+
+.pb-pill-i {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  height: 38px;
+  margin-right: 8px;
+  padding: 0 16px;
+  border-radius: 19px;
+  background: color-mix(in srgb, var(--hero-ink) 12%, transparent);
+  color: var(--hero-ink);
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pb-pill-i.is-accent {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.pb-song {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 178px;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.pb-record {
+  position: absolute;
+  left: -28px;
+  top: 14px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+
+.pb-record-disc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, #121212 0 2px, #1e1e1e 2px 4px);
+}
+
+.pb-record:hover .pb-record-disc,
+.pb-record:focus-visible .pb-record-disc {
+  animation: pb-spin 3.2s linear infinite;
+}
+
+.pb-record:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+
+.pb-record-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.pb-record-label span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #121212;
+}
+
+.pb-song-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  margin-left: 138px;
+  padding-right: 18px;
+}
+
+.pb-song-text .pb-hand {
+  font-size: 20px;
+  color: var(--text-muted);
+}
+
+.pb-song-title {
+  overflow: hidden;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pb-song-artist {
+  overflow: hidden;
+  font-size: 14px;
+  color: var(--text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pb-song-listen {
+  margin-top: 8px;
+  font-family: var(--font-bento-mono), ui-monospace, monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.pb-dump {
+  --k: calc(100cqw / 366);
+  position: relative;
+  box-sizing: border-box;
+  height: calc(var(--h) * 1px);
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.pb-dump-head {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  left: 18px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+}
+
+.pb-dump-head .pb-hand {
+  font-size: 20px;
+  letter-spacing: 0;
+}
+
+.pb-polaroid {
+  position: absolute;
+  top: calc(var(--y) * 1px);
+  left: min(calc(var(--x) * var(--k)), calc(100cqw - 140px));
+  box-sizing: content-box;
+  width: 118px;
+  margin: 0;
+  padding: 7px 7px 30px;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16);
+  color: #333;
+  transform: rotate(var(--r));
+}
+
+.pb-polaroid-photo {
+  position: relative;
+  display: block;
+  width: 118px;
+  height: 118px;
+  overflow: hidden;
+  background: #e6e2da;
+}
+
+.pb-polaroid-photo img {
+  object-fit: cover;
+}
+
+.pb-polaroid figcaption {
+  position: absolute;
+  right: 7px;
+  bottom: 4px;
+  left: 7px;
+  overflow: hidden;
+  font-family: var(--font-bento-hand), cursive;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 22px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pb-orgs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+  padding: 18px;
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.pb-orgs-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+}
+
+.pb-org-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pb-org {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 9px 14px 9px 9px;
+  border-radius: 16px;
+  background: var(--accent);
+  color: var(--on-accent);
+  transform: rotate(-2deg);
+}
+
+.pb-org[data-i="1"] {
+  background: var(--hero-bg);
+  color: var(--hero-ink);
+  transform: rotate(1.5deg);
+}
+
+.pb-org[data-i="2"] {
+  background: var(--chip-bg);
+  color: var(--text);
+  transform: rotate(-1deg);
+}
+
+.pb-org-badge {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--on-accent);
+  color: var(--accent-text);
+  font-family: var(--font-bento-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.pb-org[data-i="1"] .pb-org-badge {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.pb-org[data-i="2"] .pb-org-badge {
+  background: var(--hero-bg);
+  color: var(--hero-ink);
+}
+
+.pb-org-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pb-org-role {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+}
+
+.pb-org-name {
+  overflow: hidden;
+  font-size: 12px;
+  opacity: 0.7;
+  text-overflow: ellipsis;
+}
+
+@keyframes pb-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes pb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-band-track,
+  .pb-record:hover .pb-record-disc,
+  .pb-record:focus-visible .pb-record-disc {
+    animation: none;
+  }
+}

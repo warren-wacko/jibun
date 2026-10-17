@@ -51,7 +51,7 @@ describe("draft <-> section", () => {
     { kind: "booking", url: "https://cal.test/me" },
     { kind: "interests", items: ["coffee", "anime"] },
     { kind: "orgs", items: [{ name: "Debate Society", role: "President" }, { name: "Chess Club" }] },
-    { kind: "song", spotifyUrl: "https://open.spotify.com/track/1" },
+    { kind: "song", spotifyUrl: "https://open.spotify.com/track/1", title: "Golden Hour", artist: "JVKE" },
   ];
 
   it.each(samples)("round-trips a $kind section unchanged", (section) => {

@@ -40,9 +40,12 @@ async function Preview({
     variant: pick("data"),
     theme: pick("theme"),
     accent: pick("accent"),
+    design: pick("design"),
+    font: pick("font"),
+    order: pick("order"),
   });
 
   // Save Contact and the QR point at the seeded sample card, so those parts work for real.
-  const meta = buildTemplateMeta({ username: "maria", tier: "STARTER", addOns: [] });
+  const meta = buildTemplateMeta({ username: "maria", tier: pick("design") === "standard" ? "STANDARD" : "STARTER", addOns: [] });
   return renderTemplate(template, { data, theme: data.style.theme, meta });
 }

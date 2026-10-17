@@ -11,19 +11,22 @@ import { tileHandle } from "../shared/social";
 import type { TemplateProps } from "../types";
 import { instrumentSerif, interTight, minimalMono } from "./fonts";
 import { HeaderShare, HeaderThemeToggle, QrSheet, SaveButton, ToastProvider } from "./interactive";
-import { buildMinimalModel } from "./model";
+import { buildMinimalModel, buildStandardModel } from "./model";
+import { SectionBlock } from "./sections";
 import "./social-minimalist.css";
 
 /** Social template: minimal. A huge first name, one photo with a spinning "say hi" badge, tiles, and an italic serif accent voice. */
 export function SocialMinimalistTemplate({ data, theme, meta }: TemplateProps) {
   const { profile, contact, style } = data;
   const m = buildMinimalModel(data);
+  const standard = meta.design === "standard" ? buildStandardModel(data) : null;
 
   return (
     <ThemeScope
       theme={theme}
       accent={style.accent}
       template="social-minimalist"
+      attrs={standard ? { "data-design": "standard" } : undefined}
       className={`${interTight.variable} ${instrumentSerif.variable} ${minimalMono.variable}`}
     >
       <ToastProvider>
@@ -145,6 +148,15 @@ export function SocialMinimalistTemplate({ data, theme, meta }: TemplateProps) {
                   </a>
                 ))}
               </div>
+            </div>
+          )}
+
+          {standard && standard.order.length > 0 && (
+            <div className="mn-extras">
+              {standard.order.map((kind) => {
+                const section = standard.blocks[kind];
+                return section ? <SectionBlock key={kind} section={section} /> : null;
+              })}
             </div>
           )}
 

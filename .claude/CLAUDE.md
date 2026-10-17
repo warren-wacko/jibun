@@ -44,3 +44,10 @@
 - Page forms are validated by one function, `validateForm` in `lib/admin/page-form.ts`, used by the editor (live errors) and by `savePage` (`lib/admin/page-save.ts`), which re-validates. Tier rules go through `getEntitlements`; never trust the form.
 - The editor preview is an iframe (`/admin/preview-frame`) that renders templates through a Server Action; its page imports the template registry so the templates' client components and CSS are in its bundle.
 - Test the admin in Chrome with a throwaway admin user, and delete it and any test pages afterwards.
+
+# Standard designs
+
+- A template draws its Starter or its Standard design from `meta.design` (set from `getEntitlements`, never from the tier). Starter stays a fixed layout; Standard follows `style.sectionOrder` through `resolveOrder` (`templates/section-order.ts`), draws the section kinds listed in `templates/supported-sections.ts` and applies a font pair listed in `templates/font-pairs.ts`. Unsupported kinds are saved but not drawn.
+- Template-specific CSS switches on `[data-design="standard"]` and `[data-font-pair="..."]` (pass them to `ThemeScope` through `attrs`). Fonts for the pairs use `next/font` with `preload: false` and literal options (no spreads).
+- Accent as small text or as a graphic: use `--accent-text` / `--accent-graphic` tokens built from `data-weak-text-on-*` and `data-weak-on-*`, never the raw accent.
+- View the Standard design at `/preview/<template>?design=standard&font=<pair>&order=a,b,c`. Verify against the reference by applying its content to the sample page `/maria` with tier STANDARD, comparing block positions and total height at 390 px, and restore `/maria` afterwards.

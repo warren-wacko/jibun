@@ -59,6 +59,59 @@
   --chip-ink: var(--bg);
 }
 
+/* Fonts. The Starter design uses Archivo (condensed for the headline) for everything; a Standard page can choose a pair.
+   The --head-* values are the headline face's weight, width and tracking, and --name-max the biggest the name may be. */
+[data-template="pro-magazine"] {
+  --ff-head: var(--font-archivo), system-ui, sans-serif;
+  --ff-body: var(--font-archivo), system-ui, sans-serif;
+  --ff-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --head-weight: 800;
+  --head-stretch: 72%;
+  --head-track: -1.5px;
+  --head-word-spacing: 0.12em; /* the condensed face has a very narrow space */
+  --name-max: 76px;
+}
+
+[data-template="pro-magazine"][data-font-pair="vogue"] {
+  --ff-head: var(--font-playfair), Georgia, serif;
+  --ff-body: var(--font-dm-sans), system-ui, sans-serif;
+  --head-weight: 800;
+  --head-stretch: 100%;
+  --head-track: -1px;
+  --head-word-spacing: 0;
+  --name-max: 62px;
+}
+
+[data-template="pro-magazine"][data-font-pair="tabloid"] {
+  --ff-head: var(--font-anton), Impact, sans-serif;
+  --ff-body: var(--font-work-sans), system-ui, sans-serif;
+  --head-weight: 400;
+  --head-stretch: 100%;
+  --head-track: 0px;
+  --head-word-spacing: 0;
+  --name-max: 78px;
+}
+
+[data-template="pro-magazine"][data-font-pair="indie"] {
+  --ff-head: var(--font-fraunces), Georgia, serif;
+  --ff-body: var(--font-manrope), system-ui, sans-serif;
+  --head-weight: 800;
+  --head-stretch: 100%;
+  --head-track: -1.2px;
+  --head-word-spacing: 0;
+  --name-max: 62px;
+}
+
+/* The accent as small text (4.5:1): itself when it reads on the page, otherwise the normal text colour. */
+[data-template="pro-magazine"] {
+  --accent-small: var(--accent);
+}
+
+[data-template="pro-magazine"][data-theme="light"][data-weak-text-on-light],
+[data-template="pro-magazine"][data-theme="dark"][data-weak-text-on-dark] {
+  --accent-small: var(--text);
+}
+
 /* ---------- Base ---------- */
 .pm {
   position: relative; /* no overflow here: the bottom bar is sticky */
@@ -68,7 +121,7 @@
   max-width: 430px;
   min-height: 100dvh;
   margin: 0 auto;
-  font-family: var(--font-archivo), system-ui, sans-serif;
+  font-family: var(--ff-body);
   line-height: normal;
   color: var(--text);
   background: var(--bg);
@@ -95,7 +148,7 @@
 }
 
 .pm-label {
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 11px;
   letter-spacing: 1.6px;
   color: var(--text-muted);
@@ -140,11 +193,11 @@
 }
 
 .pm-mono {
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
 }
 
 .pm-brand {
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 11px;
   letter-spacing: 1.6px;
 }
@@ -193,7 +246,7 @@
 .pm-glass-pill {
   gap: 8px;
   padding: 0 12px 0 14px;
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 11px;
   letter-spacing: 1.6px;
 }
@@ -209,7 +262,7 @@
   gap: 4px 8px;
   padding-top: 8px;
   border-top: 1px solid var(--on-photo-line);
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 10px;
   letter-spacing: 1.6px;
   color: var(--on-photo-soft);
@@ -235,7 +288,7 @@
   padding: 0 8px;
   background: var(--accent);
   color: var(--on-accent);
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 1.6px;
@@ -244,12 +297,13 @@
 /* The headline is sized so its widest line (--em, in em) fills the cover padding, never past 76px. */
 .pm-name {
   margin: 0;
-  font-size: clamp(22px, calc((100cqw - 40px) / var(--em, 4)), 76px);
+  font-family: var(--ff-head);
+  font-size: clamp(22px, calc((100cqw - 40px) / var(--em, 4)), var(--name-max));
   line-height: 0.86;
-  font-weight: 800;
-  font-stretch: 72%;
-  letter-spacing: -1.5px;
-  word-spacing: 0.12em; /* this condensed face has a very narrow space; counted in model.ts */
+  font-weight: var(--head-weight);
+  font-stretch: var(--head-stretch);
+  letter-spacing: var(--head-track);
+  word-spacing: var(--head-word-spacing); /* the default face has a very narrow space; counted in model.ts */
   text-transform: uppercase;
   overflow-wrap: anywhere;
 }
@@ -300,10 +354,11 @@
 .pm-bio::first-letter {
   float: left;
   margin: 4px 10px 0 0;
+  font-family: var(--ff-head);
   font-size: 74px;
   line-height: 0.82;
-  font-weight: 800;
-  font-stretch: 72%;
+  font-weight: var(--head-weight);
+  font-stretch: var(--head-stretch);
   color: var(--accent-text);
 }
 
@@ -321,6 +376,7 @@
 }
 
 .pm-touch-title {
+  font-family: var(--ff-head);
   font-size: 28px;
   line-height: 1.1;
   font-weight: 800;
@@ -450,7 +506,7 @@
 }
 
 .pm-link-sub {
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 11px;
   color: var(--text-dim);
   overflow-wrap: anywhere;
@@ -486,7 +542,7 @@
   background: var(--surface);
   box-shadow: inset 0 0 0 1px var(--border);
   cursor: pointer;
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 11px;
   color: var(--text-soft);
 }
@@ -537,7 +593,7 @@
   gap: 8px;
   margin-top: auto;
   padding: 40px 24px 16px;
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 10px;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -598,7 +654,7 @@
 }
 
 .pm-save-sub {
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 10px;
   letter-spacing: 1px;
   opacity: 0.7;
@@ -711,7 +767,7 @@
 }
 
 .pm-qr-url {
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 11px;
   color: var(--text-dim);
   overflow-wrap: anywhere;
@@ -811,4 +867,338 @@
   .pm-qr-dialog::backdrop {
     animation: none;
   }
+}
+
+/* ---------- Standard design ---------- */
+.pm-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Blocks are numbered like magazine pages and share one rhythm. */
+[data-template="pro-magazine"][data-design="standard"] [data-block] {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 40px 24px 0;
+}
+
+[data-template="pro-magazine"][data-design="standard"] [data-block].pm-first {
+  padding-top: 32px;
+}
+
+[data-design="standard"] .pm-lists {
+  padding: 0;
+}
+
+[data-design="standard"] .pm-save-label,
+[data-design="standard"] .pm-qr-name {
+  font-family: var(--ff-head);
+  font-weight: var(--head-weight);
+  font-stretch: var(--head-stretch);
+}
+
+[data-design="standard"] .pm-save-label {
+  letter-spacing: 0.3px;
+}
+
+.pm-block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 1.6px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.pm-head-text {
+  font-family: var(--ff-head);
+  font-size: 19px;
+  font-weight: var(--head-weight);
+  font-stretch: var(--head-stretch);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.pm-item-desc {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+/* Ruled lists: a heavy rule on top, hairlines between rows. */
+.pm-ruled {
+  display: flex;
+  flex-direction: column;
+}
+
+.pm-ruled > * {
+  border-top: 1px solid var(--border);
+}
+
+.pm-ruled > :first-child {
+  border-top: 1.5px solid var(--text);
+}
+
+.pm-ruled > :last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+/* Gallery */
+.pm-gallery {
+  display: flex;
+  gap: 12px;
+  margin: 0 -24px;
+  padding: 0 24px 4px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.pm-gallery-item {
+  display: flex;
+  flex: 0 0 210px;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  scroll-snap-align: start;
+}
+
+.pm-gallery-photo {
+  position: relative;
+  display: block;
+  height: 270px;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.pm-gallery-photo img {
+  object-fit: cover;
+}
+
+.pm-gallery-item figcaption {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+/* Portfolio */
+.pm-work {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+}
+
+.pm-work-thumb {
+  display: block;
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.pm-work-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pm-work-text {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 3px;
+  min-width: 0;
+}
+
+/* Services */
+.pm-service {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 12px;
+  padding: 14px 0;
+}
+
+.pm-price {
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--accent-small);
+  white-space: nowrap;
+}
+
+/* Resume */
+.pm-resume {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  background: var(--text);
+  color: var(--bg);
+}
+
+.pm-resume-kicker {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  opacity: 0.7;
+}
+
+.pm-resume-title {
+  font-family: var(--ff-head);
+  font-size: 30px;
+  line-height: 0.95;
+  font-weight: var(--head-weight);
+  font-stretch: var(--head-stretch);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.pm-download {
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 8px;
+  height: 46px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--on-accent);
+  background: var(--accent);
+}
+
+/* Experience */
+.pm-exp {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 12px;
+  padding: 14px 0;
+}
+
+.pm-exp-years {
+  font-family: var(--ff-head);
+  font-size: 22px;
+  line-height: 1;
+  font-weight: var(--head-weight);
+  font-stretch: var(--head-stretch);
+  overflow-wrap: anywhere;
+}
+
+.pm-exp.is-current .pm-exp-years {
+  color: var(--accent-text);
+}
+
+.pm-exp-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pm-exp-role {
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.pm-exp-org {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+/* Skills */
+.pm-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pm-tags li {
+  display: flex;
+  align-items: center;
+  box-sizing: content-box; /* 34px plus the 1px borders, as in the design */
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--text);
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+/* Stats */
+.pm-stats {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  margin: 0;
+  border-top: 1.5px solid var(--text);
+}
+
+.pm-stat {
+  display: flex;
+  flex-direction: column-reverse; /* the figure above its label, label first in the markup */
+  justify-content: flex-end;
+  gap: 4px;
+  padding: 14px 10px 4px 12px;
+  border-left: 1px solid var(--border);
+}
+
+.pm-stat:nth-child(3n + 1) {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.pm-stat:nth-child(n + 4) {
+  border-top: 1px solid var(--border);
+}
+
+.pm-stat dd {
+  margin: 0;
+  font-family: var(--ff-head);
+  font-size: 30px;
+  line-height: 1;
+  font-weight: var(--head-weight);
+  font-stretch: var(--head-stretch);
+  color: var(--accent-text);
+  overflow-wrap: anywhere;
+}
+
+.pm-stat dt {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* The Standard footer has room for its settings button (not used here), so it is taller. */
+[data-design="standard"] .pm-footer {
+  box-sizing: border-box;
+  min-height: 92px;
+  padding: 40px 24px 8px;
+}
+
+[data-design="standard"] .pm-list .pm-label {
+  padding-bottom: 8px;
+  font-size: 10px;
+  letter-spacing: 1.4px;
 }

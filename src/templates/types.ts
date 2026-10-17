@@ -13,6 +13,8 @@ export type TemplateMeta = {
   qrHref: string;
   /** False when branding is removed (remove_branding add-on or CUSTOM). */
   showBranding: boolean;
+  /** Which design of the template to draw. Left out = "starter". Comes from the page's entitlements, never from the tier. */
+  design?: "starter" | "standard";
 };
 
 /** Every template receives typed page data and a theme, and contains no client data. */

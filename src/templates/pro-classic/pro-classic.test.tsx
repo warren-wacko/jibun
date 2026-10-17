@@ -178,8 +178,9 @@ describe("fidelity to the reference design", () => {
 
   it("every UI icon path exists in one of the reference files", () => {
     const refRoot = path.join(process.cwd(), "design-reference");
+    // both packages: some icons (download, award) are only in the Standard designs
     const all = readdirSync(refRoot)
-      .map((dir) => path.join(refRoot, dir, "starter", "index.html"))
+      .flatMap((dir) => ["starter", "standard"].map((pkg) => path.join(refRoot, dir, pkg, "index.html")))
       .filter((file) => existsSync(file))
       .map((file) => readFileSync(file, "utf8"))
       .join("\n");

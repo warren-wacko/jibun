@@ -70,6 +70,34 @@ describe("buildPreviewData", () => {
   });
 });
 
+describe("the Standard design preview", () => {
+  it("adds sections, a font pair and an order, and validates them", () => {
+    const d = buildPreviewData("pro-classic", { design: "standard", font: "bold", order: "stats, about ,bad token!,connect" });
+    expect(d.sections.length).toBeGreaterThan(5);
+    expect(d.style.fontPair).toBe("bold");
+    expect(d.style.sectionOrder).toEqual(["stats", "about", "connect"]);
+    const plain = buildPreviewData("pro-classic", {});
+    expect(plain.sections).toEqual([]);
+    expect(plain.style.fontPair).toBeUndefined();
+  });
+
+  it("ignores a font that is not a plain id", () => {
+    expect(buildPreviewData("pro-classic", { design: "standard", font: "x; y" }).style.fontPair).toBeUndefined();
+  });
+
+  it("is rendered by every registered template without breaking (templates without Standard designs ignore it)", () => {
+    const meta = buildTemplateMeta({ username: "maria", tier: "STANDARD", addOns: [] });
+    expect(meta.design).toBe("standard");
+    for (const key of registeredTemplateKeys()) {
+      for (const theme of ["light", "dark"] as const) {
+        const data = buildPreviewData(key, { design: "standard", theme });
+        const html = renderToStaticMarkup(renderTemplate(key, { data, theme, meta }));
+        expect(html, key).toContain(data.profile.fullName.split(" ")[0]);
+      }
+    }
+  });
+});
+
 describe("every registered template renders the preview data", () => {
   const meta = buildTemplateMeta({ username: "maria", tier: "STARTER", addOns: [] });
 

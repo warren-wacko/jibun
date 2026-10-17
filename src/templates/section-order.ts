@@ -38,11 +38,6 @@ export const TEMPLATE_LAYOUT: Record<string, Layout> = {
 
 export const layoutFor = (templateKey: string): Layout => TEMPLATE_LAYOUT[templateKey] ?? NO_BLOCKS;
 
-/**
- * Templates that already draw optional sections. The editor says so for the others, so nobody expects a section to
- * show on a template whose Standard design is not built yet. Add a template here when its sections are converted.
- */
-export const TEMPLATES_WITH_SECTIONS: ReadonlySet<string> = new Set<string>();
 
 /**
  * The full order for a page: built-in block ids and section kinds. With no saved order, the template's default

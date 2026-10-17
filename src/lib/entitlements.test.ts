@@ -24,6 +24,14 @@ describe("tiers", () => {
   });
 });
 
+describe("design", () => {
+  it("gives Starter its Starter design, and Standard and Custom the Standard design", () => {
+    expect(starter.design).toBe("starter");
+    expect(standard.design).toBe("standard");
+    expect(custom.design).toBe("standard");
+  });
+});
+
 describe("getEntitlements: tier table", () => {
   it("Starter", () => {
     expect(starter).toMatchObject({

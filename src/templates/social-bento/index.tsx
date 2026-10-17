@@ -10,7 +10,8 @@ import { displayUrl } from "../shared/model";
 import type { TemplateProps } from "../types";
 import { bentoHand, bentoMono, spaceGrotesk } from "./fonts";
 import { QrSheet, SaveButton, ShareTile, ThemeTile, ToastProvider } from "./interactive";
-import { SOLID_TYPES, buildBentoModel, tileHandle, type BentoTile } from "./model";
+import { SOLID_TYPES, buildBentoModel, buildStandardModel, tileHandle, type BentoTile } from "./model";
+import { SectionBlock } from "./sections";
 import "./social-bento.css";
 
 const span = (t: { colSpan: number; rowSpan: number }, i: number): CSSProperties =>
@@ -80,12 +81,14 @@ function Tile({ tile, index, showPhoneNumbers }: { tile: BentoTile; index: numbe
 export function SocialBentoTemplate({ data, theme, meta }: TemplateProps) {
   const { profile, contact, style } = data;
   const m = buildBentoModel(data);
+  const standard = meta.design === "standard" ? buildStandardModel(data) : null;
 
   return (
     <ThemeScope
       theme={theme}
       accent={style.accent}
       template="social-bento"
+      attrs={standard ? { "data-design": "standard" } : undefined}
       className={`${spaceGrotesk.variable} ${bentoHand.variable} ${bentoMono.variable}`}
     >
       <ToastProvider>
@@ -167,6 +170,15 @@ export function SocialBentoTemplate({ data, theme, meta }: TemplateProps) {
               ),
             )}
           </div>
+
+          {standard && standard.order.length > 0 && (
+            <div className="pb-extras">
+              {standard.order.map((kind) => {
+                const section = standard.blocks[kind];
+                return section ? <SectionBlock key={kind} section={section} /> : null;
+              })}
+            </div>
+          )}
 
           <section className="pb-contact">
             <div>

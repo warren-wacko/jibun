@@ -57,6 +57,27 @@
   --sticky: var(--accent);
 }
 
+/* The accent as an icon colour and a soft tint (the wins list): itself when it shows on the page, otherwise mixed toward
+   black (light page) or white (dark page). */
+[data-template="student-notebook"] {
+  --accent-text: var(--accent);
+  --accent-soft: color-mix(in srgb, var(--accent) 30%, transparent);
+  --band-pink: #ff8fb1;
+  --band-blue: #7cc4ff;
+}
+
+[data-template="student-notebook"][data-theme="dark"] {
+  --accent-soft: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+[data-template="student-notebook"][data-theme="light"][data-weak-on-light] {
+  --accent-text: color-mix(in srgb, var(--accent) 45%, black);
+}
+
+[data-template="student-notebook"][data-theme="dark"][data-weak-on-dark] {
+  --accent-text: color-mix(in srgb, var(--accent) 45%, white);
+}
+
 /* ---------- Base ---------- */
 .pn {
   position: relative;
@@ -780,5 +801,312 @@
   }
   .pn-flip {
     transition: none;
+  }
+}
+
+/* ---------- Standard design ---------- */
+.pn-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pn-save-compact {
+  justify-content: center;
+  gap: 8px;
+  padding: 0;
+  font-size: 16px;
+}
+
+.pn-resume {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+  height: 58px;
+  border-radius: 14px;
+  background: var(--accent);
+  color: var(--chip-ink);
+  box-shadow:
+    3px 3px 0 var(--shadow-ink),
+    inset 0 0 0 1.5px var(--text);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+/* Three small facts under the About paper. */
+.pn-info {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: 8px;
+  padding: 30px 20px 0;
+}
+
+.pn-info > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 10px;
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1.5px var(--border);
+}
+
+.pn-info-label {
+  font-family: var(--font-notebook-mono), ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.pn-info-value {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.pn-sec-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 22px;
+}
+
+/* Projects: swipeable cards. */
+.pn-projects {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 36px 0 0;
+}
+
+.pn-swipe {
+  font-family: var(--font-hand), cursive;
+  font-size: 20px;
+  color: var(--text-muted);
+}
+
+.pn-cards {
+  display: flex;
+  gap: 14px;
+  padding: 6px 22px 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.pn-project {
+  display: flex;
+  flex: 0 0 246px;
+  flex-direction: column;
+  overflow: hidden;
+  scroll-snap-align: start;
+  border-radius: 6px;
+  background: var(--paper);
+  box-shadow:
+    3px 3px 0 var(--shadow-ink),
+    inset 0 0 0 1.5px var(--text);
+  transform: rotate(-1.5deg);
+}
+
+.pn-project[data-i="1"] {
+  transform: rotate(1deg);
+}
+.pn-project[data-i="2"] {
+  transform: rotate(-0.5deg);
+}
+
+.pn-project-band {
+  display: block;
+  height: 8px;
+  background: var(--accent);
+}
+
+.pn-project[data-i="1"] .pn-project-band {
+  background: var(--band-pink);
+}
+.pn-project[data-i="2"] .pn-project-band {
+  background: var(--band-blue);
+}
+
+.pn-project-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 14px 16px;
+}
+
+.pn-project-top {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pn-project-title {
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.pn-project-desc {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+/* Skills: stickers. */
+.pn-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 26px 22px 0;
+}
+
+.pn-stickers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pn-stickers li {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1.5px var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.pn-stickers li[data-i="0"] {
+  background: var(--accent);
+  color: var(--chip-ink);
+  transform: rotate(-1.5deg);
+}
+
+.pn-stickers li[data-i="1"] {
+  transform: rotate(1deg);
+}
+
+/* Wins and orgs. */
+.pn-wins {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 34px 22px 0;
+}
+
+.pn-win-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1.5px var(--border);
+}
+
+.pn-win-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+  min-height: 64px;
+  padding: 12px 14px;
+}
+
+.pn-win-list li + li {
+  box-shadow: inset 0 1px 0 var(--border);
+}
+
+.pn-win-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 19px;
+  color: var(--accent-text);
+  background: var(--accent-soft);
+}
+
+.pn-win-text {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pn-win-title {
+  font-size: 15px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.pn-win-sub {
+  font-size: 13px;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+/* Find me online. */
+.pn-find {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 34px 22px 0;
+}
+
+.pn-online {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pn-online-tile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  height: 60px;
+  padding: 0 12px;
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1.5px var(--border);
+}
+
+.pn-online-name {
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* The Standard footer has room for its settings button (not used here), so it is taller. */
+[data-template="student-notebook"][data-design="standard"] .pn-footer {
+  box-sizing: border-box;
+  align-items: center;
+  min-height: 104px;
+  padding: 40px 22px 20px;
+}
+
+/* On the narrowest phones two link tiles per row are too tight for names like WhatsApp: use one per row. */
+@media (max-width: 340px) {
+  .pn-online {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

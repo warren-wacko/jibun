@@ -1006,3 +1006,323 @@
     animation: none;
   }
 }
+
+/* ---------- Standard design: tape of interests, record, photo dump, org cards ---------- */
+.pk-extras {
+  display: flex;
+  flex-direction: column;
+}
+
+.pk-block {
+  padding: 40px 16px 0;
+}
+
+.pk-strip {
+  display: flex;
+  align-items: center;
+  height: 46px;
+  margin: 40px -10px 0;
+  overflow: hidden;
+  background: var(--tape);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transform: rotate(-2deg);
+}
+
+.pk-strip-track {
+  display: flex;
+  width: max-content;
+  animation: pk-marquee 22s linear infinite;
+}
+
+.pk-strip-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 14px;
+  color: var(--on-accent);
+  font-family: var(--font-archivo-black), sans-serif;
+  font-size: 17px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pk-strip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--on-accent);
+}
+
+.pk-song {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 176px;
+  overflow: hidden;
+  background-color: var(--kraft);
+  background-image: radial-gradient(rgba(90, 60, 30, 0.18) 1px, transparent 1.5px);
+  background-size: 6px 6px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.14);
+  color: var(--kraft-ink);
+  transform: rotate(-1deg);
+}
+
+.pk-record {
+  position: absolute;
+  left: -24px;
+  top: 13px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+
+.pk-record:focus-visible {
+  outline: 2px dashed var(--focus);
+  outline-offset: 2px;
+}
+
+.pk-record-disc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, var(--black) 0 2px, #1e1e1e 2px 4px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+}
+
+.pk-record:hover .pk-record-disc,
+.pk-record:focus-visible .pk-record-disc {
+  animation: pk-spin 3.2s linear infinite;
+}
+
+.pk-record-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.pk-record-label span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--black);
+}
+
+.pk-song-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  margin-left: 140px;
+  padding-right: 16px;
+}
+
+.pk-song-hand {
+  font-family: var(--font-scrap-hand), cursive;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.pk-song-title {
+  overflow: hidden;
+  font-family: var(--font-gloock), Georgia, serif;
+  font-size: 22px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pk-song-artist {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pk-song-badge {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 3px 8px;
+  background: var(--black);
+  color: var(--cream);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.pk-dump-wrap,
+.pk-orgs-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pk-orgs-wrap {
+  gap: 14px;
+  padding-top: 30px;
+}
+
+.pk-heading {
+  padding: 0 6px;
+  font-family: var(--font-scrap-hand), cursive;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.pk-heading span {
+  padding: 0 6px;
+  background: var(--highlight);
+}
+
+.pk-dump {
+  position: relative;
+  height: calc(var(--h) * var(--px));
+}
+
+.pk-polaroid {
+  position: absolute;
+  top: calc(var(--y) * var(--px));
+  left: calc(var(--x) * var(--px));
+  box-sizing: border-box;
+  width: calc(136 * var(--px));
+  margin: 0;
+  padding: 7px 7px 32px;
+  background: var(--note-paper);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
+  color: var(--ink);
+  transform: rotate(var(--r));
+}
+
+.pk-polaroid-tape {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  width: 48px;
+  height: 16px;
+  margin-left: -24px;
+  background: var(--tape);
+  opacity: 0.85;
+  transform: rotate(var(--tr));
+}
+
+.pk-polaroid-photo {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #ede6d8;
+}
+
+.pk-polaroid-photo img {
+  object-fit: cover;
+}
+
+.pk-polaroid figcaption {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  left: 4px;
+  overflow: hidden;
+  font-family: var(--font-scrap-hand), cursive;
+  font-size: 19px;
+  font-weight: 700;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pk-orgs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: calc(10 * var(--px));
+}
+
+.pk-org {
+  box-sizing: border-box;
+  width: calc(110 * var(--px));
+  padding: 8px;
+  border: 6px dotted var(--bg);
+  background: var(--paper);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  color: var(--ink);
+  transform: rotate(-4deg);
+}
+
+.pk-org[data-i="1"] {
+  transform: rotate(2deg);
+}
+
+.pk-org[data-i="2"] {
+  transform: rotate(-1deg);
+}
+
+.pk-org-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 92px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-archivo-black), sans-serif;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.pk-org[data-i="1"] .pk-org-art {
+  background: var(--black);
+  color: var(--cream);
+}
+
+.pk-org[data-i="2"] .pk-org-art {
+  background: var(--kraft);
+  color: var(--kraft-ink);
+}
+
+.pk-org-text {
+  padding-top: 6px;
+  text-align: center;
+}
+
+.pk-org-role {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.pk-org-name {
+  font-size: 11px;
+  line-height: 1.2;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+@keyframes pk-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes pk-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pk-strip-track,
+  .pk-record:hover .pk-record-disc,
+  .pk-record:focus-visible .pk-record-disc {
+    animation: none;
+  }
+}

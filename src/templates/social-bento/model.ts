@@ -1,5 +1,7 @@
-import type { PageData, SocialLink, SocialType } from "@/lib/page-schema";
+import type { PageData, Section, SocialLink, SocialType } from "@/lib/page-schema";
 import { initials } from "../shared/model";
+import { resolveOrder } from "../section-order";
+import { supportedSections } from "../supported-sections";
 import { ICON_TYPES, contactLine, greetingName, pickHero, tileHandle } from "../shared/social";
 
 // These live in ../shared/social (the scrapbook template uses them too); re-exported for this template.
@@ -97,3 +99,56 @@ export function buildBentoModel(data: PageData) {
   };
 }
 
+/* ---------- Standard design ---------- */
+
+type StandardKind = "interests" | "song" | "gallery" | "orgs";
+
+/**
+ * The Standard design's extra blocks: the page's interests, song, photos and orgs, in the design's own order
+ * (or the page's saved order). Kinds the design has no block for are left out.
+ */
+export function buildStandardModel(data: PageData) {
+  const ok = supportedSections("social-bento");
+  const blocks: Partial<Record<StandardKind, Section>> = {};
+  for (const s of data.sections) {
+    if (ok.includes(s.kind) && (s.kind === "interests" || s.kind === "song" || s.kind === "gallery" || s.kind === "orgs")) blocks[s.kind] ??= s;
+  }
+  const canonical = (["interests", "song", "gallery", "orgs"] as const).filter((k) => k in blocks);
+  const order = resolveOrder("social-bento", canonical, data.style.sectionOrder).filter((k): k is StandardKind => k in blocks);
+  return { blocks, order };
+}
+
+/** The interests band scrolls, so the list is repeated until one copy is wider than the band, then doubled for a seamless loop. */
+export function marqueeItems(items: readonly string[], minItems = 14): string[] {
+  if (items.length === 0) return [];
+  const copies = Math.ceil(minItems / items.length);
+  const one = Array.from({ length: copies }, () => items).flat();
+  return [...one, ...one];
+}
+
+/** Where each photo of the photo dump sits (design pixels in a 366-wide box) and how it is turned. */
+const DUMP = [
+  { x: 14, y: 52, rot: -7 },
+  { x: 120, y: 44, rot: 4 },
+  { x: 218, y: 62, rot: -3 },
+  { x: 40, y: 196, rot: 5 },
+  { x: 178, y: 200, rot: -5 },
+] as const;
+/** More than five photos go on further "pages" of the same scatter, this far below the previous one. */
+const DUMP_PAGE = 300;
+/** A photo card is 155px tall; the box leaves 11px below the lowest one. */
+const DUMP_CARD_BOTTOM = 166;
+
+export function dumpLayout(count: number) {
+  const cards = Array.from({ length: count }, (_, i) => {
+    const base = DUMP[i % DUMP.length];
+    return { x: base.x, y: base.y + Math.floor(i / DUMP.length) * DUMP_PAGE, rot: base.rot };
+  });
+  const height = cards.length ? Math.max(...cards.map((c) => c.y)) + DUMP_CARD_BOTTOM : 0;
+  return { cards, height };
+}
+
+/** An org chip: the two initials of the org, the role on top and the org under it (or the org alone when there is no role). */
+export function orgChip(o: { name: string; role?: string }) {
+  return { initials: initials(o.name), line1: o.role ?? o.name, line2: o.role ? o.name : null };
+}

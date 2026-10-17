@@ -50,4 +50,4 @@ export const findFontPair = (templateKey: string, id: string): FontPair | undefi
  * Templates that already apply a chosen pair. The editor says so for the others, so nobody expects the pair to show on a
  * template whose Standard design is not built yet. Add a template here when its pairs are applied.
  */
-export const TEMPLATES_WITH_FONT_PAIRS: ReadonlySet<string> = new Set<string>();
+export const TEMPLATES_WITH_FONT_PAIRS: ReadonlySet<string> = new Set<string>(["pro-classic", "pro-magazine", "pro-signature", "pro-company"]);

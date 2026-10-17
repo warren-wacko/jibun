@@ -67,3 +67,22 @@ describe("accents", () => {
     expect(resolveAccent("#101010").tone).toBe("dark");
   });
 });
+
+describe("resolveAccent: small-text flags", () => {
+  it("marks a pale accent as weak text on a light page and a dark one as weak on a dark page", () => {
+    const pearl = resolveAccent("pearl");
+    expect(pearl.textOnLight).toBe(false);
+    expect(pearl.textOnDark).toBe(true);
+    const graphite = resolveAccent("graphite");
+    expect(graphite.textOnLight).toBe(true);
+    expect(graphite.textOnDark).toBe(false);
+  });
+
+  it("agrees with the contrast it describes", () => {
+    for (const p of ACCENT_PRESETS) {
+      const r = resolveAccent(p.id);
+      expect(r.textOnLight, p.id).toBe(contrastRatio(r.accent, "#f4f5f7") >= 4.5);
+      expect(r.textOnDark, p.id).toBe(contrastRatio(r.accent, "#17191c") >= 4.5);
+    }
+  });
+});

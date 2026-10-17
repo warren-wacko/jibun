@@ -1,5 +1,7 @@
-import type { PageData, SocialLink } from "@/lib/page-schema";
+import type { PageData, Section, SocialLink } from "@/lib/page-schema";
 import { initials } from "../shared/model";
+import { resolveOrder } from "../section-order";
+import { supportedSections } from "../supported-sections";
 import { ICON_TYPES, contactLine, greetingName, pickHero } from "../shared/social";
 
 export type Letter = { ch: string; style: number } | { space: true };
@@ -133,4 +135,52 @@ export function buildScrapbookModel(data: PageData) {
         ? { call: `tel:${contact.phone}`, text: contact.sms ? `sms:${contact.phone}` : null }
         : null,
   };
+}
+
+/* ---------- Standard design ---------- */
+
+type StandardKind = "interests" | "song" | "gallery" | "orgs";
+
+/** The Standard design's extra blocks, in the design's own order or the page's saved order. */
+export function buildStandardModel(data: PageData) {
+  const ok = supportedSections("social-scrapbook");
+  const blocks: Partial<Record<StandardKind, Section>> = {};
+  for (const s of data.sections) {
+    if (ok.includes(s.kind) && (s.kind === "interests" || s.kind === "song" || s.kind === "gallery" || s.kind === "orgs")) blocks[s.kind] ??= s;
+  }
+  const canonical = (["interests", "song", "gallery", "orgs"] as const).filter((k) => k in blocks);
+  const order = resolveOrder("social-scrapbook", canonical, data.style.sectionOrder).filter((k): k is StandardKind => k in blocks);
+  return { blocks, order };
+}
+
+/** The tape scrolls: the list is repeated until one copy is wider than the page, then doubled for a seamless loop. */
+export function tapeItems(items: readonly string[], minItems = 10): string[] {
+  if (items.length === 0) return [];
+  const one = Array.from({ length: Math.ceil(minItems / items.length) }, () => items).flat();
+  return [...one, ...one];
+}
+
+/** Where each photo of the photo dump sits (design pixels on a 390-wide page), how it is turned, and how its tape is. */
+const DUMP = [
+  { x: 10, y: 16, rot: -7, tape: -5 },
+  { x: 118, y: 6, rot: 4, tape: 6 },
+  { x: 214, y: 28, rot: -3, tape: -3 },
+  { x: 36, y: 168, rot: 5, tape: 4 },
+  { x: 176, y: 178, rot: -5, tape: -6 },
+] as const;
+const DUMP_PAGE = 300;
+/** A photo is 161px tall; the box leaves 11px under the lowest one. */
+const DUMP_CARD_BOTTOM = 172;
+
+export function dumpLayout(count: number) {
+  const cards = Array.from({ length: count }, (_, i) => {
+    const base = DUMP[i % DUMP.length];
+    return { ...base, y: base.y + Math.floor(i / DUMP.length) * DUMP_PAGE };
+  });
+  return { cards, height: cards.length ? Math.max(...cards.map((c) => c.y)) + DUMP_CARD_BOTTOM : 0 };
+}
+
+/** An org ticket: initials, role on top and the org under it (or the org alone when there is no role). */
+export function orgTicket(o: { name: string; role?: string }) {
+  return { initials: initials(o.name), line1: o.role ?? o.name, line2: o.role ? o.name : null };
 }

@@ -16,6 +16,8 @@ const VIEWS = [
   { label: "Dark", query: "theme=dark" },
   { label: "Light, sparse data", query: "theme=light&data=sparse" },
   { label: "Dark, sparse data", query: "theme=dark&data=sparse" },
+  { label: "Standard, light", query: "theme=light&design=standard" },
+  { label: "Standard, dark", query: "theme=dark&design=standard" },
 ];
 
 export default function PreviewIndex() {

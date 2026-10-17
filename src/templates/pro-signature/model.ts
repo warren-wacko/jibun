@@ -1,12 +1,20 @@
 import { buildActions, type Action } from "@/components/ActionRow";
-import type { PageData } from "@/lib/page-schema";
+import type { PageData, Section, SectionKind } from "@/lib/page-schema";
 import { groupSocials } from "@/lib/socials";
 import { initials, pickFeatured } from "../shared/model";
+import { resolveOrder } from "../section-order";
+import { supportedSections } from "../supported-sections";
 
 export { initials };
 
 /** Visual order of the action bar in the design. */
 const ACTION_ORDER: readonly Action["key"][] = ["call", "email", "text", "directions", "book"];
+
+/** "Software Engineer · Full-Stack Developer" -> its two parts (also split on | / and dashes). */
+export function titleParts(title: string | undefined): string[] {
+  if (!title) return [];
+  return title.split(/\s+(?:·|•|\||\/|—|–)\s+/).map((p) => p.trim()).filter(Boolean);
+}
 
 /** The handwritten sign-off: the page's `signature` field, else the first name. */
 export function signatureText(profile: PageData["profile"]): string {
@@ -29,10 +37,40 @@ export function buildSignatureModel(data: PageData) {
     initials: initials(profile.fullName),
     cardLabel: [profile.company, profile.location].filter(Boolean).join(" · "),
     signature: signatureText(profile),
+    /** The scrolling line under the card: what the person does, whether they are open to work, and where. Empty = no line. */
+    ticker: [...titleParts(profile.title), profile.availability?.trim(), profile.location?.trim()].filter((w): w is string => Boolean(w)),
     actions,
     featured,
     email: contact.email ?? null,
     profiles,
     messaging,
   };
+}
+
+/** Headings of the blocks and sections, as the Standard design labels them. */
+export const BLOCK_TITLES: Record<string, string> = {
+  about: "About",
+  connect: "Connect",
+  profiles: "Profiles to view",
+  messages: "Ways to message",
+  gallery: "Gallery",
+  portfolio: "Portfolio",
+  services: "Services",
+  resume: "Résumé",
+  experience: "Experience",
+  skills: "Skills",
+  stats: "At a glance",
+};
+
+/**
+ * The order the page's blocks are drawn in, and the optional sections to draw. The Starter design has no optional
+ * sections and keeps the fixed order; the Standard design follows the page's order and draws the kinds it has a
+ * design for (the rest stay saved but hidden).
+ */
+export function buildBlocks(data: PageData, design: "starter" | "standard"): { order: string[]; sections: Partial<Record<SectionKind, Section>> } {
+  if (design !== "standard") return { order: resolveOrder("pro-signature", []), sections: {} };
+  const drawn = data.sections.filter((s) => supportedSections("pro-signature").includes(s.kind));
+  const sections: Partial<Record<SectionKind, Section>> = {};
+  for (const s of drawn) sections[s.kind] ??= s;
+  return { order: resolveOrder("pro-signature", Object.keys(sections), data.style.sectionOrder), sections };
 }

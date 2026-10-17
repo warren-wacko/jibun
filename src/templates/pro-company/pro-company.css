@@ -74,6 +74,32 @@
   --scrim: rgba(15, 23, 42, 0.55);
 }
 
+/* Fonts. The Starter design uses Inter for everything; a Standard page can choose a pair.
+   --head-weight is the weight of the headings in that pair. */
+[data-template="pro-company"] {
+  --ff-head: var(--font-inter), system-ui, sans-serif;
+  --ff-body: var(--font-inter), system-ui, sans-serif;
+  --head-weight: 700;
+}
+
+[data-template="pro-company"][data-font-pair="classic"] {
+  --ff-head: var(--font-source-serif), Georgia, serif;
+  --ff-body: var(--font-source-sans), system-ui, sans-serif;
+  --head-weight: 700;
+}
+
+[data-template="pro-company"][data-font-pair="modern"] {
+  --ff-head: var(--font-manrope), system-ui, sans-serif;
+  --ff-body: var(--font-manrope), system-ui, sans-serif;
+  --head-weight: 800;
+}
+
+[data-template="pro-company"][data-font-pair="executive"] {
+  --ff-head: var(--font-plex-sans), system-ui, sans-serif;
+  --ff-body: var(--font-plex-sans), system-ui, sans-serif;
+  --head-weight: 600;
+}
+
 /* ---------- Base ---------- */
 .pco {
   position: relative;
@@ -84,7 +110,7 @@
   min-height: 100dvh;
   margin: 0 auto;
   overflow: hidden;
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--ff-body);
   line-height: normal;
   color: var(--text);
   background: var(--bg);
@@ -121,6 +147,7 @@
 }
 
 .pco-watermark {
+  font-family: var(--ff-head);
   position: absolute;
   left: 50%;
   top: 40px;
@@ -312,10 +339,11 @@
 }
 
 .pco-name {
+  font-family: var(--ff-head);
   margin: 0;
   font-size: 32px;
   line-height: 1.08;
-  font-weight: 700;
+  font-weight: var(--head-weight);
   letter-spacing: -0.8px;
   overflow-wrap: anywhere;
 }
@@ -453,8 +481,9 @@
 }
 
 .pco-sec-title {
+  font-family: var(--ff-head);
   font-size: 19px;
-  font-weight: 700;
+  font-weight: var(--head-weight);
   letter-spacing: -0.3px;
   white-space: nowrap;
 }
@@ -509,8 +538,9 @@
 }
 
 .pco-phone-number {
+  font-family: var(--ff-head);
   font-size: 23px;
-  font-weight: 700;
+  font-weight: var(--head-weight);
   letter-spacing: -0.2px;
   white-space: nowrap;
 }
@@ -784,6 +814,7 @@
 
 .pco-about-quote p {
   position: relative;
+  font-family: var(--ff-head);
   margin: 14px 0 0;
   font-size: 19px;
   line-height: 1.5;
@@ -1059,8 +1090,9 @@
 }
 
 .pco-sheet-title {
+  font-family: var(--ff-head);
   font-size: 21px;
-  font-weight: 700;
+  font-weight: var(--head-weight);
 }
 
 .pco-sheet-qr {
@@ -1189,4 +1221,334 @@
   .pco-toast {
     animation: none;
   }
+}
+
+/* ---------- Standard design ---------- */
+.pco-box {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+}
+
+/* Gallery */
+.pco-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pco-gallery li {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.pco-gallery img {
+  object-fit: cover;
+}
+
+/* Portfolio */
+.pco-works {
+  display: flex;
+  flex-direction: column;
+}
+
+.pco-work {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.pco-work + .pco-work {
+  box-shadow: inset 0 1px 0 var(--border);
+}
+
+.pco-work-thumb {
+  display: block;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.pco-work-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pco-work-text {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pco-work-title {
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.pco-work-desc {
+  font-size: 13px;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+.pco-work-arrow {
+  flex-shrink: 0;
+  color: var(--text-dim);
+}
+
+/* Services */
+.pco-services {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pco-services li {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 14px 14px 16px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.pco-service-n {
+  flex-shrink: 0;
+  width: 32px;
+  font-family: var(--ff-head);
+  font-size: 26px;
+  line-height: 1;
+  font-weight: var(--head-weight);
+  color: var(--brand-text);
+  opacity: 0.35;
+}
+
+.pco-service-body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pco-service-name {
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.pco-price {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  height: 26px;
+  margin-top: 6px;
+  padding: 0 10px;
+  border-radius: 13px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brand-text);
+  background: var(--brand-soft);
+}
+
+/* Resume */
+.pco-resume {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 12px;
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.pco-resume-text {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.pco-resume-title {
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.pco-resume-sub {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* Experience */
+.pco-timeline {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pco-timeline li {
+  display: flex;
+  gap: 14px;
+}
+
+.pco-time-rail {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  align-items: center;
+  width: 14px;
+}
+
+.pco-time-rail::after {
+  content: "";
+  flex-grow: 1;
+  width: 2px;
+  margin-top: 6px;
+  background: var(--border);
+}
+
+.pco-timeline li:last-child .pco-time-rail::after {
+  background: transparent;
+}
+
+.pco-time-dot {
+  box-sizing: border-box;
+  width: 12px;
+  height: 12px;
+  margin-top: 5px;
+  border-radius: 6px;
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+.pco-timeline li.is-current .pco-time-dot {
+  background: var(--brand-text);
+}
+
+.pco-time-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding-bottom: 18px;
+}
+
+.pco-timeline li:last-child .pco-time-body {
+  padding-bottom: 0;
+}
+
+.pco-time-years {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: var(--brand-text);
+  overflow-wrap: anywhere;
+}
+
+.pco-time-role {
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.pco-time-org {
+  font-size: 13px;
+  color: var(--text-soft);
+  overflow-wrap: anywhere;
+}
+
+/* Skills */
+.pco-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pco-tags li {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-soft);
+  background: var(--bg);
+  overflow-wrap: anywhere;
+}
+
+/* Stats */
+.pco-stats {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  margin: 0;
+}
+
+.pco-stat {
+  display: flex;
+  flex-direction: column-reverse; /* the figure above its label, label first in the markup */
+  justify-content: flex-end;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.pco-stat:nth-child(3n + 2),
+.pco-stat:nth-child(3n) {
+  box-shadow: inset 1px 0 0 var(--border);
+}
+
+.pco-stat:nth-child(n + 4) {
+  padding-top: 12px;
+}
+
+.pco-stat dd {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--brand-text);
+  overflow-wrap: anywhere;
+}
+
+.pco-stat dt {
+  font-size: 12px;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+/* The Standard footer has room for its settings button (not used here), so it is taller. */
+[data-design="standard"] .pco-footer {
+  box-sizing: border-box;
+  justify-content: center;
+  min-height: 92px;
+  padding: 28px 20px 20px;
 }

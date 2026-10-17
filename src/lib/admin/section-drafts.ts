@@ -34,6 +34,8 @@ export type SectionSpec = {
   /** Lines: how many lines and how long each may be. */
   maxLines?: number;
   maxLine?: number;
+  /** Link: other text boxes next to the link: the draft field that holds them, and the key in the stored section. */
+  extras?: readonly { field: "label" | "text"; key: string; label: string; max: number; placeholder?: string }[];
   /** Link: the key of the link in the stored section, and its label. */
   urlKey?: string;
   urlLabel?: string;
@@ -92,6 +94,7 @@ export const SECTION_SPECS: Record<SectionKind, SectionSpec> = {
     urlKey: "fileUrl",
     urlLabel: "File link",
     urlPlaceholder: "https://…/resume.pdf",
+    extras: [{ field: "label", key: "label", label: "Button text (optional)", max: 60, placeholder: "Download my résumé" }],
     available: true,
   },
   experience: {
@@ -182,6 +185,10 @@ export const SECTION_SPECS: Record<SectionKind, SectionSpec> = {
     urlKey: "spotifyUrl",
     urlLabel: "Spotify link",
     urlPlaceholder: "https://open.spotify.com/track/…",
+    extras: [
+      { field: "label", key: "title", label: "Song title (optional)", max: 80 },
+      { field: "text", key: "artist", label: "Artist (optional)", max: 80 },
+    ],
     available: true,
   },
 };
@@ -230,7 +237,7 @@ export function sectionToDraft(section: Section, id: string): SectionDraft {
     base.text = ((stored.items as string[] | undefined) ?? []).join("\n");
   } else if (spec.mode === "link" && spec.urlKey) {
     base.url = String(stored[spec.urlKey] ?? "");
-    base.label = section.kind === "resume" ? String(stored.label ?? "") : "";
+    for (const x of spec.extras ?? []) base[x.field] = String(stored[x.key] ?? "");
   }
   return base;
 }
@@ -264,7 +271,7 @@ export function draftToCandidate(draft: SectionDraft): { candidate: Record<strin
   if (spec.mode === "lines") return { candidate: { kind: draft.kind, items: draftLines(draft.text) }, itemMap };
   if (spec.mode === "link" && spec.urlKey) {
     const candidate: Record<string, unknown> = { kind: draft.kind, [spec.urlKey]: draft.url.trim() };
-    if (draft.kind === "resume") candidate.label = blank(draft.label);
+    for (const x of spec.extras ?? []) candidate[x.key] = blank(draft[x.field]);
     return { candidate, itemMap };
   }
   return { candidate: { kind: draft.kind }, itemMap };

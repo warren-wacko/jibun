@@ -67,6 +67,57 @@
   --chip-ink: var(--bg);
 }
 
+/* Fonts. The Starter design uses one family for headings and text; a Standard page can choose a pair. */
+[data-template="pro-signature"] {
+  --ff-head: var(--font-jakarta), system-ui, sans-serif;
+  --ff-body: var(--font-jakarta), system-ui, sans-serif;
+  --ff-mono: var(--font-dm-mono), ui-monospace, monospace;
+}
+
+[data-template="pro-signature"][data-font-pair="editorial"] {
+  --ff-head: var(--font-fraunces), Georgia, serif;
+  --ff-body: var(--font-manrope), system-ui, sans-serif;
+}
+
+[data-template="pro-signature"][data-font-pair="technical"] {
+  --ff-head: var(--font-space-grotesk), system-ui, sans-serif;
+  --ff-body: var(--font-space-grotesk), system-ui, sans-serif;
+}
+
+[data-template="pro-signature"][data-font-pair="bold"] {
+  --ff-head: var(--font-syne), system-ui, sans-serif;
+  --ff-body: var(--font-dm-sans), system-ui, sans-serif;
+}
+
+/* The accent as small text (4.5:1): itself when it reads on the page, otherwise mixed toward the text colour. */
+[data-template="pro-signature"] {
+  --accent-text: var(--accent);
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --accent-graphic: var(--accent);
+  --resume-chip: rgba(255, 255, 255, 0.12);
+  --resume-shadow: 0 14px 30px rgba(18, 20, 23, 0.14);
+}
+
+[data-template="pro-signature"][data-theme="dark"] {
+  --accent-soft: color-mix(in srgb, var(--accent) 20%, transparent);
+  --resume-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+[data-template="pro-signature"][data-accent-tone="light"] {
+  --resume-chip: rgba(17, 19, 21, 0.08);
+}
+
+[data-template="pro-signature"][data-theme="light"][data-weak-text-on-light],
+[data-template="pro-signature"][data-theme="dark"][data-weak-text-on-dark] {
+  --accent-text: color-mix(in srgb, var(--accent) 35%, var(--text));
+}
+
+/* The accent as a small graphic (dots): itself when it shows against the page, otherwise the text colour. */
+[data-template="pro-signature"][data-theme="light"][data-weak-on-light],
+[data-template="pro-signature"][data-theme="dark"][data-weak-on-dark] {
+  --accent-graphic: var(--text);
+}
+
 /* ---------- Base ---------- */
 .ps {
   position: relative;
@@ -77,7 +128,7 @@
   min-height: 100dvh;
   margin: 0 auto;
   overflow: hidden;
-  font-family: var(--font-jakarta), system-ui, sans-serif;
+  font-family: var(--ff-body);
   line-height: normal;
   color: var(--text);
   background: var(--bg);
@@ -104,11 +155,11 @@
 }
 
 .ps-mono {
-  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
 }
 
 .ps-label {
-  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 11px;
   letter-spacing: 2px;
   color: var(--text-muted);
@@ -129,6 +180,7 @@
 }
 
 .ps-watermark {
+  font-family: var(--ff-head);
   position: absolute;
   inset: 70px 0 auto 0;
   text-align: center;
@@ -153,7 +205,7 @@
 
 .ps-brand {
   text-align: center;
-  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 11px;
   letter-spacing: 2px;
   color: var(--text-muted);
@@ -292,6 +344,7 @@
 }
 
 .ps-name {
+  font-family: var(--ff-head);
   font-size: 26px;
   line-height: 1.05;
   font-weight: 800;
@@ -310,7 +363,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 10px;
   letter-spacing: 1.4px;
   text-transform: uppercase;
@@ -323,7 +376,7 @@
 }
 
 .ps-back-label {
-  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 10px;
   letter-spacing: 2px;
   opacity: 0.7;
@@ -354,13 +407,14 @@
 }
 
 .ps-back-name {
+  font-family: var(--ff-head);
   font-size: 20px;
   font-weight: 800;
   overflow-wrap: anywhere;
 }
 
 .ps-back-url {
-  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 11px;
   opacity: 0.7;
   overflow-wrap: anywhere;
@@ -385,6 +439,55 @@
 }
 
 /* ---------- Save and actions ---------- */
+/* The scrolling line of specialties under the card. */
+.ps-ticker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  box-sizing: content-box; /* 46px plus the two 1px rules, as in the design */
+  height: 46px;
+  margin-top: 24px;
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.ps-ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-left: 18px;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  letter-spacing: 1.6px;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  white-space: nowrap;
+  animation: ps-marquee 26s linear infinite;
+}
+
+.ps-ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.ps-ticker-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 4px;
+  background: var(--accent-graphic);
+}
+
+@keyframes ps-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 .ps-actions {
   position: relative;
   display: flex;
@@ -475,6 +578,7 @@
 
 .ps-quote {
   margin: 0;
+  font-family: var(--ff-head);
   font-size: 22px;
   line-height: 1.38;
   font-weight: 600;
@@ -547,7 +651,7 @@
 }
 
 .ps-row-sub {
-  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 11px;
   color: var(--text-dim);
   overflow-wrap: anywhere;
@@ -591,7 +695,7 @@
   background: var(--surface);
   box-shadow: inset 0 0 0 1px var(--border);
   cursor: pointer;
-  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 11px;
   color: var(--text-soft);
 }
@@ -631,7 +735,7 @@
   gap: 8px;
   margin-top: auto;
   padding: 44px 24px 24px;
-  font-family: var(--font-dm-mono), ui-monospace, monospace;
+  font-family: var(--ff-mono);
   font-size: 10px;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -714,6 +818,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ps-hero,
+  .ps-ticker-track,
   .ps-actions,
   .ps-signature,
   .ps-toast {
@@ -723,4 +828,380 @@
   .ps-dot {
     transition: none;
   }
+}
+
+/* ---------- Standard design ---------- */
+.ps-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Every block shares one rhythm; the first is a little lower. */
+[data-template="pro-signature"][data-design="standard"] [data-block] {
+  padding: 36px 20px 0;
+  gap: 12px;
+}
+
+[data-template="pro-signature"][data-design="standard"] [data-block].ps-first {
+  padding-top: 44px;
+}
+
+[data-design="standard"] .ps-about {
+  gap: 12px;
+}
+
+[data-design="standard"] .ps-about > :not(.ps-label) {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.ps-item-title {
+  font-family: var(--ff-head);
+  font-size: 16px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.ps-item-desc {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+.ps-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Gallery */
+.ps-gallery {
+  display: flex;
+  gap: 12px;
+  margin: 0 -20px;
+  padding: 4px 20px 8px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.ps-gallery-item {
+  position: relative;
+  flex: 0 0 200px;
+  height: 250px;
+  margin: 0;
+  overflow: hidden;
+  scroll-snap-align: center;
+  border-radius: 22px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+  transform: rotate(-1.5deg);
+}
+
+.ps-gallery-item:nth-child(6n + 2) {
+  transform: rotate(1deg);
+}
+.ps-gallery-item:nth-child(6n + 3) {
+  transform: rotate(-0.5deg);
+}
+.ps-gallery-item:nth-child(6n + 4) {
+  transform: rotate(1.5deg);
+}
+.ps-gallery-item:nth-child(6n + 5) {
+  transform: rotate(-1deg);
+}
+.ps-gallery-item:nth-child(6n) {
+  transform: rotate(0.5deg);
+}
+
+.ps-gallery-item img {
+  object-fit: cover;
+}
+
+.ps-gallery-item figcaption {
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 12px;
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  background: var(--bg);
+}
+
+/* Portfolio */
+.ps-work {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px 10px 10px;
+  border-radius: 22px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.ps-work-thumb {
+  display: block;
+  flex-shrink: 0;
+  width: 76px;
+  height: 76px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--bg);
+}
+
+.ps-work-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ps-work-text {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 3px;
+  min-width: 0;
+}
+
+/* Services */
+.ps-service {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 22px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.ps-service-n {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  color: var(--accent-text);
+  background: var(--accent-soft);
+}
+
+.ps-service-name {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.ps-price {
+  flex-shrink: 0;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  color: var(--accent-text);
+  white-space: nowrap;
+}
+
+/* Resume */
+.ps-resume {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 24px;
+  color: var(--on-accent);
+  background: var(--accent);
+  box-shadow: var(--resume-shadow);
+}
+
+.ps-resume-tag {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-end;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 52px;
+  height: 64px;
+  padding-bottom: 9px;
+  border-radius: 10px;
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  background: var(--resume-chip);
+}
+
+.ps-resume-title {
+  font-family: var(--ff-head);
+  font-size: 18px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.ps-resume-sub {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.ps-download {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  color: var(--accent);
+  background: var(--on-accent);
+}
+
+/* Experience */
+.ps-timeline {
+  margin: 0;
+  padding: 18px 18px 0;
+  list-style: none;
+  border-radius: 22px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.ps-timeline li {
+  display: flex;
+  gap: 14px;
+}
+
+.ps-time-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 12px;
+  padding-top: 5px;
+}
+
+.ps-time-rail::after {
+  content: "";
+  flex-grow: 1;
+  width: 2px;
+  margin-top: 4px;
+  border-radius: 1px;
+  background: var(--border);
+}
+
+.ps-timeline li:last-child .ps-time-rail::after {
+  display: none;
+}
+
+.ps-time-dot {
+  box-sizing: border-box;
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 2px var(--text-faint);
+}
+
+.ps-timeline li.is-current .ps-time-dot {
+  background: var(--accent-graphic);
+  box-shadow: none;
+}
+
+.ps-time-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding-bottom: 20px;
+}
+
+.ps-time-years {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+/* Skills */
+.ps-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ps-chips li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  min-height: 38px;
+  padding: 0 16px 0 10px;
+  border-radius: 19px;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+  overflow-wrap: anywhere;
+}
+
+.ps-chip-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--accent-graphic);
+}
+
+/* Stats */
+.ps-stats {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.ps-stat {
+  display: flex;
+  flex-direction: column-reverse; /* the figure above its label, label first in the markup */
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 12px;
+  border-radius: 20px;
+  text-align: center;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.ps-stat dd {
+  margin: 0;
+  font-family: var(--ff-head);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent-text);
+  overflow-wrap: anywhere;
+}
+
+.ps-stat dt {
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+/* The Standard footer has room for its settings button (not used here), so it is taller. */
+[data-design="standard"] .ps-footer {
+  box-sizing: border-box;
+  min-height: 108px;
+  padding: 44px 24px 20px;
+}
+
+.ps-time-body .ps-item-desc {
+  line-height: normal;
 }

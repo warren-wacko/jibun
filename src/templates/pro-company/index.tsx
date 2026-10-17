@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { CSSProperties } from "react";
+import { Fragment, type CSSProperties, type ReactNode } from "react";
 import {
   ArrowUpRightIcon,
   BadgeNfcIcon,
@@ -14,11 +14,13 @@ import { BrandGlyph } from "@/components/SocialIcon";
 import { SOCIAL_LABELS, messagingLabel } from "@/lib/socials";
 import type { SocialLink } from "@/lib/page-schema";
 import { ThemeScope } from "../ThemeScope";
+import { findFontPair } from "../font-pairs";
 import { displayUrl } from "../shared/model";
 import type { TemplateProps } from "../types";
-import { inter } from "./fonts";
+import { FONT_CLASSES } from "./fonts";
 import { CopyButton, QrSheet, SaveButton, ToastProvider, TopShare, TopThemeToggle } from "./interactive";
-import { BADGE_RING_TEXT, buildCompanyModel, type SectionKey } from "./model";
+import { BADGE_RING_TEXT, buildCompanyModel } from "./model";
+import { BARE_KINDS, SectionBody } from "./sections";
 import "./pro-company.css";
 
 const RING_STEP = 360 / BADGE_RING_TEXT.length;
@@ -69,16 +71,95 @@ function RowLink({ s, label }: { s: SocialLink; label: string }) {
 /** Professional / company template: arched portrait with a rotating tap badge, info strip, big contact panels, gradient link tiles. */
 export function ProCompanyTemplate({ data, theme, meta }: TemplateProps) {
   const { profile, contact, style } = data;
-  const m = buildCompanyModel(data);
-  const sectionTitle = (key: SectionKey) => m.sections.find((s) => s.key === key);
+  const design = meta.design ?? "starter";
+  const m = buildCompanyModel(data, design);
+  const fontPair = design === "standard" && style.fontPair && findFontPair("pro-company", style.fontPair) ? style.fontPair : undefined;
+  const sectionTitle = (key: string) => m.sections.find((s) => s.key === key);
 
   const about = sectionTitle("about");
   const connect = sectionTitle("connect");
   const profilesSec = sectionTitle("profiles");
   const messagesSec = sectionTitle("messages");
 
+  // The numbered blocks in page order. "Get in touch" (00) is always first and is not part of the order.
+  const blocks: Record<string, ReactNode> = {
+    about: about && profile.bio && (
+      <section className="pco-sec" data-block="about">
+        <SectionHead num={about.num} title={about.title} />
+        <div className="pco-card pco-about">
+          <div className="pco-about-quote">
+            <span className="pco-quote-mark" aria-hidden="true">
+              “
+            </span>
+            <p>{profile.bio}</p>
+          </div>
+        </div>
+      </section>
+    ),
+    connect: connect && m.featured && (
+      <section className="pco-sec" data-block="connect">
+        <SectionHead num={connect.num} title={connect.title} />
+        <a href={m.featured.url} className="pco-net pco-net-wide" data-net={m.featured.icon ?? "website"} target="_blank" rel="noopener noreferrer">
+          <BrandGlyph type={m.featured.icon} size={140} className="pco-net-ghost" />
+          <span className="pco-net-wide-chip">
+            <BrandGlyph type={m.featured.icon} size={23} />
+          </span>
+          <span className="pco-net-text">
+            <strong>{m.featured.label}</strong>
+            <span>{m.featured.sub}</span>
+          </span>
+          <span className="pco-net-arrow">
+            <ArrowUpRightIcon size={16} strokeWidth={1.9} />
+          </span>
+        </a>
+      </section>
+    ),
+    profiles: profilesSec && (
+      <section className="pco-sec" data-block="profiles">
+        <SectionHead num={profilesSec.num} title={profilesSec.title} />
+        <div className="pco-grid3" style={{ "--cols": Math.min(m.profiles.length, 3) } as CSSProperties}>
+          {m.profiles.map((s) => (
+            <TileLink key={`${s.type}-${s.handle}`} s={s} label={s.handle} />
+          ))}
+        </div>
+      </section>
+    ),
+    messages: messagesSec && (
+      <section className="pco-sec" data-block="messages">
+        <SectionHead num={messagesSec.num} title={messagesSec.title} />
+        <div className="pco-list">
+          {m.messaging.map((s) => (
+            <RowLink key={`${s.type}-${s.handle}`} s={s} label={messagingLabel(s, contact.showPhoneNumbers)} />
+          ))}
+        </div>
+      </section>
+    ),
+  };
+  for (const [kind, section] of Object.entries(m.extra)) {
+    const head = sectionTitle(kind);
+    if (!section || !head) continue;
+    blocks[kind] = (
+      <section className="pco-sec" data-block={kind}>
+        <SectionHead num={head.num} title={head.title} />
+        {BARE_KINDS.has(kind) ? (
+          <SectionBody section={section} />
+        ) : (
+          <div className="pco-card pco-box">
+            <SectionBody section={section} />
+          </div>
+        )}
+      </section>
+    );
+  }
+
   return (
-    <ThemeScope theme={theme} accent={style.accent} template="pro-company" className={inter.variable}>
+    <ThemeScope
+      theme={theme}
+      accent={style.accent}
+      template="pro-company"
+      className={FONT_CLASSES}
+      attrs={{ "data-design": design, "data-font-pair": fontPair }}
+    >
       <ToastProvider>
         <main className="pco">
           <header className="pco-stage">
@@ -239,66 +320,9 @@ export function ProCompanyTemplate({ data, theme, meta }: TemplateProps) {
             </section>
           )}
 
-          {about && profile.bio && (
-            <section className="pco-sec">
-              <SectionHead num={about.num} title={about.title} />
-              <div className="pco-card pco-about">
-                <div className="pco-about-quote">
-                  <span className="pco-quote-mark" aria-hidden="true">
-                    “
-                  </span>
-                  <p>{profile.bio}</p>
-                </div>
-              </div>
-            </section>
-          )}
-
-          {connect && m.featured && (
-            <section className="pco-sec">
-              <SectionHead num={connect.num} title={connect.title} />
-              <a
-                href={m.featured.url}
-                className="pco-net pco-net-wide"
-                data-net={m.featured.icon ?? "website"}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <BrandGlyph type={m.featured.icon} size={140} className="pco-net-ghost" />
-                <span className="pco-net-wide-chip">
-                  <BrandGlyph type={m.featured.icon} size={23} />
-                </span>
-                <span className="pco-net-text">
-                  <strong>{m.featured.label}</strong>
-                  <span>{m.featured.sub}</span>
-                </span>
-                <span className="pco-net-arrow">
-                  <ArrowUpRightIcon size={16} strokeWidth={1.9} />
-                </span>
-              </a>
-            </section>
-          )}
-
-          {profilesSec && (
-            <section className="pco-sec">
-              <SectionHead num={profilesSec.num} title={profilesSec.title} />
-              <div className="pco-grid3" style={{ "--cols": Math.min(m.profiles.length, 3) } as CSSProperties}>
-                {m.profiles.map((s) => (
-                  <TileLink key={`${s.type}-${s.handle}`} s={s} label={s.handle} />
-                ))}
-              </div>
-            </section>
-          )}
-
-          {messagesSec && (
-            <section className="pco-sec">
-              <SectionHead num={messagesSec.num} title={messagesSec.title} />
-              <div className="pco-list">
-                {m.messaging.map((s) => (
-                  <RowLink key={`${s.type}-${s.handle}`} s={s} label={messagingLabel(s, contact.showPhoneNumbers)} />
-                ))}
-              </div>
-            </section>
-          )}
+          {m.sections.map(({ key }) => (
+            <Fragment key={key}>{blocks[key]}</Fragment>
+          ))}
 
           <Footer tagline="Always one tap away." showBranding={meta.showBranding} className="pco-footer" />
         </main>

@@ -39,6 +39,11 @@ export const ICON_PATHS = {
   shareStem: "M12 2v13",
   copyBack: "M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1",
   arrowUpRight: "M7 17 17 7M8 7h9v9",
+  downloadTray: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4",
+  downloadArrow: "m7 10 5 5 5-5M12 15V3",
+  awardRibbon: "M8.2 13.3 7 22l5-3 5 3-1.2-8.7",
+  fileBody: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z",
+  fileDownload: "M14 2v6h6M12 18v-6M9 15l3 3 3-3",
   nfc1: "M8.5 8.5a5 5 0 0 1 0 7",
   nfc2: "M12 5.5a9.5 9.5 0 0 1 0 13",
   nfc3: "M15.5 2.5a14 14 0 0 1 0 19",
@@ -116,6 +121,27 @@ export const CopyIcon = (p: IconProps) => (
   <Svg {...p}>
     <rect x="9" y="9" width="13" height="13" rx="2" />
     <path d={ICON_PATHS.copyBack} />
+  </Svg>
+);
+
+export const DownloadIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d={ICON_PATHS.downloadTray} />
+    <path d={ICON_PATHS.downloadArrow} />
+  </Svg>
+);
+
+export const AwardIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <circle cx="12" cy="8" r="6" />
+    <path d={ICON_PATHS.awardRibbon} />
+  </Svg>
+);
+
+export const FileDownloadIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d={ICON_PATHS.fileBody} />
+    <path d={ICON_PATHS.fileDownload} />
   </Svg>
 );
 

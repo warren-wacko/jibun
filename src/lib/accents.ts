@@ -92,6 +92,9 @@ export function resolveAccent(accent: string): {
   /** Is the accent readable as text/graphics (3:1) on a near-white page? On a near-black page? */
   readableOnLight: boolean;
   readableOnDark: boolean;
+  /** Is the accent readable as small text (4.5:1) on a near-white page? On a near-black one? Templates mix it toward the text colour when not. */
+  textOnLight: boolean;
+  textOnDark: boolean;
   /** Simple 0-1 brightness (sRGB weighted, not WCAG luminance). Templates can branch on it in CSS maths. */
   luma: number;
 } {
@@ -110,6 +113,8 @@ export function resolveAccent(accent: string): {
     tone: luminance(resolved.onAccent) < 0.5 ? "light" : "dark",
     readableOnLight: contrastRatio(resolved.accent, "#ffffff") >= 3,
     readableOnDark: contrastRatio(resolved.accent, "#0e1013") >= 3,
+    textOnLight: contrastRatio(resolved.accent, "#f4f5f7") >= 4.5,
+    textOnDark: contrastRatio(resolved.accent, "#17191c") >= 4.5,
     luma: lumaOf(resolved.accent),
   };
 }

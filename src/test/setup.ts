@@ -20,5 +20,16 @@ vi.mock("next/font/google", () => {
     Plus_Jakarta_Sans: font,
     DM_Mono: font,
     Caveat: font,
+    DM_Sans: font,
+    Fraunces: font,
+    Manrope: font,
+    Space_Mono: font,
+    Syne: font,
+    Playfair_Display: font,
+    Anton: font,
+    Work_Sans: font,
+    IBM_Plex_Sans: font,
+    Source_Sans_3: font,
+    Source_Serif_4: font,
   };
 });

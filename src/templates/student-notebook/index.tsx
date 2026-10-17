@@ -1,6 +1,6 @@
 import Image from "next/image";
-import type { CSSProperties } from "react";
-import { ArrowUpRightIcon, MailIcon, MessageIcon, PhoneIcon } from "@/components/icons";
+import { Fragment, type CSSProperties } from "react";
+import { ArrowUpRightIcon, DownloadIcon, MailIcon, MessageIcon, PhoneIcon } from "@/components/icons";
 import { Footer } from "@/components/Footer";
 import { BrandGlyph, SocialIcon } from "@/components/SocialIcon";
 import { BRAND_NAME } from "@/lib/site";
@@ -10,7 +10,8 @@ import { ThemeScope } from "../ThemeScope";
 import type { TemplateProps } from "../types";
 import { handwriting, notebookMono, schibsted } from "./fonts";
 import { CopyEmail, HeaderShare, HeaderThemeToggle, PolaroidFlip, SaveButton, ToastProvider } from "./interactive";
-import { buildNotebookModel, type QuickAction } from "./model";
+import { buildNotebookModel, buildStandardModel, type QuickAction } from "./model";
+import { OnlineTiles, SectionBlock } from "./sections";
 import "./student-notebook.css";
 
 function QuickIcon({ action }: { action: QuickAction }) {
@@ -43,6 +44,9 @@ function TileGrid({ links }: { links: SocialLink[] }) {
 export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
   const { profile, style } = data;
   const m = buildNotebookModel(data);
+  // The Standard design is a longer page with its own layout (see buildStandardModel); the Starter design is unchanged.
+  const design = meta.design ?? "starter";
+  const std = design === "standard" ? buildStandardModel(data) : null;
 
   return (
     <ThemeScope
@@ -50,6 +54,7 @@ export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
       accent={style.accent}
       template="student-notebook"
       className={`${schibsted.variable} ${handwriting.variable} ${notebookMono.variable}`}
+      attrs={{ "data-design": design }}
     >
       <ToastProvider>
         <main className="pn">
@@ -130,7 +135,17 @@ export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
           </div>
 
           <div className="pn-actions">
-            <SaveButton href={meta.vcardHref} />
+            {std?.resume ? (
+              <div className="pn-pair">
+                <SaveButton href={meta.vcardHref} compact />
+                <a href={std.resume.url} className="pn-resume" target="_blank" rel="noopener noreferrer" download>
+                  <DownloadIcon size={19} strokeWidth={2} />
+                  {std.resume.label}
+                </a>
+              </div>
+            ) : (
+              <SaveButton href={meta.vcardHref} />
+            )}
             {m.quick.length > 0 && (
               <nav className="pn-quick" aria-label="Contact actions" style={{ "--cols": Math.min(m.quick.length, 4) } as CSSProperties}>
                 {m.quick.map((a) => (
@@ -153,7 +168,41 @@ export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
             </div>
           )}
 
-          {(m.featured || m.email) && (
+          {std && std.info.length > 0 && (
+            <div className="pn-info" style={{ "--cols": std.info.length } as CSSProperties}>
+              {std.info.map((i) => (
+                <div key={i.label}>
+                  <span className="pn-info-label">{i.label}</span>
+                  <span className="pn-info-value">{i.value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {std?.order.map((kind) => {
+            const section = std.blocks[kind as "portfolio" | "skills" | "orgs"];
+            return section ? (
+              <Fragment key={kind}>
+                <SectionBlock section={section} />
+              </Fragment>
+            ) : null;
+          })}
+
+          {std && (std.tiles.length > 0 || std.email) && (
+            <section className="pn-find" data-block="online">
+              <span className="pn-h2">Find me online</span>
+              {std.tiles.length > 0 && <OnlineTiles tiles={std.tiles} />}
+              {std.email && (
+                <div className="pn-email-row">
+                  <MailIcon size={18} />
+                  <a href={`mailto:${std.email}`}>{std.email}</a>
+                  <CopyEmail email={std.email} />
+                </div>
+              )}
+            </section>
+          )}
+
+          {!std && (m.featured || m.email) && (
             <section className="pn-section pn-connect">
               <span className="pn-h2">Connect</span>
               {m.featured && (
@@ -176,14 +225,14 @@ export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
             </section>
           )}
 
-          {m.profiles.length > 0 && (
+          {!std && m.profiles.length > 0 && (
             <section className="pn-section">
               <span className="pn-h3">Profiles to view</span>
               <TileGrid links={m.profiles} />
             </section>
           )}
 
-          {m.messaging.length > 0 && (
+          {!std && m.messaging.length > 0 && (
             <section className="pn-section" style={{ paddingTop: 26 }}>
               <span className="pn-h3">Ways to message</span>
               <TileGrid links={m.messaging} />

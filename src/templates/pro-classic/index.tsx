@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { ReactNode } from "react";
+import { Fragment, type CSSProperties, type ReactNode } from "react";
 import {
   ArrowUpRightIcon,
   CalendarIcon,
@@ -15,10 +15,12 @@ import { SOCIAL_LABELS, messagingLabel } from "@/lib/socials";
 import { BRAND_NAME } from "@/lib/site";
 import type { SocialLink } from "@/lib/page-schema";
 import { ThemeScope } from "../ThemeScope";
+import { findFontPair } from "../font-pairs";
 import type { TemplateProps } from "../types";
-import { bricolage, jetbrainsMono } from "./fonts";
+import { FONT_CLASSES } from "./fonts";
 import { CardFlip, CopyEmail, HeaderShare, HeaderThemeToggle, SaveButton, ToastProvider } from "./interactive";
-import { buildModel, displayUrl } from "./model";
+import { BLOCK_TITLES, buildBlocks, buildModel, displayUrl } from "./model";
+import { SectionBody } from "./sections";
 import "./pro-classic.css";
 
 const ACTION_ICON = {
@@ -29,9 +31,9 @@ const ACTION_ICON = {
   book: <CalendarIcon />,
 } as const;
 
-function Section({ title, className, children }: { title: string; className?: string; children: ReactNode }) {
+function Section({ title, className, block, children }: { title: string; className?: string; block: string; children: ReactNode }) {
   return (
-    <section className={`pc-section ${className ?? ""}`}>
+    <section className={`pc-section ${className ?? ""}`} data-block={block}>
       <span className="pc-label">{title}</span>
       {children}
     </section>
@@ -42,7 +44,7 @@ function TileGrid({ links, label }: { links: SocialLink[]; label: (link: SocialL
   // 1 item fills the row, 2 split it, 3+ make rows of three.
   const cols = Math.min(links.length, 3);
   return (
-    <div className="pc-grid" style={{ "--cols": cols } as React.CSSProperties}>
+    <div className="pc-grid" style={{ "--cols": cols } as CSSProperties}>
       {links.map((s) => (
         <a key={`${s.type}-${s.handle}`} href={s.url} className="pc-tile" target="_blank" rel="noopener noreferrer">
           <SocialIcon type={s.type} />
@@ -56,17 +58,78 @@ function TileGrid({ links, label }: { links: SocialLink[]; label: (link: SocialL
   );
 }
 
-/** Professional / contact-first template with a flip card (holographic shine, QR on the back). */
+/**
+ * Professional / contact-first template with a flip card (holographic shine, QR on the back).
+ * The Starter design is a fixed stack of blocks. The Standard design draws the same blocks, and the page's optional
+ * sections, in the page's order (see `buildBlocks`), with a font pair if one was chosen.
+ */
 export function ProClassicTemplate({ data, theme, meta }: TemplateProps) {
   const { profile, contact, style } = data;
   const m = buildModel(data);
+  const design = meta.design ?? "starter";
+  const { order, sections } = buildBlocks(data, design);
+  const fontPair = design === "standard" && style.fontPair && findFontPair("pro-classic", style.fontPair) ? style.fontPair : undefined;
+
+  const blocks: Record<string, ReactNode> = {
+    about: profile.bio ? (
+      <section className="pc-section pc-about" data-block="about">
+        <span className="pc-label">{BLOCK_TITLES.about}</span>
+        <p>{profile.bio}</p>
+      </section>
+    ) : null,
+    connect:
+      m.featured || m.email ? (
+        <Section title={BLOCK_TITLES.connect} className="pc-connect" block="connect">
+          <div className="pc-rows">
+          {m.featured && (
+            <a href={m.featured.url} className="pc-row pc-row-link" target="_blank" rel="noopener noreferrer">
+              <SocialIcon type={m.featured.icon} size={38} glyphSize={18} />
+              <span className="pc-row-text">
+                <span className="pc-row-title">{m.featured.label}</span>
+                <span className="pc-row-sub">{m.featured.sub}</span>
+              </span>
+              <ArrowUpRightIcon size={18} className="pc-row-arrow" />
+            </a>
+          )}
+          {m.email && (
+            <div className="pc-row pc-row-email">
+              <MailIcon size={18} />
+              <a href={`mailto:${m.email}`}>{m.email}</a>
+              <CopyEmail email={m.email} />
+            </div>
+          )}
+          </div>
+        </Section>
+      ) : null,
+    profiles:
+      m.profiles.length > 0 ? (
+        <Section title={BLOCK_TITLES.profiles} block="profiles">
+          <TileGrid links={m.profiles} label={(s) => s.handle} />
+        </Section>
+      ) : null,
+    messages:
+      m.messaging.length > 0 ? (
+        <Section title={BLOCK_TITLES.messages} block="messages">
+          <TileGrid links={m.messaging} label={(s) => messagingLabel(s, contact.showPhoneNumbers)} />
+        </Section>
+      ) : null,
+  };
+  for (const [kind, section] of Object.entries(sections)) {
+    if (!section) continue;
+    blocks[kind] = (
+      <Section title={BLOCK_TITLES[kind] ?? kind} block={kind}>
+        <SectionBody section={section} />
+      </Section>
+    );
+  }
 
   return (
     <ThemeScope
       theme={theme}
       accent={style.accent}
       template="pro-classic"
-      className={`${bricolage.variable} ${jetbrainsMono.variable}`}
+      className={FONT_CLASSES}
+      attrs={{ "data-design": design, "data-font-pair": fontPair }}
     >
       <ToastProvider>
         <main className="pc">
@@ -133,7 +196,7 @@ export function ProClassicTemplate({ data, theme, meta }: TemplateProps) {
               <nav
                 className="pc-quick"
                 aria-label="Contact actions"
-                style={{ "--cols": Math.min(m.actions.length, 4) } as React.CSSProperties}
+                style={{ "--cols": Math.min(m.actions.length, 4) } as CSSProperties}
               >
                 {m.actions.map((a) => (
                   <a
@@ -149,46 +212,9 @@ export function ProClassicTemplate({ data, theme, meta }: TemplateProps) {
             )}
           </div>
 
-          {profile.bio && (
-            <section className="pc-section pc-about">
-              <span className="pc-label">About</span>
-              <p>{profile.bio}</p>
-            </section>
-          )}
-
-          {(m.featured || m.email) && (
-            <Section title="Connect" className="pc-connect">
-              {m.featured && (
-                <a href={m.featured.url} className="pc-row pc-row-link" target="_blank" rel="noopener noreferrer">
-                  <SocialIcon type={m.featured.icon} size={38} glyphSize={18} />
-                  <span className="pc-row-text">
-                    <span className="pc-row-title">{m.featured.label}</span>
-                    <span className="pc-row-sub">{m.featured.sub}</span>
-                  </span>
-                  <ArrowUpRightIcon size={18} className="pc-row-arrow" />
-                </a>
-              )}
-              {m.email && (
-                <div className="pc-row pc-row-email">
-                  <MailIcon size={18} />
-                  <a href={`mailto:${m.email}`}>{m.email}</a>
-                  <CopyEmail email={m.email} />
-                </div>
-              )}
-            </Section>
-          )}
-
-          {m.profiles.length > 0 && (
-            <Section title="Profiles to view">
-              <TileGrid links={m.profiles} label={(s) => s.handle} />
-            </Section>
-          )}
-
-          {m.messaging.length > 0 && (
-            <Section title="Ways to message">
-              <TileGrid links={m.messaging} label={(s) => messagingLabel(s, contact.showPhoneNumbers)} />
-            </Section>
-          )}
+          {order.map((token) => (
+            <Fragment key={token}>{blocks[token]}</Fragment>
+          ))}
 
           <Footer tagline="Always one tap away." showBranding={meta.showBranding} className="pc-footer" />
         </main>

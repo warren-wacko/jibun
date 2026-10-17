@@ -30,6 +30,8 @@ export const SECTION_ADD_ON: Partial<Record<SectionKind, AddOn>> = {
 
 export type Entitlements = {
   tier: Tier;
+  /** Which of a template's two designs the page gets: its Starter design or its Standard design (Standard and Custom). */
+  design: "starter" | "standard";
   /** Every template is available in every tier; only CUSTOM may use a one-off custom-[slug] component and bannerUrl. */
   customComponent: boolean;
   accent: "preset" | "hex";
@@ -51,6 +53,7 @@ type TierRules = Omit<Entitlements, "tier" | "brandingFooter" | "addOns">;
 
 const TIER_RULES: Record<Tier, TierRules> = {
   STARTER: {
+    design: "starter",
     customComponent: false,
     accent: "preset",
     fonts: "default",
@@ -61,6 +64,7 @@ const TIER_RULES: Record<Tier, TierRules> = {
     smallEdits: 2,
   },
   STANDARD: {
+    design: "standard",
     customComponent: false,
     accent: "hex",
     fonts: "pairs",
@@ -71,6 +75,7 @@ const TIER_RULES: Record<Tier, TierRules> = {
     smallEdits: 4,
   },
   CUSTOM: {
+    design: "standard",
     customComponent: true,
     accent: "hex",
     fonts: "any",

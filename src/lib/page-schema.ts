@@ -87,7 +87,7 @@ export const SectionSchema = z.discriminatedUnion("kind", [
     kind: z.literal("orgs"),
     items: z.array(z.object({ name: text(80), role: text(60).optional() })).min(1).max(12),
   }),
-  z.object({ kind: z.literal("song"), spotifyUrl: httpUrl }),
+  z.object({ kind: z.literal("song"), spotifyUrl: httpUrl, title: text(80).optional(), artist: text(80).optional() }),
 ]);
 export type Section = z.infer<typeof SectionSchema>;
 export type SectionKind = Section["kind"];

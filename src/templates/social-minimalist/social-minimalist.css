@@ -711,3 +711,290 @@
     animation: none;
   }
 }
+
+/* ---------- Standard design: interests, record, photo dump, org pills ---------- */
+.mn-extras {
+  display: flex;
+  flex-direction: column;
+}
+
+.mn-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 40px 16px 0;
+}
+
+.mn-label {
+  padding: 0 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.mn-ticker {
+  margin-top: 44px;
+  padding: 18px 0;
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 var(--border),
+    inset 0 -1px 0 var(--border);
+}
+
+.mn-ticker-track {
+  display: flex;
+  width: max-content;
+  animation: mn-marquee 30s linear infinite;
+}
+
+.mn-ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-right: 18px;
+  font-family: var(--serif);
+  font-size: 34px;
+  font-style: italic;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+.mn-ticker-item.is-dim {
+  color: var(--text-muted);
+}
+
+.mn-ticker-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.mn-song {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 24px;
+  background: var(--surface);
+}
+
+.mn-record {
+  flex: none;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+}
+
+.mn-record-disc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, #111 0 1.5px, #1c1c1c 1.5px 3px);
+}
+
+.mn-record:hover .mn-record-disc,
+.mn-record:focus-visible .mn-record-disc {
+  animation: mn-spin 3.2s linear infinite;
+}
+
+.mn-record-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.mn-record-label span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #111;
+}
+
+.mn-song-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mn-song-title {
+  overflow: hidden;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mn-song-artist {
+  overflow: hidden;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mn-dump-wrap {
+  gap: 4px;
+}
+
+.mn-dump-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-right: 8px;
+}
+
+.mn-serif-note {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.mn-dump {
+  --px: calc(100cqw / 390);
+  position: relative;
+  height: calc(var(--h) * var(--px));
+}
+
+.mn-polaroid {
+  position: absolute;
+  top: calc(var(--y) * var(--px));
+  left: calc(var(--x) * var(--px));
+  box-sizing: border-box;
+  width: calc(134 * var(--px));
+  margin: 0;
+  padding: 6px 6px 28px;
+  border-radius: 10px;
+  background: var(--card-bg);
+  box-shadow:
+    0 1px 0 var(--border),
+    0 12px 28px rgba(0, 0, 0, 0.1);
+  transform: rotate(var(--r));
+}
+
+.mn-polaroid-photo {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.mn-polaroid-photo img {
+  object-fit: cover;
+}
+
+.mn-polaroid figcaption {
+  position: absolute;
+  right: 10px;
+  bottom: 7px;
+  left: 10px;
+  overflow: hidden;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mn-orgs-wrap {
+  gap: 14px;
+  padding-top: 30px;
+}
+
+.mn-orgs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 4px;
+}
+
+.mn-org {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-height: 48px;
+  padding: 6px 16px 6px 6px;
+  border-radius: 24px;
+  background: var(--accent);
+  color: var(--on-accent);
+  transform: rotate(-1.5deg);
+}
+
+.mn-org[data-i="1"] {
+  background: var(--text);
+  color: var(--bg);
+  transform: rotate(1deg);
+}
+
+.mn-org[data-i="2"] {
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--border);
+  transform: rotate(-0.5deg);
+}
+
+.mn-org-badge {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--on-accent);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.mn-org[data-i="1"] .mn-org-badge {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.mn-org[data-i="2"] .mn-org-badge {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.mn-org-text {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.mn-org-rest {
+  font-weight: 400;
+  opacity: 0.6;
+}
+
+@keyframes mn-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mn-ticker-track,
+  .mn-record:hover .mn-record-disc,
+  .mn-record:focus-visible .mn-record-disc {
+    animation: none;
+  }
+}

@@ -10,7 +10,8 @@ import { tileHandle } from "../shared/social";
 import type { TemplateProps } from "../types";
 import { archivoBlack, courierPrime, gloock, scrapHand } from "./fonts";
 import { HeaderShare, HeaderThemeToggle, QrSheet, SaveButton, ToastProvider } from "./interactive";
-import { buildScrapbookModel } from "./model";
+import { buildScrapbookModel, buildStandardModel } from "./model";
+import { SectionBlock } from "./sections";
 import { TORN_CLIP } from "./torn";
 import "./social-scrapbook.css";
 
@@ -18,12 +19,14 @@ import "./social-scrapbook.css";
 export function SocialScrapbookTemplate({ data, theme, meta }: TemplateProps) {
   const { profile, contact, style } = data;
   const m = buildScrapbookModel(data);
+  const standard = meta.design === "standard" ? buildStandardModel(data) : null;
 
   return (
     <ThemeScope
       theme={theme}
       accent={style.accent}
       template="social-scrapbook"
+      attrs={standard ? { "data-design": "standard" } : undefined}
       className={`${archivoBlack.variable} ${gloock.variable} ${courierPrime.variable} ${scrapHand.variable}`}
     >
       <ToastProvider>
@@ -152,6 +155,15 @@ export function SocialScrapbookTemplate({ data, theme, meta }: TemplateProps) {
                   <div className="pk-barcode" aria-hidden="true" />
                 </div>
               </div>
+            </div>
+          )}
+
+          {standard && standard.order.length > 0 && (
+            <div className="pk-extras">
+              {standard.order.map((kind) => {
+                const section = standard.blocks[kind];
+                return section ? <SectionBlock key={kind} section={section} /> : null;
+              })}
             </div>
           )}
 
