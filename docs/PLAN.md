@@ -31,12 +31,13 @@ Rule: one phase per session; review and pass the gate before starting the next.
 - **Gate:** tap → page → Save Contact works locally with the real card, against the seeded page. The real-phone and NFC tag test moves to Phase 5 with the Hostinger deploy
 
 ## Phase 3 (M3): Admin panel
-- [ ] Auth.js credentials login, bcrypt, middleware on `/admin/*` only, login rate limiting
-- [ ] Clients list: search, tier/status/usage filters, `paidUntil` and last-tapped columns, usage badges
-- [ ] New/edit page form driven by `getEntitlements`; live phone-width preview with light/dark switch
-- [ ] Image upload with crop; social link editor (add, remove, reorder)
-- [ ] Cards: code generation (unambiguous alphabet), chip URL copy, QR, lost/disabled, spare, reset usage
-- [ ] Renewals screen, edit counter, reminder-sent marker; dashboard
+- [x] Admin login: email + bcrypt password, signed httpOnly session cookie (`jose`, 7 days, instead of Auth.js: one admin, no OAuth needed), `proxy.ts` on `/admin/*` only, `requireAdmin()` in every page and action, login rate limiting (10/IP and 5/email per 15 min), `npm run admin:create`
+- [x] Clients list at `/admin/clients`: search (name, username, email), tier/status/usage filters, sort, paging (25), `paidUntil` and last-tapped columns, usage and renewal badges; filters are a plain GET form so every view has a URL
+- [x] New/edit page form at `/admin/pages/new` and `/admin/pages/[username]`: driven by `getEntitlements` (tier, accent, fonts, banner, custom templates), username suggestion and availability check, status and paid-until, add-ons; live phone-width preview (the real template in an iframe, 320-430 px, light/dark); one shared validator for the client and the Server Action; optional sections are kept as they are until the Standard templates exist
+- [x] Social link editor (add, remove, reorder, links built from handles, tile notes)
+- [x] Image fields (photo, logo): paste a link, with a thumbnail preview and a disabled "Upload and crop" button as the placeholder. The real upload moves to the last step (needs the Cloudinary account)
+- [x] Cards (panel on the edit page, saves at once): code generation (unambiguous alphabet), chip link and QR link with copy, per-card QR (SVG, PNG download), disable / mark lost / turn on, spare cards (max 10), rename, reset usage (deletes the card's taps and recomputes the page's last tap), delete a never-used card; per-card and page tap totals. Checked with real taps: a lost or disabled card shows the inactive page, and the page QR moves to the next active card
+- [x] Renewals screen (`/admin/renewals`: terms ending within 30 days or already ended, with stage badges for due / grace / lapsed, reminder-sent mark, ready-made reminder email, renew +4 years, mark inactive, edit counter) and dashboard (`/admin`: active pages, taps this week, renewals due, drafts, live pages by usage status with links to the filtered list, next renewals). The edit counter is also on the page editor
 - **Gate:** a Starter client is created in under 10 minutes with no code changes
 
 ## Phase 4 (M4): Templates and Standard
@@ -59,7 +60,11 @@ Rule: one phase per session; review and pass the gate before starting the next.
 - [ ] Lighthouse mobile ≥ 90 (performance and accessibility)
 - [ ] Playwright tests: tap → page → vCard
 - [ ] Production checklist: env vars, backups, hosting resource monitoring
-- [ ] **Last step:** buy Hostinger + domain, deploy `release`, write a real NFC tag, test tap/QR/Save Contact on a real iPhone and Android
+- [ ] **Last step (everything that needs an account or the domain):**
+  - [ ] Cloudinary account and keys; build the image upload with crop in the editor (replaces the placeholder), and check photos still reach the vCard
+  - [ ] Buy Hostinger + domain; set `NEXT_PUBLIC_SITE_URL` and the other env vars; deploy `release`
+  - [ ] Create the real admin account on the live site (`npm run admin:create`)
+  - [ ] Write a real NFC tag; test tap, QR and Save Contact on a real iPhone and Android
 - **Gate:** launch-ready
 
 ## Later
@@ -68,7 +73,7 @@ Rule: one phase per session; review and pass the gate before starting the next.
 
 ## Open questions (from PRD)
 - Domain for Jibun (replaces `tapcard.ph`); needed only for the final deploy (Phase 5)
-- Cloudinary account and API keys; needed in Phase 3 (image upload)
+- Cloudinary account and API keys; needed in the last step (image upload replaces the placeholder)
 - ~~Brand name~~ decided: Jibun
 - Renewal fee (draft ₱300–500)
 - Final prices (draft Starter ₱1,200 pro / ₱1,000 student)

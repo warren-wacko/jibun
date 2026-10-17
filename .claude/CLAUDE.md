@@ -37,3 +37,10 @@
   - Shared logic lives in `src/templates/shared/model.ts` (featured link, `displayUrl`), `src/components/Toast.tsx`, `src/lib/phone.ts`. Size big display text from real glyph widths (see `headlineEm` in `pro-magazine/model.ts`), not character counts. Use `data-weak-on-light` / `data-weak-on-dark` (set by `ThemeScope`) when an accent must be used as text.
   - No gear/settings controls, no per-template colour pickers, and no client-side QR or vCard code: use the app's `/qr` and `/vcard` routes.
 - Convert a reference file only following the PRD "Conversion rules". Never edit the reference HTML. Hosting (Hostinger) is the last step of the plan; do not start it before then.
+
+# Admin
+
+- Every admin page and Server Action calls `requireAdmin()` (`lib/admin/auth.ts`); the proxy only checks the cookie signature. Read it inside `<Suspense>`.
+- Page forms are validated by one function, `validateForm` in `lib/admin/page-form.ts`, used by the editor (live errors) and by `savePage` (`lib/admin/page-save.ts`), which re-validates. Tier rules go through `getEntitlements`; never trust the form.
+- The editor preview is an iframe (`/admin/preview-frame`) that renders templates through a Server Action; its page imports the template registry so the templates' client components and CSS are in its bundle.
+- Test the admin in Chrome with a throwaway admin user, and delete it and any test pages afterwards.
