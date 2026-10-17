@@ -5,6 +5,7 @@ export const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-jakarta",
   display: "swap",
+  preload: false,
 });
 
 export const dmMono = DM_Mono({
@@ -12,6 +13,7 @@ export const dmMono = DM_Mono({
   weight: ["400", "500"],
   variable: "--font-dm-mono",
   display: "swap",
+  preload: false,
 });
 
 export const caveat = Caveat({
@@ -19,6 +21,7 @@ export const caveat = Caveat({
   weight: "600",
   variable: "--font-caveat",
   display: "swap",
+  preload: false,
 });
 
 // The font pairs a Standard page can choose (see templates/font-pairs.ts). `preload: false` keeps them off the

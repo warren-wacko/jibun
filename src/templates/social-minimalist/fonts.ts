@@ -5,6 +5,7 @@ export const interTight = Inter_Tight({
   subsets: ["latin"],
   variable: "--font-inter-tight",
   display: "swap",
+  preload: false,
 });
 
 export const instrumentSerif = Instrument_Serif({
@@ -13,6 +14,7 @@ export const instrumentSerif = Instrument_Serif({
   style: ["normal", "italic"],
   variable: "--font-instrument-serif",
   display: "swap",
+  preload: false,
 });
 
 export const minimalMono = DM_Mono({
@@ -20,4 +22,5 @@ export const minimalMono = DM_Mono({
   weight: ["400", "500"],
   variable: "--font-minimal-mono",
   display: "swap",
+  preload: false,
 });

@@ -5,6 +5,7 @@ export const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-space",
   display: "swap",
+  preload: false,
 });
 
 export const bentoHand = Caveat({
@@ -12,6 +13,7 @@ export const bentoHand = Caveat({
   weight: ["600", "700"],
   variable: "--font-bento-hand",
   display: "swap",
+  preload: false,
 });
 
 export const bentoMono = DM_Mono({
@@ -19,4 +21,5 @@ export const bentoMono = DM_Mono({
   weight: ["400", "500"],
   variable: "--font-bento-mono",
   display: "swap",
+  preload: false,
 });

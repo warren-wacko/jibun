@@ -16,6 +16,7 @@ export const bricolage = Bricolage_Grotesque({
   axes: ["opsz"],
   variable: "--font-bricolage",
   display: "swap",
+  preload: false,
 });
 
 export const jetbrainsMono = JetBrains_Mono({
@@ -23,6 +24,7 @@ export const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500"],
   variable: "--font-jetbrains",
   display: "swap",
+  preload: false,
 });
 
 // The font pairs a Standard page can choose (see templates/font-pairs.ts). `preload: false` keeps them off the

@@ -39,6 +39,15 @@
   --accent-soft: color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
+/* the org badge is the accent's text colour on a white or black chip: shade the accent to stay readable on it */
+[data-template="social-bento"][data-accent-tone="dark"] {
+  --badge-ink: color-mix(in srgb, black 45%, var(--accent));
+}
+
+[data-template="social-bento"][data-accent-tone="light"] {
+  --badge-ink: color-mix(in srgb, white 55%, var(--accent));
+}
+
 [data-template="social-bento"] {
   --focus: #2f54eb;
   --k-dark: clamp(0, calc((0.35 - var(--accent-luma, 0.3)) * 1000), 1);
@@ -1095,7 +1104,7 @@ button.pb-tile.pb-center {
   height: 36px;
   border-radius: 12px;
   background: var(--on-accent);
-  color: var(--accent-text);
+  color: var(--badge-ink);
   font-family: var(--font-bento-mono), ui-monospace, monospace;
   font-size: 12px;
   font-weight: 500;

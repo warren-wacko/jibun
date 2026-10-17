@@ -37,7 +37,7 @@ function SectionHead({ num, title }: { num: string; title: string }) {
 
 function TileLink({ s, label }: { s: SocialLink; label: string }) {
   return (
-    <a href={s.url} className="pco-net pco-net-tile" data-net={s.type} aria-label={SOCIAL_LABELS[s.type]} target="_blank" rel="noopener noreferrer">
+    <a href={s.url} className="pco-net pco-net-tile" data-net={s.type} target="_blank" rel="noopener noreferrer">
       <BrandGlyph type={s.type} size={86} className="pco-net-ghost" />
       <span className="pco-net-glyph">
         <BrandGlyph type={s.type} size={26} />

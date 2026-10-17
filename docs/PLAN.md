@@ -67,8 +67,8 @@ Rule: one phase per session; review and pass the gate before starting the next.
 
 ## Phase 5 (M5): Launch polish
 - [ ] Marketing homepage: offer, tiers, sample cards, contact
-- [ ] Lighthouse mobile ≥ 90 (performance and accessibility)
-- [ ] Playwright tests: tap → page → vCard
+- [x] Lighthouse mobile (Lighthouse 12, default mobile throttling, all 8 templates in the Standard design): accessibility 100, best practices 100, performance 88–92 (between runs it moves by about 3 points), SEO 66 on purpose (client pages are `noindex`). The big win: every page was preloading the fonts of all eight templates (11 files, about 0.5 MB); template fonts now use `preload: false`, so a page downloads only the fonts it uses (performance went from about 77 to 88–92). Also fixed: a duplicate accessible name on the `pro-company` link tiles, and low-contrast ghost numerals and org badges. Left as is: all templates' CSS is one shared bundle (about 30 KB of it unused on any page) and Next's own JavaScript (about 135 KB); `inlineCss` and lazy template loading were tried and made it worse
+- [x] Playwright tests: tap → page → vCard (`npm run test:e2e`, `e2e/tap-flow.spec.ts`: redirect and no-store, page shows the person, vCard content, QR image, tap logged without an IP, unknown/lost/lapsed cards go to /inactive; fixture rows are created and removed per run). Note: an unknown username shows the default Next.js "page could not be found" page with status 200 (the page streams); a branded not-found page is a later polish item
 - [ ] Production checklist: env vars, backups, hosting resource monitoring
 - [ ] **Last step (everything that needs an account or the domain):**
   - [ ] Cloudinary account and keys; build the image upload with crop in the editor (replaces the placeholder), and check photos still reach the vCard

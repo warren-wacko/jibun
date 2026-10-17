@@ -1345,6 +1345,10 @@
   opacity: 0.35;
 }
 
+.pco-service-n::before {
+  content: attr(data-n);
+}
+
 .pco-service-body {
   display: flex;
   flex-direction: column;

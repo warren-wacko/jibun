@@ -6,6 +6,7 @@ export const archivoBlack = Archivo_Black({
   weight: "400",
   variable: "--font-archivo-black",
   display: "swap",
+  preload: false,
 });
 
 export const gloock = Gloock({
@@ -13,6 +14,7 @@ export const gloock = Gloock({
   weight: "400",
   variable: "--font-gloock",
   display: "swap",
+  preload: false,
 });
 
 export const courierPrime = Courier_Prime({
@@ -20,6 +22,7 @@ export const courierPrime = Courier_Prime({
   weight: ["400", "700"],
   variable: "--font-courier-prime",
   display: "swap",
+  preload: false,
 });
 
 export const scrapHand = Caveat({
@@ -27,4 +30,5 @@ export const scrapHand = Caveat({
   weight: ["500", "600", "700"],
   variable: "--font-scrap-hand",
   display: "swap",
+  preload: false,
 });

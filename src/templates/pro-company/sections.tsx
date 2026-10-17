@@ -46,9 +46,8 @@ function Services({ section }: { section: Of<"services"> }) {
     <ul className="pco-services">
       {section.items.map((s, i) => (
         <li key={`${s.name}-${i}`}>
-          <span className="pco-service-n" aria-hidden="true">
-            {String(i + 1).padStart(2, "0")}
-          </span>
+          {/* a ghost numeral: drawn by CSS from data-n, so it is decoration and not text */}
+          <span className="pco-service-n" data-n={String(i + 1).padStart(2, "0")} aria-hidden="true" />
           <span className="pco-service-body">
             <span className="pco-service-name">{s.name}</span>
             {s.price && <span className="pco-price">{s.price}</span>}

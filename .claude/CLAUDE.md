@@ -49,5 +49,6 @@
 
 - A template draws its Starter or its Standard design from `meta.design` (set from `getEntitlements`, never from the tier). Starter stays a fixed layout; Standard follows `style.sectionOrder` through `resolveOrder` (`templates/section-order.ts`), draws the section kinds listed in `templates/supported-sections.ts` and applies a font pair listed in `templates/font-pairs.ts`. Unsupported kinds are saved but not drawn.
 - Template-specific CSS switches on `[data-design="standard"]` and `[data-font-pair="..."]` (pass them to `ThemeScope` through `attrs`). Fonts for the pairs use `next/font` with `preload: false` and literal options (no spreads).
+- Template fonts use `preload: false` (literal options). Without it every page preloads the fonts of all eight templates, about 0.5 MB on a phone.
 - Accent as small text or as a graphic: use `--accent-text` / `--accent-graphic` tokens built from `data-weak-text-on-*` and `data-weak-on-*`, never the raw accent.
 - View the Standard design at `/preview/<template>?design=standard&font=<pair>&order=a,b,c`. Verify against the reference by applying its content to the sample page `/maria` with tier STANDARD, comparing block positions and total height at 390 px, and restore `/maria` afterwards.

@@ -6,6 +6,7 @@ export const archivo = Archivo({
   axes: ["wdth"],
   variable: "--font-archivo",
   display: "swap",
+  preload: false,
 });
 
 export const plexMono = IBM_Plex_Mono({
@@ -13,6 +14,7 @@ export const plexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
   variable: "--font-plex-mono",
   display: "swap",
+  preload: false,
 });
 
 // The font pairs a Standard page can choose (see templates/font-pairs.ts). `preload: false` keeps them off the

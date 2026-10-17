@@ -5,6 +5,7 @@ export const schibsted = Schibsted_Grotesk({
   subsets: ["latin"],
   variable: "--font-schibsted",
   display: "swap",
+  preload: false,
 });
 
 export const handwriting = Caveat({
@@ -12,6 +13,7 @@ export const handwriting = Caveat({
   weight: ["500", "700"],
   variable: "--font-hand",
   display: "swap",
+  preload: false,
 });
 
 export const notebookMono = IBM_Plex_Mono({
@@ -19,4 +21,5 @@ export const notebookMono = IBM_Plex_Mono({
   weight: ["400", "500"],
   variable: "--font-notebook-mono",
   display: "swap",
+  preload: false,
 });

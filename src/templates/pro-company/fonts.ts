@@ -5,6 +5,7 @@ export const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+  preload: false,
 });
 
 // The font pairs a Standard page can choose (see templates/font-pairs.ts). `preload: false` keeps them off the

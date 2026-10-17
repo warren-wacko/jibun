@@ -27,6 +27,15 @@
   --scrim: rgba(0, 0, 0, 0.4);
 }
 
+/* the org badge is the accent's text colour on a white or black chip: shade the accent to stay readable on it */
+[data-template="social-minimalist"][data-accent-tone="dark"] {
+  --badge-ink: color-mix(in srgb, black 45%, var(--accent));
+}
+
+[data-template="social-minimalist"][data-accent-tone="light"] {
+  --badge-ink: color-mix(in srgb, white 55%, var(--accent));
+}
+
 [data-template="social-minimalist"] {
   --serif: var(--font-instrument-serif), Georgia, serif;
   --mono: var(--font-minimal-mono), monospace;
@@ -964,7 +973,7 @@
   height: 36px;
   border-radius: 50%;
   background: var(--on-accent);
-  color: var(--accent);
+  color: var(--badge-ink);
   font-size: 12px;
   font-weight: 700;
 }
