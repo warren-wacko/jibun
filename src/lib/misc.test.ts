@@ -57,6 +57,13 @@ describe("accents", () => {
     expect(resolveAccent("#fff").accent).toBe("#ffffff");
     expect(resolveAccent("#fff").onAccent).toBe("#0e1013");
     expect(resolveAccent("school-blue-gold").accent).toBe("#1e3a8a");
-    expect(resolveAccent("does-not-exist").accent).toBe(ACCENT_PRESETS[0].accent);
+    expect(resolveAccent("does-not-exist").accent).toBe("#2563eb"); // falls back to blue
+  });
+
+  it("reports whether the accent is a light or dark surface", () => {
+    expect(resolveAccent("pearl").tone).toBe("light");
+    expect(resolveAccent("graphite").tone).toBe("dark");
+    expect(resolveAccent("#fff").tone).toBe("light");
+    expect(resolveAccent("#101010").tone).toBe("dark");
   });
 });

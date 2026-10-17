@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Warren Jacob Abdon — Digital Card</title>
+<meta name="description" content="Software Engineer · Full-Stack Developer. Save my contact in one tap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Fraunces:opsz,wght@9..144,500;9..144,700&amp;family=Manrope:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;family=Space+Mono&amp;family=Syne:wght@600;700;800&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible{outline:2px solid #6C7CF0;outline-offset:3px}
+@keyframes cardIn{0%{opacity:0;transform:translateY(48px) rotateX(28deg) scale(.94)}100%{opacity:1;transform:none}}
+@keyframes riseIn{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+@keyframes toastIn{0%{opacity:0;transform:translate(-50%,12px)}100%{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion: reduce){.anim{animation:none !important}}
+</style>
+<style>
+html,body{margin:0;padding:0}
+body{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+#app>div{width:100% !important;max-width:430px;margin:0 auto;min-height:100vh !important;min-height:100dvh !important}
+</style>
+</head>
+<body>
+<!-- 01-pro-classic — standard — from StandardDark.dc.html -->
+<div id="app"></div>
+<template id="dc-template">
+<div style="position: relative; width: 390px; min-height: 2040px; box-sizing: border-box; background: {{bg}}; font-family: {{fBody}}; color: {{ink}}; display: flex; flex-direction: column; overflow: hidden; transition: background 350ms ease, color 350ms ease">
+
+  <div style="position: absolute; left: 50%; top: 40px; width: 460px; height: 420px; margin-left: -230px; background: {{glow}}; opacity: {{glowOpacity}}; pointer-events: none"></div>
+
+  <div style="position: relative; z-index: 2; height: 64px; margin: 0 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid {{headerLine}}">
+    <span style="font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">[YOUR BRAND]</span>
+    <div style="display: flex; align-items: center; gap: 6px">
+      <button type="button" onClick="{{toggleTheme}}" aria-label="{{themeAria}}" style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+        <div style="width: 36px; height: 36px; border-radius: 18px; border: 1px solid {{line}}; background: {{chromeBg}}; color: {{ink}}; display: flex; align-items: center; justify-content: center">
+          <sc-if value="{{isDark}}" hint-placeholder-val="{{ true }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+          </sc-if>
+          <sc-if value="{{isLight}}" hint-placeholder-val="{{ false }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+          </sc-if>
+        </div>
+      </button>
+      <button type="button" onClick="{{shareCard}}" aria-label="Share this card" style="all: unset; cursor: pointer; height: 44px; display: flex; align-items: center">
+        <div style="height: 36px; padding: 0 12px 0 14px; border-radius: 18px; border: 1px solid {{line}}; background: {{chromeBg}}; box-sizing: border-box; display: flex; align-items: center; gap: 8px; font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{ink}}">
+          SHARE
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"></path><path d="m16 6-4-4-4 4"></path><path d="M12 2v13"></path></svg>
+        </div>
+      </button>
+    </div>
+  </div>
+
+
+  <div class="anim" style="position: relative; z-index: 2; padding: 0 24px; margin-top: {{cardLift}}; display: flex; flex-direction: column; align-items: center; gap: 18px; perspective: 1400px; animation: cardIn 900ms cubic-bezier(.2,.8,.2,1) 120ms both">
+    <button type="button" onClick="{{flip}}" onMouseMove="{{tiltMove}}" onMouseLeave="{{tiltReset}}" onTouchMove="{{tiltMove}}" onTouchEnd="{{tiltReset}}" aria-label="Flip card" style="all: unset; cursor: pointer; width: 342px; height: 206px; display: block; perspective: 1200px">
+      <div style="position: relative; width: 342px; height: 206px; transform-style: preserve-3d; transition: {{cardTransition}}; transform: {{cardTransform}}">
+        <div style="position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 18px; overflow: hidden; background: {{card}}; color: {{cardInk}}; box-shadow: {{cardShadow}}">
+          <sc-if value="{{holo}}" hint-placeholder-val="{{ true }}">
+            <div style="position: absolute; inset: 0; background-image: linear-gradient(115deg, transparent 18%, rgba(255,90,200,0.22) 34%, rgba(80,200,255,0.22) 46%, rgba(255,230,90,0.20) 58%, rgba(120,255,190,0.18) 68%, transparent 82%); background-size: 260% 260%; background-position: {{holoPos}}; mix-blend-mode: {{holoBlend}}; transition: background-position 120ms ease-out; pointer-events: none"></div>
+          </sc-if>
+          <div style="position: absolute; inset: 0; background: {{glare}}; pointer-events: none"></div>
+          <div style="position: relative; height: 100%; box-sizing: border-box; padding: 22px 22px 20px; display: flex; flex-direction: column; justify-content: space-between">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start">
+              <span style="font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; text-transform: uppercase; opacity: 0.75">Freelance · Cavite, PH</span>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.8"><path d="M8.5 8.5a5 5 0 0 1 0 7"></path><path d="M12 5.5a9.5 9.5 0 0 1 0 13"></path><path d="M15.5 2.5a14 14 0 0 1 0 19"></path><circle cx="5" cy="12" r="1"></circle></svg>
+            </div>
+            <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 14px">
+              <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+                <span style="font-family: {{fHead}}; font-size: 27px; line-height: 1.02; font-weight: 700; letter-spacing: -0.6px">Warren Jacob Abdon</span>
+                <span style="font-size: 14px; font-weight: 500; opacity: 0.8">Software Engineer · Full-Stack Developer</span>
+              </div>
+              <div style="width: 80px; height: 80px; flex-shrink: 0; border-radius: 16px; overflow: hidden; box-shadow: inset 0 0 0 1px {{photoLine}}">
+                <img src="assets/photo.jpg" alt="Portrait of Warren Jacob Abdon" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; transform: rotateY(180deg); border-radius: 18px; overflow: hidden; background: {{card}}; color: {{cardInk}}; box-shadow: {{cardShadow}}">
+          <div style="position: absolute; inset: 0; background: {{glare}}; pointer-events: none"></div>
+          <div style="position: relative; height: 100%; box-sizing: border-box; padding: 20px; display: flex; align-items: center; gap: 20px">
+            <div style="width: 150px; height: 150px; flex-shrink: 0; border-radius: 12px; background: #FFFFFF; padding: 9px; box-sizing: border-box; display: grid; grid-template-columns: {{qrCols}}">
+              <sc-for list="{{qr}}" as="cell" hint-placeholder-count="441">
+                <div style="aspect-ratio: 1; background: {{cell.c}}"></div>
+              </sc-for>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <span style="font-family: {{fHead}}; font-size: 18px; font-weight: 700; line-height: 1.15">Scan to save me to your phone</span>
+              <span style="font-family: {{fMono}}; font-size: 11px; line-height: 1.4; opacity: 0.75">yourbrand.com/warren</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </button>
+    <div style="height: 40px; padding: 4px; border-radius: 20px; background: {{surface}}; border: 1px solid {{line}}; box-sizing: border-box; display: flex; gap: 4px">
+      <button type="button" onClick="{{showFront}}" style="all: unset; cursor: pointer; height: 30px; padding: 0 16px; border-radius: 15px; background: {{frontBg}}; color: {{frontInk}}; font-size: 13px; font-weight: 600; display: flex; align-items: center; transition: background 200ms">Card</button>
+      <button type="button" onClick="{{showBack}}" style="all: unset; cursor: pointer; height: 30px; padding: 0 16px; border-radius: 15px; background: {{backBg}}; color: {{backInk}}; font-size: 13px; font-weight: 600; display: flex; align-items: center; transition: background 200ms">QR code</button>
+    </div>
+  </div>
+
+  <div class="anim" style="position: relative; z-index: 2; padding: 24px 24px 0; display: flex; flex-direction: column; gap: 20px; animation: riseIn 700ms ease-out 450ms both">
+    <button type="button" onClick="{{save}}" style="all: unset; cursor: pointer; box-sizing: border-box; height: 60px; border-radius: 18px; background: {{saveBg}}; color: {{saveInk}}; box-shadow: {{saveBorder}}; display: flex; align-items: center; justify-content: space-between; padding: 0 8px 0 22px; font-size: 17px; font-weight: 600; transition: background 300ms, color 300ms">
+      <span>{{saveLabel}}</span>
+      <div style="width: 44px; height: 44px; border-radius: 13px; background: {{saveChip}}; color: {{saveChipInk}}; display: flex; align-items: center; justify-content: center">
+        <sc-if value="{{saved}}" hint-placeholder-val="{{ false }}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+        </sc-if>
+        <sc-if value="{{notSaved}}" hint-placeholder-val="{{ true }}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6M22 11h-6"></path></svg>
+        </sc-if>
+      </div>
+    </button>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+      <a href="tel:+630000000000" style="display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13px; color: {{soft}}">
+        <div style="width: 58px; height: 58px; border-radius: 29px; background: {{surface}}; border: 1px solid {{line}}; color: {{ink}}; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></div>
+        Call
+      </a>
+      <a href="mailto:hello@warrenabdon.dev" style="display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13px; color: {{soft}}">
+        <div style="width: 58px; height: 58px; border-radius: 29px; background: {{surface}}; border: 1px solid {{line}}; color: {{ink}}; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg></div>
+        Email
+      </a>
+      <a href="sms:+630000000000" style="display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13px; color: {{soft}}">
+        <div style="width: 58px; height: 58px; border-radius: 29px; background: {{surface}}; border: 1px solid {{line}}; color: {{ink}}; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+        Text
+      </a>
+      <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Cavite+Philippines" style="display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13px; color: {{soft}}">
+        <div style="width: 58px; height: 58px; border-radius: 29px; background: {{surface}}; border: 1px solid {{line}}; color: {{ink}}; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
+        Directions
+      </a>
+    </div>
+  </div>
+
+  <sc-for list="{{sections}}" as="sec" hint-placeholder-count="6">
+    <div style="position: relative; z-index: 2; padding: 36px 24px 0; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="width: 14px; height: 2px; background: {{accent}}"></span>
+        <span style="font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">{{sec.label}}</span>
+        <sc-if value="{{sec.isAddon}}" hint-placeholder-val="{{ false }}">
+          <span style="margin-left: auto; font-family: {{fMono}}; font-size: 9px; letter-spacing: 1.2px; color: {{accentText}}">{{sec.tag}}</span>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{sec.isAbout}}" hint-placeholder-val="{{ false }}">
+        <p style="margin: 0; font-family: {{fHead}}; font-size: 22px; line-height: 1.35; font-weight: 600; letter-spacing: -0.3px">I build fast, reliable web apps end to end, from the database to the interface. Got an idea? Let's build it.</p>
+      </sc-if>
+
+      <sc-if value="{{sec.isConnect}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <a href="https://linkedin.com/in/yourname" style="min-height: 68px; border-radius: 18px; background: {{surface}}; border: 1px solid {{line}}; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 14px">
+            <div style="width: 38px; height: 38px; border-radius: 10px; background: #0A66C2; color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="-62.72 -30.72 573.44 573.44" fill="currentColor" role="img" aria-hidden="true"><path d="M100.3 448l-92.9 0 0-299.1 92.9 0 0 299.1zM53.8 108.1C24.1 108.1 0 83.5 0 53.8 0 39.5 5.7 25.9 15.8 15.8s23.8-15.8 38-15.8 27.9 5.7 38 15.8 15.8 23.8 15.8 38c0 29.7-24.1 54.3-53.8 54.3zM447.9 448l-92.7 0 0-145.6c0-34.7-.7-79.2-48.3-79.2-48.3 0-55.7 37.7-55.7 76.7l0 148.1-92.8 0 0-299.1 89.1 0 0 40.8 1.3 0c12.4-23.5 42.7-48.3 87.9-48.3 94 0 111.3 61.9 111.3 142.3l0 164.3-.1 0z"></path></svg></div>
+            <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1">
+              <span style="font-size: 16px; font-weight: 600">Connect on LinkedIn</span>
+              <span style="font-family: {{fMono}}; font-size: 11px; color: {{dim}}">linkedin.com/in/yourname</span>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{dim}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+          </a>
+          <div style="min-height: 60px; border-radius: 18px; border: 1px solid {{line}}; box-sizing: border-box; padding: 0 8px 0 16px; display: flex; align-items: center; gap: 14px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg>
+            <a href="mailto:hello@warrenabdon.dev" style="font-size: 15px; font-weight: 500; flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis">hello@warrenabdon.dev</a>
+            <button type="button" onClick="{{copyEmail}}" aria-label="Copy email address" style="all: unset; cursor: pointer; height: 44px; padding: 0 12px; border-radius: 12px; background: {{surface}}; box-shadow: inset 0 0 0 1px {{line}}; display: flex; align-items: center; gap: 6px; font-family: {{fMono}}; font-size: 11px; color: {{soft}}">COPY</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{sec.isProfiles}}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+          <a href="https://facebook.com/yourname" style="height: 104px; border-radius: 18px; background: {{surface}}; border: 1px solid {{line}}; box-sizing: border-box; padding: 14px; display: flex; flex-direction: column; justify-content: space-between">
+            <div style="width: 34px; height: 34px; border-radius: 10px; background: #0866FF; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="-126.72 -30.72 573.44 573.44" fill="currentColor" role="img" aria-hidden="true"><path d="M80 299.3l0 212.7 116 0 0-212.7 86.5 0 18-97.8-104.5 0 0-34.6c0-51.7 20.3-71.5 72.7-71.5 16.3 0 29.4 .4 37 1.2l0-88.7C291.4 4 256.4 0 236.2 0 129.3 0 80 50.5 80 159.4l0 42.1-66 0 0 97.8 66 0z"></path></svg></div>
+            <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 14px; font-weight: 600">Facebook</span><span style="font-family: {{fMono}}; font-size: 10px; color: {{dim}}">/yourname</span></div>
+          </a>
+          <a href="https://instagram.com/yourname" style="height: 104px; border-radius: 18px; background: {{surface}}; border: 1px solid {{line}}; box-sizing: border-box; padding: 14px; display: flex; flex-direction: column; justify-content: space-between">
+            <div style="width: 34px; height: 34px; border-radius: 10px; background: radial-gradient(circle at 30% 107%, #FDF497 0%, #FDF497 5%, #FD5949 45%, #D6249F 60%, #285AEB 90%); color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" role="img" aria-hidden="true"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"></path></svg></div>
+            <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 14px; font-weight: 600">Instagram</span><span style="font-family: {{fMono}}; font-size: 10px; color: {{dim}}">@yourname</span></div>
+          </a>
+          <a href="https://tiktok.com/@yourname" style="height: 104px; border-radius: 18px; background: {{surface}}; border: 1px solid {{line}}; box-sizing: border-box; padding: 14px; display: flex; flex-direction: column; justify-content: space-between">
+            <div style="width: 34px; height: 34px; border-radius: 10px; background: #000000; box-shadow: inset 0 0 0 1px #33373D; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" style="filter: drop-shadow(-1px -1px 0 #25F4EE) drop-shadow(1px 1px 0 #FE2C55)" role="img" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"></path></svg></div>
+            <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 14px; font-weight: 600">TikTok</span><span style="font-family: {{fMono}}; font-size: 10px; color: {{dim}}">@yourname</span></div>
+          </a>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{sec.isMessages}}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+          <a href="https://m.me/yourname" style="height: 104px; border-radius: 18px; background: {{surface}}; border: 1px solid {{line}}; box-sizing: border-box; padding: 14px; display: flex; flex-direction: column; justify-content: space-between">
+            <div style="width: 34px; height: 34px; border-radius: 10px; background: radial-gradient(circle at 19% 100%, #0099FF 0%, #A033FF 60%, #FF5280 93%, #FF7061 100%); color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" role="img" aria-hidden="true"><path d="M12 0C5.24 0 0 4.952 0 11.64c0 3.499 1.434 6.521 3.769 8.61a.96.96 0 0 1 .323.683l.065 2.135a.96.96 0 0 0 1.347.85l2.381-1.053a.96.96 0 0 1 .641-.046A13 13 0 0 0 12 23.28c6.76 0 12-4.952 12-11.64S18.76 0 12 0m6.806 7.44c.522-.03.971.567.63 1.094l-4.178 6.457a.707.707 0 0 1-.977.208l-3.87-2.504a.44.44 0 0 0-.49.007l-4.363 3.01c-.637.438-1.415-.317-.995-.966l4.179-6.457a.706.706 0 0 1 .977-.21l3.87 2.505c.15.097.344.094.491-.007l4.362-3.008a.7.7 0 0 1 .364-.13"></path></svg></div>
+            <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 14px; font-weight: 600">Messenger</span><span style="font-family: {{fMono}}; font-size: 10px; color: {{dim}}">m.me/yourname</span></div>
+          </a>
+          <a href="https://wa.me/630000000000" style="height: 104px; border-radius: 18px; background: {{surface}}; border: 1px solid {{line}}; box-sizing: border-box; padding: 14px; display: flex; flex-direction: column; justify-content: space-between">
+            <div style="width: 34px; height: 34px; border-radius: 10px; background: #25D366; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" role="img" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path></svg></div>
+            <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 14px; font-weight: 600">WhatsApp</span><span style="font-family: {{fMono}}; font-size: 10px; color: {{dim}}">+63 9XX XXX</span></div>
+          </a>
+          <a href="viber://chat?number=%2B630000000000" style="height: 104px; border-radius: 18px; background: {{surface}}; border: 1px solid {{line}}; box-sizing: border-box; padding: 14px; display: flex; flex-direction: column; justify-content: space-between">
+            <div style="width: 34px; height: 34px; border-radius: 10px; background: #7360F2; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" role="img" aria-hidden="true"><path d="M11.4 0C9.473.028 5.333.344 3.02 2.467 1.302 4.187.696 6.7.633 9.817.57 12.933.488 18.776 6.12 20.36h.003l-.004 2.416s-.037.977.61 1.177c.777.242 1.234-.5 1.98-1.302.407-.44.972-1.084 1.397-1.58 3.85.326 6.812-.416 7.15-.525.776-.252 5.176-.816 5.892-6.657.74-6.02-.36-9.83-2.34-11.546-.596-.55-3.006-2.3-8.375-2.323 0 0-.395-.025-1.037-.017zm.058 1.693c.545-.004.88.017.88.017 4.542.02 6.717 1.388 7.222 1.846 1.675 1.435 2.53 4.868 1.906 9.897v.002c-.604 4.878-4.174 5.184-4.832 5.395-.28.09-2.882.737-6.153.524 0 0-2.436 2.94-3.197 3.704-.12.12-.26.167-.352.144-.13-.033-.166-.188-.165-.414l.02-4.018c-4.762-1.32-4.485-6.292-4.43-8.895.054-2.604.543-4.738 1.996-6.173 1.96-1.773 5.474-2.018 7.11-2.03zm.38 2.602c-.167 0-.303.135-.304.302 0 .167.133.303.3.305 1.624.01 2.946.537 4.028 1.592 1.073 1.046 1.62 2.468 1.633 4.334.002.167.14.3.307.3.166-.002.3-.138.3-.304-.014-1.984-.618-3.596-1.816-4.764-1.19-1.16-2.692-1.753-4.447-1.765zm-3.96.695c-.19-.032-.4.005-.616.117l-.01.002c-.43.247-.816.562-1.146.932-.002.004-.006.004-.008.008-.267.323-.42.638-.46.948-.008.046-.01.093-.007.14 0 .136.022.27.065.4l.013.01c.135.48.473 1.276 1.205 2.604.42.768.903 1.5 1.446 2.186.27.344.56.673.87.984l.132.132c.31.308.64.6.984.87.686.543 1.418 1.027 2.186 1.447 1.328.733 2.126 1.07 2.604 1.206l.01.014c.13.042.265.064.402.063.046.002.092 0 .138-.008.31-.036.627-.19.948-.46.004 0 .003-.002.008-.005.37-.33.683-.72.93-1.148l.003-.01c.225-.432.15-.842-.18-1.12-.004 0-.698-.58-1.037-.83-.36-.255-.73-.492-1.113-.71-.51-.285-1.032-.106-1.248.174l-.447.564c-.23.283-.657.246-.657.246-3.12-.796-3.955-3.955-3.955-3.955s-.037-.426.248-.656l.563-.448c.277-.215.456-.737.17-1.248-.217-.383-.454-.756-.71-1.115-.25-.34-.826-1.033-.83-1.035-.137-.165-.31-.265-.502-.297zm4.49.88c-.158.002-.29.124-.3.282-.01.167.115.312.282.324 1.16.085 2.017.466 2.645 1.15.63.688.93 1.524.906 2.57-.002.168.13.306.3.31.166.003.305-.13.31-.297.025-1.175-.334-2.193-1.067-2.994-.74-.81-1.777-1.253-3.05-1.346h-.024zm.463 1.63c-.16.002-.29.127-.3.287-.008.167.12.31.288.32.523.028.875.175 1.113.422.24.245.388.62.416 1.164.01.167.15.295.318.287.167-.008.295-.15.287-.317-.03-.644-.215-1.178-.58-1.557-.367-.378-.893-.574-1.52-.607h-.018z"></path></svg></div>
+            <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 14px; font-weight: 600">Viber</span><span style="font-family: {{fMono}}; font-size: 10px; color: {{dim}}">+63 9XX XXX</span></div>
+          </a>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{sec.isGallery}}" hint-placeholder-val="{{ false }}">
+        <div style="margin: 0 -24px; display: flex; gap: 10px; overflow-x: auto; padding: 0 24px 4px; scroll-snap-type: x mandatory">
+          <sc-for list="{{gallery}}" as="g" hint-placeholder-count="6">
+            <div style="flex: 0 0 220px; height: 168px; scroll-snap-align: start; border-radius: 16px; overflow: hidden; position: relative; background-color: {{surface}}; background-image: {{g.pattern}}; box-shadow: inset 0 0 0 1px {{line}}">
+              <span style="position: absolute; left: 12px; bottom: 10px; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.4px; color: {{dim}}">{{g.label}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{sec.isPortfolio}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <sc-for list="{{portfolio}}" as="p" hint-placeholder-count="3">
+            <a href="https://example.com" style="border-radius: 18px; background: {{surface}}; border: 1px solid {{line}}; padding: 12px; display: flex; align-items: center; gap: 14px">
+              <div style="width: 64px; height: 64px; border-radius: 12px; flex-shrink: 0; background-color: {{bg}}; background-image: {{p.pattern}}"></div>
+              <div style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+                <span style="font-family: {{fHead}}; font-size: 16px; font-weight: 700">{{p.title}}</span>
+                <span style="font-size: 13px; color: {{dim}}; line-height: 1.35">{{p.desc}}</span>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{dim}}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+            </a>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{sec.isServices}}" hint-placeholder-val="{{ false }}">
+        <div style="border-radius: 18px; background: {{surface}}; border: 1px solid {{line}}; overflow: hidden">
+          <sc-for list="{{services}}" as="sv" hint-placeholder-count="3">
+            <div style="padding: 16px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; box-shadow: {{sv.divider}}">
+              <div style="display: flex; flex-direction: column; gap: 3px">
+                <span style="font-family: {{fHead}}; font-size: 16px; font-weight: 700">{{sv.name}}</span>
+                <span style="font-size: 13px; color: {{dim}}; line-height: 1.35">{{sv.desc}}</span>
+              </div>
+              <span style="flex-shrink: 0; font-family: {{fMono}}; font-size: 12px; color: {{accentText}}; white-space: nowrap">{{sv.price}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{sec.isResume}}" hint-placeholder-val="{{ false }}">
+        <div style="border-radius: 18px; background: {{surface}}; border: 1px solid {{line}}; padding: 16px; display: flex; align-items: center; gap: 14px">
+          <div style="width: 46px; height: 56px; border-radius: 8px; background: {{accentSoft}}; color: {{accentText}}; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; box-sizing: border-box; font-family: {{fMono}}; font-size: 10px; flex-shrink: 0">PDF</div>
+          <div style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1">
+            <span style="font-family: {{fHead}}; font-size: 16px; font-weight: 700">Résumé / CV</span>
+            <span style="font-family: {{fMono}}; font-size: 11px; color: {{dim}}">PDF · Updated [Month 20XX]</span>
+          </div>
+          <button type="button" onClick="{{downloadResume}}" style="all: unset; cursor: pointer; height: 44px; padding: 0 14px; border-radius: 12px; background: {{ink}}; color: {{bg}}; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m7 10 5 5 5-5M12 15V3"></path></svg>
+            Download
+          </button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{sec.isExperience}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column">
+          <sc-for list="{{experience}}" as="x" hint-placeholder-count="3">
+            <div style="display: flex; gap: 16px">
+              <div style="display: flex; flex-direction: column; align-items: center; width: 12px; padding-top: 6px">
+                <div style="width: 10px; height: 10px; border-radius: 5px; background: {{x.dot}}; box-shadow: {{x.ring}}"></div>
+                <sc-if value="{{x.hasLine}}" hint-placeholder-val="{{ true }}">
+                  <div style="flex-grow: 1; width: 1px; background: {{line}}; margin-top: 4px"></div>
+                </sc-if>
+              </div>
+              <div style="padding-bottom: 22px; display: flex; flex-direction: column; gap: 3px">
+                <span style="font-family: {{fMono}}; font-size: 11px; color: {{muted}}">{{x.years}}</span>
+                <span style="font-family: {{fHead}}; font-size: 17px; font-weight: 700">{{x.role}}</span>
+                <span style="font-size: 14px; color: {{dim}}">{{x.org}}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{sec.isSkills}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <sc-for list="{{skills}}" as="k" hint-placeholder-count="7">
+            <span style="height: 36px; padding: 0 14px; border-radius: 18px; background: {{surface}}; border: 1px solid {{line}}; display: flex; align-items: center; font-size: 14px; font-weight: 500">{{k.label}}</span>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{sec.isStats}}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid {{line}}; border-bottom: 1px solid {{line}}">
+          <div style="padding: 16px 12px 16px 0; display: flex; flex-direction: column; gap: 6px; border-right: 1px solid {{line}}">
+            <span style="font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.2px; color: {{muted}}">EXPERIENCE</span>
+            <span style="font-family: {{fHead}}; font-size: 17px; font-weight: 700; color: {{accentText}}">2+ years</span>
+          </div>
+          <div style="padding: 16px 12px; display: flex; flex-direction: column; gap: 6px; border-right: 1px solid {{line}}">
+            <span style="font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.2px; color: {{muted}}">FOCUS</span>
+            <span style="font-family: {{fHead}}; font-size: 17px; font-weight: 700; color: {{accentText}}">Protection</span>
+          </div>
+          <div style="padding: 16px 0 16px 12px; display: flex; flex-direction: column; gap: 6px">
+            <span style="font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.2px; color: {{muted}}">BASED IN</span>
+            <span style="font-family: {{fHead}}; font-size: 17px; font-weight: 700; color: {{accentText}}">Cavite, PH</span>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-for>
+
+  <div style="position: relative; margin-top: auto; padding: 40px 24px 20px; display: flex; justify-content: space-between; align-items: center; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1px; color: {{faint}}">
+    <span>ALWAYS ONE TAP AWAY.</span>
+    <button type="button" onClick="{{togglePalette}}" aria-label="Change card color" aria-expanded="{{paletteAria}}" style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: {{cogInk}}">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 400ms cubic-bezier(.2,.8,.2,1); transform: {{cogTurn}}"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    </button>
+    <sc-if value="{{paletteOpen}}" hint-placeholder-val="{{ false }}">
+      <div class="anim" role="dialog" aria-label="Card color" style="position: absolute; right: 20px; bottom: 68px; z-index: 10; width: 248px; box-sizing: border-box; padding: 16px; border-radius: 20px; background: {{surface}}; border: 1px solid {{line}}; box-shadow: 0 18px 40px rgba(0,0,0,0.22); display: flex; flex-direction: column; gap: 12px; animation: riseIn 240ms ease-out both">
+        <div style="display: flex; justify-content: space-between; align-items: baseline">
+          <span style="font-size: 10px; letter-spacing: 1.6px; color: {{muted}}">CARD COLOR</span>
+          <span style="font-family: {{fBody}}; font-size: 13px; letter-spacing: 0; font-weight: 600; color: {{ink}}">{{cardName}}</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px">
+          <sc-for list="{{swatches}}" as="sw" hint-placeholder-count="6">
+            <button type="button" onClick="{{sw.pick}}" aria-label="{{sw.name}}" style="all: unset; cursor: pointer; width: 32px; height: 32px; border-radius: 16px; background: {{sw.c}}; box-shadow: {{sw.ring}}; transition: box-shadow 200ms"></button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+    <div class="anim" role="status" style="position: fixed; left: 50%; bottom: 28px; z-index: 30; height: 44px; padding: 0 18px; border-radius: 22px; background: {{ink}}; color: {{bg}}; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; white-space: nowrap; box-shadow: 0 12px 30px rgba(0,0,0,0.3); animation: toastIn 260ms ease-out both; transform: translateX(-50%)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+      {{toast}}
+    </div>
+  </sc-if>
+</div>
+</template>
+<!-- EDIT ME: the contact that "Save contact" adds to the visitor's phone -->
+<script type="application/json" id="dc-contact">{
+  "fullName": "Warren Jacob Abdon",
+  "firstName": "Warren Jacob",
+  "lastName": "Abdon",
+  "title": "Software Engineer · Full-Stack Developer",
+  "org": "Freelance",
+  "phone": "+63 9XX XXX XXXX",
+  "email": "hello@warrenabdon.dev",
+  "website": "",
+  "city": "Cavite",
+  "country": "Philippines",
+  "note": "",
+  "photo": "assets/photo.jpg"
+}</script>
+<script type="application/json" id="dc-props">{"theme": "Dark", "card": "#F4F4F2", "accent": "#F28C28", "fontPair": "Modern — Bricolage", "finish": "holographic", "sectionA": "Stats row", "sectionB": "Experience", "order": "about, sectionA, connect, sectionB, profiles, messages"}</script>
+<script type="text/plain" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { flipped: false, rx: 0, ry: 0, gx: 50, gy: 30, moving: false, saved: false, toast: '', themeOverride: null, cardPick: null, paletteOpen: false };
+  }
+  componentWillUnmount() {
+    if (this._toastT) { clearTimeout(this._toastT); }
+  }
+  showToast(msg) {
+    var self = this;
+    if (this._toastT) { clearTimeout(this._toastT); }
+    this.setState({ toast: msg });
+    this._toastT = setTimeout(function () { self.setState({ toast: '' }); }, 2200);
+  }
+  resolveTheme() {
+    if (this.state.themeOverride) { return this.state.themeOverride; }
+    var pref = this.props.theme ?? 'Dark';
+    if (pref === 'Light') { return 'light'; }
+    if (pref === 'Match phone') {
+      try { if (window.matchMedia && !window.matchMedia('(prefers-color-scheme: dark)').matches) { return 'light'; } } catch (err) {}
+    }
+    return 'dark';
+  }
+  palette(mode) {
+    if (mode === 'dark') {
+      return { bg: '#0C0D0F', ink: '#F2F2F0', muted: '#9AA0A9', surface: '#17191C', line: '#2B2F35', soft: '#C9CDD3', dim: '#A3A8B0', faint: '#8D939C', glowOpacity: 0.55, cardShadow: '0 30px 60px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.10)' };
+    }
+    return { bg: '#F4F5F7', ink: '#121417', muted: '#5C626B', surface: '#FFFFFF', line: '#E1E3E7', soft: '#3A3F46', dim: '#5C626B', faint: '#6B7079', glowOpacity: 0.35, cardShadow: '0 24px 48px rgba(18,20,23,0.22), inset 0 0 0 1px rgba(18,20,23,0.08)' };
+  }
+  fonts(pair) {
+    var map = {
+      'Editorial — Fraunces + Manrope': { head: "'Fraunces', Georgia, serif", body: "'Manrope', system-ui, sans-serif", mono: "'JetBrains Mono', monospace" },
+      'Technical — Space Grotesk': { head: "'Space Grotesk', system-ui, sans-serif", body: "'Space Grotesk', system-ui, sans-serif", mono: "'Space Mono', monospace" },
+      'Bold — Syne + DM Sans': { head: "'Syne', system-ui, sans-serif", body: "'DM Sans', system-ui, sans-serif", mono: "'JetBrains Mono', monospace" }
+    };
+    return map[pair] || { head: "'Bricolage Grotesque', system-ui, sans-serif", body: "'Bricolage Grotesque', system-ui, sans-serif", mono: "'JetBrains Mono', monospace" };
+  }
+  hex(v, fallback) {
+    var s = String(v || '').trim();
+    if (s.charAt(0) !== '#') { s = '#' + s; }
+    return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(s) ? s : fallback;
+  }
+  rgb(hex) {
+    var n = String(hex || '#000000').replace('#', '');
+    if (n.length === 3) { n = n[0] + n[0] + n[1] + n[1] + n[2] + n[2]; }
+    return [parseInt(n.slice(0, 2), 16), parseInt(n.slice(2, 4), 16), parseInt(n.slice(4, 6), 16)];
+  }
+  lum(hex) {
+    var c = this.rgb(hex);
+    return (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255;
+  }
+  near(a, b) {
+    var x = this.rgb(a), y = this.rgb(b);
+    return Math.sqrt(Math.pow(x[0] - y[0], 2) + Math.pow(x[1] - y[1], 2) + Math.pow(x[2] - y[2], 2)) / 441.7 < 0.12;
+  }
+  rgba(hex, a) {
+    var c = this.rgb(hex);
+    return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+  }
+  mix(hex, toward, amt) {
+    var c = this.rgb(hex);
+    var m = function (v) { return Math.round(v + (toward - v) * amt); };
+    return 'rgb(' + m(c[0]) + ',' + m(c[1]) + ',' + m(c[2]) + ')';
+  }
+  qrEncode(text) {
+    var bytes = [];
+    var u = unescape(encodeURIComponent(String(text)));
+    for (var i = 0; i < u.length; i++) { bytes.push(u.charCodeAt(i)); }
+    var EC = [null, [10, 1, 16, 0, 0], [16, 1, 28, 0, 0], [26, 1, 44, 0, 0], [18, 2, 32, 0, 0], [24, 2, 43, 0, 0], [16, 4, 27, 0, 0], [18, 4, 31, 0, 0], [22, 2, 38, 2, 39], [22, 3, 36, 2, 37], [26, 4, 43, 1, 44], [30, 1, 50, 4, 51], [22, 6, 36, 2, 37], [22, 8, 37, 1, 38], [24, 4, 40, 5, 41], [24, 5, 41, 5, 42]];
+    var AL = [null, [], [6, 18], [6, 22], [6, 26], [6, 30], [6, 34], [6, 22, 38], [6, 24, 42], [6, 26, 46], [6, 28, 50], [6, 30, 54], [6, 32, 58], [6, 34, 62], [6, 26, 46, 66], [6, 26, 48, 70]];
+    var ver = 0, e;
+    for (var v = 1; v <= 15; v++) {
+      e = EC[v];
+      var cap = e[1] * e[2] + e[3] * e[4];
+      var need = 4 + (v < 10 ? 8 : 16) + bytes.length * 8;
+      if (need <= cap * 8) { ver = v; break; }
+    }
+    if (!ver) { return null; }
+    e = EC[ver];
+    var dataCap = e[1] * e[2] + e[3] * e[4];
+    var bits = [];
+    var put = function (val, len) { for (var k = len - 1; k >= 0; k--) { bits.push((val >>> k) & 1); } };
+    put(4, 4); put(bytes.length, ver < 10 ? 8 : 16);
+    bytes.forEach(function (b) { put(b, 8); });
+    for (var t = 0; t < 4 && bits.length < dataCap * 8; t++) { bits.push(0); }
+    while (bits.length % 8) { bits.push(0); }
+    var data = [];
+    for (var p = 0; p < bits.length; p += 8) { var by = 0; for (var q = 0; q < 8; q++) { by = (by << 1) | bits[p + q]; } data.push(by); }
+    for (var pad = 0; data.length < dataCap; pad++) { data.push(pad % 2 ? 0x11 : 0xEC); }
+    var EXP = new Array(512), LOG = new Array(256), x = 1;
+    for (var z = 0; z < 255; z++) { EXP[z] = x; LOG[x] = z; x <<= 1; if (x & 0x100) { x ^= 0x11D; } }
+    for (z = 255; z < 512; z++) { EXP[z] = EXP[z - 255]; }
+    var mul = function (a, b) { return (a && b) ? EXP[LOG[a] + LOG[b]] : 0; };
+    var ecn = e[0], gen = [1];
+    for (z = 0; z < ecn; z++) {
+      var ng = new Array(gen.length + 1).fill(0);
+      for (var j = 0; j < gen.length; j++) { ng[j] ^= gen[j]; ng[j + 1] ^= mul(gen[j], EXP[z]); }
+      gen = ng;
+    }
+    var rs = function (msg) {
+      var res = msg.concat(new Array(ecn).fill(0));
+      for (var a = 0; a < msg.length; a++) {
+        var c = res[a];
+        if (c) { for (var b = 0; b < gen.length; b++) { res[a + b] ^= mul(gen[b], c); } }
+      }
+      return res.slice(msg.length);
+    };
+    var blocks = [], ecs = [], off = 0;
+    for (var g = 0; g < e[1] + e[3]; g++) {
+      var len = g < e[1] ? e[2] : e[4];
+      var blk = data.slice(off, off + len); off += len;
+      blocks.push(blk); ecs.push(rs(blk));
+    }
+    var final = [];
+    var maxLen = Math.max(e[2], e[4]);
+    for (var i2 = 0; i2 < maxLen; i2++) { blocks.forEach(function (bk) { if (i2 < bk.length) { final.push(bk[i2]); } }); }
+    for (i2 = 0; i2 < ecn; i2++) { ecs.forEach(function (ek) { final.push(ek[i2]); }); }
+    var n = ver * 4 + 17;
+    var M = [], R = [];
+    for (var r = 0; r < n; r++) { M.push(new Array(n).fill(0)); R.push(new Array(n).fill(false)); }
+    var set = function (rr, cc, val) { M[rr][cc] = val ? 1 : 0; R[rr][cc] = true; };
+    var finder = function (rr, cc) {
+      for (var dr = -1; dr <= 7; dr++) {
+        for (var dc = -1; dc <= 7; dc++) {
+          var y = rr + dr, xx = cc + dc;
+          if (y < 0 || xx < 0 || y >= n || xx >= n) { continue; }
+          var on = (dr >= 0 && dr <= 6 && (dc === 0 || dc === 6)) || (dc >= 0 && dc <= 6 && (dr === 0 || dr === 6)) || (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4);
+          set(y, xx, on);
+        }
+      }
+    };
+    finder(0, 0); finder(0, n - 7); finder(n - 7, 0);
+    for (i2 = 8; i2 < n - 8; i2++) { set(6, i2, i2 % 2 === 0); set(i2, 6, i2 % 2 === 0); }
+    var al = AL[ver];
+    al.forEach(function (ar) {
+      al.forEach(function (ac) {
+        if ((ar === 6 && ac === 6) || (ar === 6 && ac === n - 7) || (ar === n - 7 && ac === 6)) { return; }
+        for (var dr = -2; dr <= 2; dr++) { for (var dc = -2; dc <= 2; dc++) { set(ar + dr, ac + dc, Math.max(Math.abs(dr), Math.abs(dc)) !== 1); } }
+      });
+    });
+    set(n - 8, 8, true);
+    for (i2 = 0; i2 < 9; i2++) { if (!R[8][i2]) { R[8][i2] = true; } if (!R[i2][8]) { R[i2][8] = true; } }
+    for (i2 = 0; i2 < 8; i2++) { R[8][n - 1 - i2] = true; R[n - 1 - i2][8] = true; }
+    if (ver >= 7) {
+      var vb = ver << 12, rem = ver << 12;
+      for (var k2 = 17; k2 >= 12; k2--) { if ((rem >>> k2) & 1) { rem ^= 0x1F25 << (k2 - 12); } }
+      vb |= rem;
+      for (i2 = 0; i2 < 18; i2++) {
+        var bit = (vb >>> i2) & 1;
+        var a1 = Math.floor(i2 / 3), b1 = n - 11 + (i2 % 3);
+        set(a1, b1, bit); set(b1, a1, bit);
+      }
+    }
+    var fbits = [];
+    final.forEach(function (cw) { for (var k3 = 7; k3 >= 0; k3--) { fbits.push((cw >>> k3) & 1); } });
+    var idx = 0, up = true;
+    for (var col = n - 1; col > 0; col -= 2) {
+      if (col === 6) { col--; }
+      for (var s = 0; s < n; s++) {
+        var row = up ? n - 1 - s : s;
+        for (var cdx = 0; cdx < 2; cdx++) {
+          var cc2 = col - cdx;
+          if (R[row][cc2]) { continue; }
+          M[row][cc2] = idx < fbits.length ? fbits[idx] : 0; idx++;
+        }
+      }
+      up = !up;
+    }
+    var maskFn = [
+      function (i, j) { return (i + j) % 2 === 0; },
+      function (i) { return i % 2 === 0; },
+      function (i, j) { return j % 3 === 0; },
+      function (i, j) { return (i + j) % 3 === 0; },
+      function (i, j) { return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 === 0; },
+      function (i, j) { return (i * j) % 2 + (i * j) % 3 === 0; },
+      function (i, j) { return ((i * j) % 2 + (i * j) % 3) % 2 === 0; },
+      function (i, j) { return ((i + j) % 2 + (i * j) % 3) % 2 === 0; }
+    ];
+    var build = function (mk) {
+      var A = M.map(function (rw) { return rw.slice(); });
+      for (var i = 0; i < n; i++) { for (var j = 0; j < n; j++) { if (!R[i][j] && maskFn[mk](i, j)) { A[i][j] ^= 1; } } }
+      var fmt = (0 << 3) | mk, fr = fmt << 10;
+      for (var k = 14; k >= 10; k--) { if ((fr >>> k) & 1) { fr ^= 0x537 << (k - 10); } }
+      var fb = ((fmt << 10) | fr) ^ 0x5412;
+      for (i = 0; i < 15; i++) {
+        var bt = (fb >>> i) & 1;
+        if (i < 6) { A[i][8] = bt; } else if (i < 8) { A[i + 1][8] = bt; } else { A[n - 15 + i][8] = bt; }
+        if (i < 8) { A[8][n - i - 1] = bt; } else if (i < 9) { A[8][15 - i - 1 + 1] = bt; } else { A[8][15 - i - 1] = bt; }
+      }
+      A[n - 8][8] = 1;
+      return A;
+    };
+    var penalty = function (A) {
+      var pen = 0, i, j, run, dark = 0;
+      for (i = 0; i < n; i++) {
+        run = 1;
+        for (j = 1; j < n; j++) { if (A[i][j] === A[i][j - 1]) { run++; } else { if (run >= 5) { pen += run - 2; } run = 1; } }
+        if (run >= 5) { pen += run - 2; }
+        run = 1;
+        for (j = 1; j < n; j++) { if (A[j][i] === A[j - 1][i]) { run++; } else { if (run >= 5) { pen += run - 2; } run = 1; } }
+        if (run >= 5) { pen += run - 2; }
+      }
+      for (i = 0; i < n - 1; i++) { for (j = 0; j < n - 1; j++) { var c = A[i][j]; if (c === A[i][j + 1] && c === A[i + 1][j] && c === A[i + 1][j + 1]) { pen += 3; } } }
+      for (i = 0; i < n; i++) { for (j = 0; j < n; j++) { dark += A[i][j]; } }
+      pen += Math.floor(Math.abs(dark * 20 / (n * n) - 10)) * 10;
+      return pen;
+    };
+    var best = null, bestP = Infinity;
+    for (var m2 = 0; m2 < 8; m2++) { var cand = build(m2), pp = penalty(cand); if (pp < bestP) { bestP = pp; best = cand; } }
+    return best;
+  }
+  buildQr() {
+    var url = '';
+    try { if (typeof location !== 'undefined' && location.href) { url = String(location.href); } } catch (err) {}
+    if (!/^https?:/i.test(url)) { url = 'https://yourbrand.com/yourname'; }
+    if (this._qr && this._qrUrl === url) { return this._qr; }
+    var mx = this.qrEncode(url) || this.qrEncode(url.slice(0, 300));
+    var cells = [];
+    for (var i = 0; i < mx.length; i++) { for (var j = 0; j < mx.length; j++) { cells.push({ c: mx[i][j] ? '#111315' : '#FFFFFF' }); } }
+    this._qrUrl = url;
+    this._qrN = mx.length;
+    this._qr = cells;
+    return cells;
+  }
+  sectionKey(label) {
+    var map = { 'Gallery': 'gallery', 'Portfolio links': 'portfolio', 'Services list': 'services', 'Résumé download': 'resume', 'Experience': 'experience', 'Skills': 'skills', 'Stats row': 'stats' };
+    return map[label] || 'none';
+  }
+  buildSections() {
+    var a = this.sectionKey(this.props.sectionA ?? 'Gallery');
+    var b = this.sectionKey(this.props.sectionB ?? 'Experience');
+    var raw = String(this.props.order ?? 'about, sectionA, connect, sectionB, profiles, messages').toLowerCase().split(',');
+    var labels = { about: 'ABOUT', connect: 'CONNECT', profiles: 'PROFILES TO VIEW', messages: 'WAYS TO MESSAGE', gallery: 'GALLERY', portfolio: 'PORTFOLIO', services: 'SERVICES', resume: 'RÉSUMÉ', experience: 'EXPERIENCE', skills: 'SKILLS', stats: 'AT A GLANCE' };
+    var optional = { gallery: 1, portfolio: 1, services: 1, resume: 1, experience: 1, skills: 1, stats: 1 };
+    var seen = {};
+    var out = [];
+    var picks = 0;
+    raw.forEach(function (tok) {
+      var k = tok.trim().replace(/\s+/g, '');
+      if (k === 'sectiona') { k = a; }
+      if (k === 'sectionb') { k = b; }
+      if (k === 'résumé' || k === 'cv') { k = 'resume'; }
+      if (!labels[k] || seen[k]) { return; }
+      seen[k] = true;
+      var isOpt = !!optional[k];
+      if (isOpt) { picks += 1; }
+      out.push({
+        key: k,
+        label: labels[k],
+        isAddon: isOpt && picks > 2,
+        tag: 'ADD-ON',
+        isAbout: k === 'about', isConnect: k === 'connect', isProfiles: k === 'profiles', isMessages: k === 'messages',
+        isGallery: k === 'gallery', isPortfolio: k === 'portfolio', isServices: k === 'services', isResume: k === 'resume',
+        isExperience: k === 'experience', isSkills: k === 'skills', isStats: k === 'stats'
+      });
+    });
+    return out;
+  }
+  renderVals() {
+    var self = this;
+    var s = this.state;
+    var mode = this.resolveTheme();
+    var t = this.palette(mode);
+    var dark = mode === 'dark';
+    var f = this.fonts(this.props.fontPair ?? 'Modern — Bricolage');
+    var card = s.cardPick || this.hex(this.props.card, '#F4F4F2');
+    var accent = this.hex(this.props.accent, '#F28C28');
+    var finish = this.props.finish ?? 'holographic';
+    var banner = 'None';
+    var lightCard = this.lum(card) > 0.55;
+    var ink = lightCard ? '#111315' : '#F4F4F2';
+    var ry = s.ry + (s.flipped ? 180 : 0);
+    var clash = this.near(card, t.ink);
+    var glowHex = this.near(card, t.bg) ? accent : card;
+    var accentText = (dark && this.lum(accent) < 0.25) ? this.mix(accent, 255, 0.5) : ((!dark && this.lum(accent) > 0.6) ? this.mix(accent, 0, 0.45) : accent);
+    var stripe = this.rgba(accent, dark ? 0.16 : 0.14);
+    var bannerPattern = 'repeating-linear-gradient(135deg, ' + stripe + ' 0 14px, transparent 14px 28px), radial-gradient(circle at 80% 20%, ' + this.rgba(accent, 0.35) + ', transparent 60%)';
+    var swatchDefs = [['Pearl', '#F4F4F2'], ['Graphite', '#202328'], ['Cobalt', '#2343D6'], ['Forest', '#1F4D3A'], ['Oxblood', '#6B1F2A'], ['Sand', '#D9C7A7']];
+    var cardName = 'Custom';
+    swatchDefs.forEach(function (d) { if (d[1].toLowerCase() === String(card).toLowerCase()) { cardName = d[0]; } });
+    var patterns = [
+      'repeating-linear-gradient(45deg, ' + this.rgba(accent, 0.18) + ' 0 10px, transparent 10px 20px)',
+      'radial-gradient(' + this.rgba(accent, 0.28) + ' 1.5px, transparent 1.8px)',
+      'linear-gradient(135deg, ' + this.rgba(accent, 0.30) + ', transparent 70%)',
+      'repeating-linear-gradient(0deg, ' + this.rgba(accent, 0.16) + ' 0 2px, transparent 2px 12px)',
+      'radial-gradient(circle at 30% 30%, ' + this.rgba(accent, 0.35) + ', transparent 55%)',
+      'repeating-linear-gradient(90deg, ' + this.rgba(accent, 0.14) + ' 0 18px, transparent 18px 36px)'
+    ];
+    return {
+      bg: t.bg, ink: t.ink, muted: t.muted, surface: t.surface, line: t.line, soft: t.soft, dim: t.dim, faint: t.faint,
+      fHead: f.head, fBody: f.body, fMono: f.mono,
+      glow: 'radial-gradient(closest-side, ' + this.rgba(glowHex, 0.75) + ' 0%, ' + this.rgba(glowHex, 0.28) + ' 45%, transparent 100%)',
+      glowOpacity: t.glowOpacity,
+      cardShadow: t.cardShadow,
+      accent: accent,
+      accentText: accentText,
+      accentSoft: this.rgba(accent, dark ? 0.2 : 0.14),
+      bannerAbove: banner === 'Above the card',
+      bannerBehind: banner === 'Behind the card',
+      bannerBase: dark ? '#14161A' : '#E9EAEE',
+      bannerPattern: bannerPattern,
+      bannerLabel: dark ? 'rgba(255,255,255,0.4)' : 'rgba(18,20,23,0.4)',
+      cardLift: banner === 'Above the card' ? '-74px' : '26px',
+      headerLine: banner === 'Behind the card' ? 'transparent' : t.line,
+      chromeBg: banner === 'Behind the card' ? this.rgba(t.bg, 0.6) : 'transparent',
+      isDark: dark,
+      isLight: !dark,
+      themeAria: dark ? 'Switch to light theme' : 'Switch to dark theme',
+      toggleTheme: function () { self.setState({ themeOverride: self.resolveTheme() === 'dark' ? 'light' : 'dark' }); },
+      card: card,
+      cardInk: ink,
+      cardName: cardName,
+      holo: finish === 'holographic',
+      holoBlend: lightCard ? 'multiply' : 'screen',
+      holoPos: (100 - s.gx) + '% ' + (100 - s.gy) + '%',
+      glare: 'radial-gradient(circle at ' + s.gx + '% ' + s.gy + '%, rgba(255,255,255,' + (lightCard ? 0.55 : 0.22) + '), rgba(255,255,255,0) 55%)',
+      photoLine: lightCard ? 'rgba(17,19,21,0.10)' : 'rgba(244,244,242,0.16)',
+      qr: this.buildQr(),
+      qrCols: 'repeat(' + (this._qrN || 21) + ', minmax(0, 1fr))',
+      cardTransform: 'rotateX(' + s.rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)',
+      cardTransition: s.moving ? 'transform 120ms ease-out' : 'transform 750ms cubic-bezier(.2,.8,.2,1)',
+      tiltMove: function (e) {
+        var el = e.currentTarget;
+        if (!el) { return; }
+        var r = el.getBoundingClientRect();
+        var p = (e.touches && e.touches[0]) ? e.touches[0] : e;
+        var x = Math.min(1, Math.max(0, (p.clientX - r.left) / r.width));
+        var y = Math.min(1, Math.max(0, (p.clientY - r.top) / r.height));
+        self.setState({ rx: (0.5 - y) * 16, ry: (x - 0.5) * 22, gx: Math.round(x * 100), gy: Math.round(y * 100), moving: true });
+      },
+      tiltReset: function () { self.setState({ rx: 0, ry: 0, gx: 50, gy: 30, moving: false }); },
+      flip: function () { self.setState({ flipped: !self.state.flipped, moving: false }); },
+      showFront: function () { self.setState({ flipped: false, moving: false }); },
+      showBack: function () { self.setState({ flipped: true, moving: false }); },
+      frontBg: s.flipped ? 'transparent' : t.ink,
+      frontInk: s.flipped ? t.muted : t.bg,
+      backBg: s.flipped ? t.ink : 'transparent',
+      backInk: s.flipped ? t.bg : t.muted,
+      saved: s.saved,
+      notSaved: !s.saved,
+      saveLabel: s.saved ? 'Saved to contacts' : 'Save Contact',
+      saveBg: s.saved ? t.surface : t.ink,
+      saveInk: s.saved ? t.ink : t.bg,
+      saveBorder: s.saved ? 'inset 0 0 0 1px ' + t.line : 'none',
+      saveChip: s.saved ? 'rgba(52,199,123,0.18)' : (clash ? this.rgba(t.bg, 0.18) : card),
+      saveChipInk: s.saved ? t.ink : (clash ? t.bg : ink),
+      save: function () {
+        if (!self.state.saved) { self.setState({ saved: true }); self.showToast('Contact card downloaded'); }
+      },
+      sections: this.buildSections(),
+      gallery: [1, 2, 3, 4, 5, 6].map(function (n, i) { return { label: 'PHOTO ' + n + ' / 6', pattern: patterns[i] }; }),
+      portfolio: [
+        { title: '[Project title]', desc: '[One-line description of the project]', pattern: patterns[0] },
+        { title: '[Project title]', desc: '[One-line description of the project]', pattern: patterns[1] },
+        { title: '[Project title]', desc: '[One-line description of the project]', pattern: patterns[2] }
+      ],
+      services: [
+        { name: '[Service name]', desc: '[What the client gets]', price: 'from ₱[X]', divider: 'none' },
+        { name: '[Service name]', desc: '[What the client gets]', price: 'from ₱[X]', divider: 'inset 0 1px 0 ' + t.line },
+        { name: '[Service name]', desc: '[What the client gets]', price: 'Ask me', divider: 'inset 0 1px 0 ' + t.line }
+      ],
+      experience: [
+        { years: 'JUN — AUG 2025', role: 'Full-Stack Developer Intern', org: 'AWB', dot: accent, ring: 'none', hasLine: true },
+        { years: '20XX — 20XX', role: '[Previous role]', org: '[Organization]', dot: 'transparent', ring: 'inset 0 0 0 1.5px ' + t.faint, hasLine: true },
+        { years: '20XX', role: '[Degree or certification]', org: '[School or issuer]', dot: 'transparent', ring: 'inset 0 0 0 1.5px ' + t.faint, hasLine: false }
+      ],
+      skills: ['TypeScript', 'Next.js', 'Node.js', 'PostgreSQL', 'Prisma', 'Python', 'Docker'].map(function (k) { return { label: k }; }),
+      downloadResume: function () { self.showToast('Résumé downloaded'); },
+      paletteOpen: s.paletteOpen,
+      paletteAria: s.paletteOpen ? 'true' : 'false',
+      cogInk: s.paletteOpen ? t.ink : t.faint,
+      cogTurn: s.paletteOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+      togglePalette: function () { self.setState({ paletteOpen: !self.state.paletteOpen }); },
+      swatches: swatchDefs.map(function (d) {
+        var on = d[1].toLowerCase() === String(card).toLowerCase();
+        return {
+          name: d[0],
+          c: d[1],
+          ring: on ? '0 0 0 2px ' + t.surface + ', 0 0 0 4px ' + t.ink : 'inset 0 0 0 1px rgba(0,0,0,0.14)',
+          pick: function () {
+            self.setState({ cardPick: d[1], flipped: false });
+            try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (err) {}
+          }
+        };
+      }),
+      shareCard: function () {
+        var url = (typeof location !== 'undefined') ? location.href : '';
+        try {
+          if (navigator.share) { navigator.share({ title: 'Warren Jacob Abdon', url: url }); return; }
+          if (navigator.clipboard) { navigator.clipboard.writeText(url); }
+        } catch (err) {}
+        self.showToast('Link copied');
+      },
+      copyEmail: function () {
+        try { if (navigator.clipboard) { navigator.clipboard.writeText('hello@warrenabdon.dev'); } } catch (err) {}
+        self.showToast('Email copied');
+      },
+      hasToast: !!s.toast,
+      toast: s.toast
+    };
+  }
+}
+</script>
+<script>(function(global,factory){typeof exports==="object"&&typeof module!=="undefined"?module.exports=factory():typeof define==="function"&&define.amd?define(factory):(global=global||self,global.morphdom=factory())})(this,function(){"use strict";var DOCUMENT_FRAGMENT_NODE=11;function morphAttrs(fromNode,toNode){var toNodeAttrs=toNode.attributes;var attr;var attrName;var attrNamespaceURI;var attrValue;var fromValue;if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE||fromNode.nodeType===DOCUMENT_FRAGMENT_NODE){return}for(var i=toNodeAttrs.length-1;i>=0;i--){attr=toNodeAttrs[i];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;attrValue=attr.value;if(attrNamespaceURI){attrName=attr.localName||attrName;fromValue=fromNode.getAttributeNS(attrNamespaceURI,attrName);if(fromValue!==attrValue){if(attr.prefix==="xmlns"){attrName=attr.name}fromNode.setAttributeNS(attrNamespaceURI,attrName,attrValue)}}else{fromValue=fromNode.getAttribute(attrName);if(fromValue!==attrValue){fromNode.setAttribute(attrName,attrValue)}}}var fromNodeAttrs=fromNode.attributes;for(var d=fromNodeAttrs.length-1;d>=0;d--){attr=fromNodeAttrs[d];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;if(attrNamespaceURI){attrName=attr.localName||attrName;if(!toNode.hasAttributeNS(attrNamespaceURI,attrName)){fromNode.removeAttributeNS(attrNamespaceURI,attrName)}}else{if(!toNode.hasAttribute(attrName)){fromNode.removeAttribute(attrName)}}}}var range;var NS_XHTML="http://www.w3.org/1999/xhtml";var doc=typeof document==="undefined"?undefined:document;var HAS_TEMPLATE_SUPPORT=!!doc&&"content"in doc.createElement("template");var HAS_RANGE_SUPPORT=!!doc&&doc.createRange&&"createContextualFragment"in doc.createRange();function createFragmentFromTemplate(str){var template=doc.createElement("template");template.innerHTML=str;return template.content.childNodes[0]}function createFragmentFromRange(str){if(!range){range=doc.createRange();range.selectNode(doc.body)}var fragment=range.createContextualFragment(str);return fragment.childNodes[0]}function createFragmentFromWrap(str){var fragment=doc.createElement("body");fragment.innerHTML=str;return fragment.childNodes[0]}function toElement(str){str=str.trim();if(HAS_TEMPLATE_SUPPORT){return createFragmentFromTemplate(str)}else if(HAS_RANGE_SUPPORT){return createFragmentFromRange(str)}return createFragmentFromWrap(str)}function compareNodeNames(fromEl,toEl){var fromNodeName=fromEl.nodeName;var toNodeName=toEl.nodeName;var fromCodeStart,toCodeStart;if(fromNodeName===toNodeName){return true}fromCodeStart=fromNodeName.charCodeAt(0);toCodeStart=toNodeName.charCodeAt(0);if(fromCodeStart<=90&&toCodeStart>=97){return fromNodeName===toNodeName.toUpperCase()}else if(toCodeStart<=90&&fromCodeStart>=97){return toNodeName===fromNodeName.toUpperCase()}else{return false}}function createElementNS(name,namespaceURI){return!namespaceURI||namespaceURI===NS_XHTML?doc.createElement(name):doc.createElementNS(namespaceURI,name)}function moveChildren(fromEl,toEl){var curChild=fromEl.firstChild;while(curChild){var nextChild=curChild.nextSibling;toEl.appendChild(curChild);curChild=nextChild}return toEl}function syncBooleanAttrProp(fromEl,toEl,name){if(fromEl[name]!==toEl[name]){fromEl[name]=toEl[name];if(fromEl[name]){fromEl.setAttribute(name,"")}else{fromEl.removeAttribute(name)}}}var specialElHandlers={OPTION:function(fromEl,toEl){var parentNode=fromEl.parentNode;if(parentNode){var parentName=parentNode.nodeName.toUpperCase();if(parentName==="OPTGROUP"){parentNode=parentNode.parentNode;parentName=parentNode&&parentNode.nodeName.toUpperCase()}if(parentName==="SELECT"&&!parentNode.hasAttribute("multiple")){if(fromEl.hasAttribute("selected")&&!toEl.selected){fromEl.setAttribute("selected","selected");fromEl.removeAttribute("selected")}parentNode.selectedIndex=-1}}syncBooleanAttrProp(fromEl,toEl,"selected")},INPUT:function(fromEl,toEl){syncBooleanAttrProp(fromEl,toEl,"checked");syncBooleanAttrProp(fromEl,toEl,"disabled");if(fromEl.value!==toEl.value){fromEl.value=toEl.value}if(!toEl.hasAttribute("value")){fromEl.removeAttribute("value")}},TEXTAREA:function(fromEl,toEl){var newValue=toEl.value;if(fromEl.value!==newValue){fromEl.value=newValue}var firstChild=fromEl.firstChild;if(firstChild){var oldValue=firstChild.nodeValue;if(oldValue==newValue||!newValue&&oldValue==fromEl.placeholder){return}firstChild.nodeValue=newValue}},SELECT:function(fromEl,toEl){if(!toEl.hasAttribute("multiple")){var selectedIndex=-1;var i=0;var curChild=fromEl.firstChild;var optgroup;var nodeName;while(curChild){nodeName=curChild.nodeName&&curChild.nodeName.toUpperCase();if(nodeName==="OPTGROUP"){optgroup=curChild;curChild=optgroup.firstChild}else{if(nodeName==="OPTION"){if(curChild.hasAttribute("selected")){selectedIndex=i;break}i++}curChild=curChild.nextSibling;if(!curChild&&optgroup){curChild=optgroup.nextSibling;optgroup=null}}}fromEl.selectedIndex=selectedIndex}}};var ELEMENT_NODE=1;var DOCUMENT_FRAGMENT_NODE$1=11;var TEXT_NODE=3;var COMMENT_NODE=8;function noop(){}function defaultGetNodeKey(node){if(node){return node.getAttribute&&node.getAttribute("id")||node.id}}function morphdomFactory(morphAttrs){return function morphdom(fromNode,toNode,options){if(!options){options={}}if(typeof toNode==="string"){if(fromNode.nodeName==="#document"||fromNode.nodeName==="HTML"||fromNode.nodeName==="BODY"){var toNodeHtml=toNode;toNode=doc.createElement("html");toNode.innerHTML=toNodeHtml}else{toNode=toElement(toNode)}}else if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE$1){toNode=toNode.firstElementChild}var getNodeKey=options.getNodeKey||defaultGetNodeKey;var onBeforeNodeAdded=options.onBeforeNodeAdded||noop;var onNodeAdded=options.onNodeAdded||noop;var onBeforeElUpdated=options.onBeforeElUpdated||noop;var onElUpdated=options.onElUpdated||noop;var onBeforeNodeDiscarded=options.onBeforeNodeDiscarded||noop;var onNodeDiscarded=options.onNodeDiscarded||noop;var onBeforeElChildrenUpdated=options.onBeforeElChildrenUpdated||noop;var skipFromChildren=options.skipFromChildren||noop;var addChild=options.addChild||function(parent,child){return parent.appendChild(child)};var childrenOnly=options.childrenOnly===true;var fromNodesLookup=Object.create(null);var keyedRemovalList=[];function addKeyedRemoval(key){keyedRemovalList.push(key)}function walkDiscardedChildNodes(node,skipKeyedNodes){if(node.nodeType===ELEMENT_NODE){var curChild=node.firstChild;while(curChild){var key=undefined;if(skipKeyedNodes&&(key=getNodeKey(curChild))){addKeyedRemoval(key)}else{onNodeDiscarded(curChild);if(curChild.firstChild){walkDiscardedChildNodes(curChild,skipKeyedNodes)}}curChild=curChild.nextSibling}}}function removeNode(node,parentNode,skipKeyedNodes){if(onBeforeNodeDiscarded(node)===false){return}if(parentNode){parentNode.removeChild(node)}onNodeDiscarded(node);walkDiscardedChildNodes(node,skipKeyedNodes)}function indexTree(node){if(node.nodeType===ELEMENT_NODE||node.nodeType===DOCUMENT_FRAGMENT_NODE$1){var curChild=node.firstChild;while(curChild){var key=getNodeKey(curChild);if(key){fromNodesLookup[key]=curChild}indexTree(curChild);curChild=curChild.nextSibling}}}indexTree(fromNode);function handleNodeAdded(el){onNodeAdded(el);var curChild=el.firstChild;while(curChild){var nextSibling=curChild.nextSibling;var key=getNodeKey(curChild);if(key){var unmatchedFromEl=fromNodesLookup[key];if(unmatchedFromEl&&compareNodeNames(curChild,unmatchedFromEl)){curChild.parentNode.replaceChild(unmatchedFromEl,curChild);morphEl(unmatchedFromEl,curChild)}else{handleNodeAdded(curChild)}}else{handleNodeAdded(curChild)}curChild=nextSibling}}function cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey){while(curFromNodeChild){var fromNextSibling=curFromNodeChild.nextSibling;if(curFromNodeKey=getNodeKey(curFromNodeChild)){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}}function morphEl(fromEl,toEl,childrenOnly){var toElKey=getNodeKey(toEl);if(toElKey){delete fromNodesLookup[toElKey]}if(!childrenOnly){var beforeUpdateResult=onBeforeElUpdated(fromEl,toEl);if(beforeUpdateResult===false){return}else if(beforeUpdateResult instanceof HTMLElement){fromEl=beforeUpdateResult;indexTree(fromEl)}morphAttrs(fromEl,toEl);onElUpdated(fromEl);if(onBeforeElChildrenUpdated(fromEl,toEl)===false){return}}if(fromEl.nodeName!=="TEXTAREA"){morphChildren(fromEl,toEl)}else{specialElHandlers.TEXTAREA(fromEl,toEl)}}function morphChildren(fromEl,toEl){var skipFrom=skipFromChildren(fromEl,toEl);var curToNodeChild=toEl.firstChild;var curFromNodeChild=fromEl.firstChild;var curToNodeKey;var curFromNodeKey;var fromNextSibling;var toNextSibling;var matchingFromEl;outer:while(curToNodeChild){toNextSibling=curToNodeChild.nextSibling;curToNodeKey=getNodeKey(curToNodeChild);while(!skipFrom&&curFromNodeChild){fromNextSibling=curFromNodeChild.nextSibling;if(curToNodeChild.isSameNode&&curToNodeChild.isSameNode(curFromNodeChild)){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}curFromNodeKey=getNodeKey(curFromNodeChild);var curFromNodeType=curFromNodeChild.nodeType;var isCompatible=undefined;if(curFromNodeType===curToNodeChild.nodeType){if(curFromNodeType===ELEMENT_NODE){if(curToNodeKey){if(curToNodeKey!==curFromNodeKey){if(matchingFromEl=fromNodesLookup[curToNodeKey]){if(fromNextSibling===matchingFromEl){isCompatible=false}else{fromEl.insertBefore(matchingFromEl,curFromNodeChild);if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=matchingFromEl;curFromNodeKey=getNodeKey(curFromNodeChild)}}else{isCompatible=false}}}else if(curFromNodeKey){isCompatible=false}isCompatible=isCompatible!==false&&compareNodeNames(curFromNodeChild,curToNodeChild);if(isCompatible){morphEl(curFromNodeChild,curToNodeChild)}}else if(curFromNodeType===TEXT_NODE||curFromNodeType==COMMENT_NODE){isCompatible=true;if(curFromNodeChild.nodeValue!==curToNodeChild.nodeValue){curFromNodeChild.nodeValue=curToNodeChild.nodeValue}}}if(isCompatible){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}if(curToNodeKey&&(matchingFromEl=fromNodesLookup[curToNodeKey])&&compareNodeNames(matchingFromEl,curToNodeChild)){if(!skipFrom){addChild(fromEl,matchingFromEl)}morphEl(matchingFromEl,curToNodeChild)}else{var onBeforeNodeAddedResult=onBeforeNodeAdded(curToNodeChild);if(onBeforeNodeAddedResult!==false){if(onBeforeNodeAddedResult){curToNodeChild=onBeforeNodeAddedResult}if(curToNodeChild.actualize){curToNodeChild=curToNodeChild.actualize(fromEl.ownerDocument||doc)}addChild(fromEl,curToNodeChild);handleNodeAdded(curToNodeChild)}}curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling}cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey);var specialElHandler=specialElHandlers[fromEl.nodeName];if(specialElHandler){specialElHandler(fromEl,toEl)}}var morphedNode=fromNode;var morphedNodeType=morphedNode.nodeType;var toNodeType=toNode.nodeType;if(!childrenOnly){if(morphedNodeType===ELEMENT_NODE){if(toNodeType===ELEMENT_NODE){if(!compareNodeNames(fromNode,toNode)){onNodeDiscarded(fromNode);morphedNode=moveChildren(fromNode,createElementNS(toNode.nodeName,toNode.namespaceURI))}}else{morphedNode=toNode}}else if(morphedNodeType===TEXT_NODE||morphedNodeType===COMMENT_NODE){if(toNodeType===morphedNodeType){if(morphedNode.nodeValue!==toNode.nodeValue){morphedNode.nodeValue=toNode.nodeValue}return morphedNode}else{morphedNode=toNode}}}if(morphedNode===toNode){onNodeDiscarded(fromNode)}else{if(toNode.isSameNode&&toNode.isSameNode(morphedNode)){return}morphEl(morphedNode,toNode,childrenOnly);if(keyedRemovalList){for(var i=0,len=keyedRemovalList.length;i<len;i++){var elToRemove=fromNodesLookup[keyedRemovalList[i]];if(elToRemove){removeNode(elToRemove,elToRemove.parentNode,false)}}}}if(!childrenOnly&&morphedNode!==fromNode&&fromNode.parentNode){if(morphedNode.actualize){morphedNode=morphedNode.actualize(fromNode.ownerDocument||doc)}fromNode.parentNode.replaceChild(morphedNode,fromNode)}return morphedNode}}var morphdom=morphdomFactory(morphAttrs);return morphdom});</script>
+<script>(function () {
+  function legacyCopy(t) { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); }
+  var nativeWrite = navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText.bind(navigator.clipboard) : null;
+  var shim = function (t) { if (!nativeWrite) { legacyCopy(t); return Promise.resolve(); } return nativeWrite(t).catch(function () { legacyCopy(t); }); };
+  try { if (navigator.clipboard) { navigator.clipboard.writeText = shim; } else { Object.defineProperty(navigator, 'clipboard', { value: { writeText: shim } }); } } catch (e) {}
+})();
+(function () {
+  var C = JSON.parse(document.getElementById('dc-contact').textContent);
+  var photoB64 = '';
+  if (C.photo) {
+    fetch(C.photo).then(function (r) { return r.blob(); }).then(function (b) {
+      var fr = new FileReader(); fr.onload = function () { photoB64 = String(fr.result).split(',')[1] || ''; }; fr.readAsDataURL(b);
+    }).catch(function () {});
+  }
+  function esc(v) { return String(v || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1'); }
+  function fold(line) { var out = []; while (line.length > 75) { out.push(line.slice(0, 75)); line = ' ' + line.slice(75); } out.push(line); return out.join('\r\n'); }
+  window.__dcSaveContact = function () {
+    var url = C.website || location.href;
+    var L = ['BEGIN:VCARD', 'VERSION:3.0',
+      'N:' + esc(C.lastName) + ';' + esc(C.firstName) + ';;;',
+      'FN:' + esc(C.fullName)];
+    if (C.title) { L.push('TITLE:' + esc(C.title)); }
+    if (C.org) { L.push('ORG:' + esc(C.org)); }
+    if (C.phone) { L.push('TEL;TYPE=CELL:' + C.phone); }
+    if (C.email) { L.push('EMAIL;TYPE=INTERNET:' + C.email); }
+    if (url) { L.push('URL:' + url); }
+    if (C.city || C.country) { L.push('ADR;TYPE=WORK:;;;' + esc(C.city) + ';;;' + esc(C.country)); }
+    if (C.note) { L.push('NOTE:' + esc(C.note)); }
+    if (photoB64) { L.push('PHOTO;ENCODING=b;TYPE=JPEG:' + photoB64); }
+    L.push('END:VCARD');
+    var text = L.map(fold).join('\r\n') + '\r\n';
+    var blob = new Blob([text], { type: 'text/vcard;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (C.fullName || 'contact').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.vcf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  };
+})();
+(function () {
+  var tpl = document.getElementById('dc-template');
+  var root = document.getElementById('app');
+  var PROPS = JSON.parse(document.getElementById('dc-props').textContent);
+  function DCLogic(props) { this.props = props || {}; this.state = {}; }
+  DCLogic.prototype.setState = function (p) {
+    var next = typeof p === 'function' ? p(this.state, this.props) : p;
+    this.state = Object.assign({}, this.state, next);
+    schedule();
+  };
+  var Component = new Function('DCLogic', document.getElementById('dc-logic').textContent + '\nreturn Component;')(DCLogic);
+  var comp = new Component(PROPS);
+  if (!comp.state) { comp.state = {}; }
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  function get(scope, path) {
+    if (path === 'true') { return true; }
+    if (path === 'false') { return false; }
+    return path.split('.').reduce(function (a, k) { return a == null ? a : a[k]; }, scope);
+  }
+  function sub(str, scope) {
+    return str.replace(HOLE, function (m, p) { var v = get(scope, p); return (v == null || typeof v === 'function') ? '' : String(v); });
+  }
+  function build(node, scope, parent) {
+    var kids = node.childNodes;
+    for (var i = 0; i < kids.length; i++) {
+      var ch = kids[i];
+      if (ch.nodeType === 3) { parent.appendChild(document.createTextNode(sub(ch.textContent, scope))); continue; }
+      if (ch.nodeType !== 1) { continue; }
+      var tag = ch.localName;
+      if (tag === 'sc-if') {
+        var m = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('value') || '');
+        if (m && get(scope, m[1])) { build(ch, scope, parent); }
+        continue;
+      }
+      if (tag === 'sc-for') {
+        var lm = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('list') || '');
+        var as = ch.getAttribute('as');
+        var list = (lm && get(scope, lm[1])) || [];
+        for (var j = 0; j < list.length; j++) { var sc = Object.create(scope); sc[as] = list[j]; build(ch, sc, parent); }
+        continue;
+      }
+      var el = ch.namespaceURI && ch.namespaceURI !== 'http://www.w3.org/1999/xhtml' ? document.createElementNS(ch.namespaceURI, ch.localName) : document.createElement(tag);
+      var attrs = ch.attributes;
+      for (var a = 0; a < attrs.length; a++) {
+        var at = attrs[a];
+        if (/^on[a-z]/i.test(at.name)) {
+          var hm = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/.exec(at.value);
+          var fn = hm ? get(scope, hm[1]) : null;
+          if (typeof fn === 'function') { el['on' + at.name.slice(2).toLowerCase()] = fn; }
+          continue;
+        }
+        if (at.name.indexOf('hint-') === 0) { continue; }
+        el.setAttribute(at.name, sub(at.value, scope));
+      }
+      build(ch.content || ch, scope, el);
+      parent.appendChild(el);
+    }
+  }
+  var EVTS = ['click', 'mousemove', 'mouseleave', 'touchmove', 'touchend', 'touchstart', 'input', 'change', 'keydown'];
+  function render() {
+    var vals = comp.renderVals();
+    if (typeof vals.save === 'function') { var origSave = vals.save; vals.save = function () { window.__dcSaveContact(); return origSave.apply(this, arguments); }; }
+    var next = document.createElement('div');
+    next.id = 'app';
+    build(tpl.content, vals, next);
+    morphdom(root, next, {
+      onBeforeElUpdated: function (from, to) {
+        for (var i = 0; i < EVTS.length; i++) { var k = 'on' + EVTS[i]; if (from[k] !== to[k]) { from[k] = to[k] || null; } }
+        return !from.isEqualNode(to);
+      }
+    });
+    var first = root.firstElementChild;
+    if (first) { document.body.style.background = getComputedStyle(first).backgroundColor; }
+  }
+  var queued = false;
+  function schedule() { if (queued) { return; } queued = true; requestAnimationFrame(function () { queued = false; render(); }); }
+  render();
+  if (comp.componentDidMount) { comp.componentDidMount(); }
+})();
+</script>
+</body>
+</html>

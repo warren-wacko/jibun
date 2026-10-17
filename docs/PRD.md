@@ -11,7 +11,7 @@ A single Next.js app on one domain that hosts every client's NFC digital card. N
 **MVP goals (Phase 1)**
 
 - Create a client page from the admin panel in under 10 minutes with no code changes.
-- Seven launch templates (4 professional, 1 student, 2 social), each with light and dark themes; pro-classic is built first.
+- Eight launch templates (4 professional, 1 student, 3 social), each with light and dark themes; pro-classic is built first.
 - Standard tier: the same templates with optional sections and extra customization unlocked.
 - Tap flow: `/c/[code]` logs the tap and redirects to `/[username]`.
 - Save Contact (vCard), QR fallback, share button, branding footer.
@@ -92,7 +92,7 @@ Rule for Standard ("pick 2"): a section unlocked by an add-on does not use a fre
 
 A template is a React component that receives a typed `PageData` object and a theme; it never contains client data. All templates live in a registry keyed by `templateKey`, and every template must render correctly with any subset of fields, sections and links present.
 
-Three families: **professional** (contact-first, Save Contact is the main action), **student** (job seekers and fresh grads), and **social** (follow-first, socials at the top, Save Contact secondary). Seven templates ship at launch; the rest are released later as design drops.
+Three families: **professional** (contact-first, Save Contact is the main action), **student** (job seekers and fresh grads), and **social** (follow-first, socials at the top, Save Contact secondary). Eight templates ship at launch; the rest are released later as design drops.
 
 | Key | Family | Signature elements | Release |
 | --- | --- | --- | --- |
@@ -103,6 +103,7 @@ Three families: **professional** (contact-first, Save Contact is the main action
 | `student-notebook` | Student | Grid-paper background, taped QR polaroid, "Open to" sticky note, program and graduation line, LinkedIn in action row | Launch |
 | `social-bento` | Social | Bento tiles, large "Follow me on IG" tile, "Currently" status tile, small icon row for extra socials | Launch |
 | `social-scrapbook` | Social | Taped photo, letter-cutout name, ticket-style follow button, sticky-note socials, receipt-style "Also find me on" | Launch |
+| `social-minimalist` | Social | Minimal layout with serif display type; see `design-reference/08-social-minimalist/` | Launch |
 | `social-retro-os` | Social | Y2K window frames, away-message bio, visitor counter | Drop |
 | `social-editorial` | Social | Minimal serif layout, rotating badge on photo | Drop |
 | `social-chrome` | Social | Chrome/glass name, star accents, arched photo | Drop |
@@ -133,24 +134,24 @@ Three families: **professional** (contact-first, Save Contact is the main action
 
 Template designs come from Claude Design as static HTML mockups. They are visual references only: each one is converted once into a React template component, and the app never serves the HTML directly.
 
-**Status: no reference files are in the repo yet.** The designs exist in Claude Design and will be exported one at a time as `index.html` files. Until a template's file arrives, do not invent its design: build the app against a plain `placeholder` template that uses the shared components and theme variables, and convert each real template only once its file is added. Exported files may be saved either as `design-reference/[name].html` or as a folder `design-reference/[name]/index.html` (keeping any exported assets beside it).
+**Status: the eight launch templates are in `design-reference/`.** Each is a folder `design-reference/[nn]-[templateKey]/` with two packages, `starter/` and `standard/`, and each package holds an `index.html` and its `assets/` (a sample `photo.jpg`). Drop templates have no files yet. Until a template's file arrives, do not invent its design: use the plain `placeholder` template, and convert each real template only once its folder is added.
 
-Store them in `design-reference/` at the repo root, named `[tier]-package-[family]-template-[n].html`:
-
-| Reference file | Converts to `templateKey` |
+| Reference folder | Converts to `templateKey` |
 | --- | --- |
-| `starter-package-professional-template-1.html` | `pro-classic` |
-| `starter-package-professional-template-2.html` | `pro-magazine` |
-| `starter-package-professional-template-3.html` | `pro-signature` |
-| `starter-package-professional-template-4.html` | `pro-company` |
-| `starter-package-student-template-1.html` | `student-notebook` |
-| `starter-package-social-template-1.html` | `social-bento` |
-| `starter-package-social-template-2.html` | `social-scrapbook` |
-| `starter-package-social-template-3.html` to `-7.html` | `social-retro-os`, `social-editorial`, `social-chrome`, `social-gothic-arch`, `social-blackletter` (drops) |
-| `standard-package-sections-[templateKey].html` | Styled section variants for that template |
-| `custom-package-[username].html` | `custom-[username]` |
+| `01-pro-classic/` | `pro-classic` |
+| `02-pro-magazine/` | `pro-magazine` |
+| `03-pro-signature/` | `pro-signature` |
+| `04-pro-company/` | `pro-company` |
+| `05-student-notebook/` | `student-notebook` |
+| `06-social-bento/` | `social-bento` |
+| `07-social-scrapbook/` | `social-scrapbook` |
+| `08-social-minimalist/` | `social-minimalist` |
+| `[nn]-[templateKey]/` (continue numbering) | Drops: `social-retro-os`, `social-editorial`, `social-chrome`, `social-gothic-arch`, `social-blackletter` |
+| `custom-[username]/` | `custom-[username]` (CUSTOM tier) |
 
-Each reference file shows both light and dark themes and uses realistic placeholder data. New designs continue the numbering and get a row here and in the Templates table before they are built.
+`starter/index.html` is the Starter design. `standard/index.html` is the same design with the Standard sections (gallery, portfolio, services, résumé, experience, skills, stats and so on) and font-pair options. For `04-pro-company`, `06-social-bento`, `07-social-scrapbook` and `08-social-minimalist` the two files differ only by a `package` switch. Each file shows realistic placeholder data and has a theme setting. New designs continue the numbering and get a row here and in the Templates table before they are built.
+
+The exports are fixed-width (390 px) Claude Design files with their own QR encoder, vCard builder and hardcoded palettes. Conversion replaces those with the app's QR and vCard routes, theme variables and fluid layout.
 
 **Conversion rules (for Claude Code)**
 
@@ -162,7 +163,7 @@ Each reference file shows both light and dark themes and uses realistic placehol
 6. Hide every section, grid or button whose data is empty.
 7. Leave the HTML file unchanged so it stays the reference to compare against.
 
-Example prompt: "Convert `design-reference/starter-package-professional-template-1.html` into the `pro-classic` template, following the PRD conversion rules."
+Example prompt: "Convert `design-reference/01-pro-classic/starter/index.html` into the `pro-classic` template, following the PRD conversion rules."
 
 ## Page content model
 
@@ -516,7 +517,7 @@ Production runs on Hostinger's managed Node.js hosting: a flat monthly price wit
 
 Build in this order and give Claude Code one milestone at a time; each ends with something you can test on a real phone.
 
-Template HTML files are delivered later, so M1–M3 are built with the `placeholder` template. Converting `pro-classic` (in M2) and the other templates (in M4) waits until their reference files are in `design-reference/`; skip those items until then and continue with the rest.
+The template reference files are in `design-reference/`. Hosting is the last step: the Hostinger deploy and the real NFC tag test are the final items of M5, so everything else is built and tested locally first.
 
 **M1 — Foundation**
 
@@ -531,7 +532,6 @@ Template HTML files are delivered later, so M1–M3 are built with the `placehol
 - [ ] Shared components: ActionRow, SaveContact, SocialGrid (profiles / messaging), FeaturedLink, Footer
 - [ ] `/[username]` page, `/[username]/vcard`, `/[username]/qr`
 - [ ] `/c/[code]` route with tap logging, status checks and redirect; `/inactive` page
-- [ ] Deploy to Hostinger from the \`release\` branch, connect the domain, write a real NFC tag and test on iPhone and Android
 
 **M3 — Admin panel**
 
@@ -542,7 +542,7 @@ Template HTML files are delivered later, so M1–M3 are built with the `placehol
 
 **M4 — Templates and Standard**
 
-- [ ] Remaining launch templates in both themes: `pro-magazine`, `pro-signature`, `pro-company`, `student-notebook`, `social-bento`, `social-scrapbook`
+- [ ] Remaining launch templates in both themes: `pro-magazine`, `pro-signature`, `pro-company`, `student-notebook`, `social-bento`, `social-scrapbook`, `social-minimalist`
 - [ ] Accent palette and school color presets
 - [ ] Standard sections with styled variants for each launch template
 - [ ] Font pairs and section reordering for Standard
@@ -553,6 +553,7 @@ Template HTML files are delivered later, so M1–M3 are built with the `placehol
 - [ ] Marketing homepage with tiers and sample cards
 - [ ] Lighthouse mobile check (performance and accessibility at least 90)
 - [ ] Playwright tests for tap → page → vCard
+- [ ] Deploy to Hostinger from the `release` branch, connect the domain, write a real NFC tag and test on iPhone and Android (last step)
 
 **Later phases**
 

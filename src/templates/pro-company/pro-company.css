@@ -1,0 +1,1192 @@
+/*
+ * pro-company: tokens and layout. Every colour is a variable defined here (or by ThemeScope);
+ * the component files contain no colour values. The whole brand palette (stage, panel, badge,
+ * glow, tints) is derived from the page accent with color-mix(), so any accent works.
+ * Source design: design-reference/04-pro-company/starter/index.html
+ */
+
+/* ---------- Tokens ---------- */
+[data-template="pro-company"][data-theme="light"] {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --text-soft: #334155;
+  --text-dim: #5f6e86; /* the design's #64748b is 4.4:1 on --bg; this is 4.7:1 */
+  --border: #e2e8f0;
+  --brand-shadow-amount: 28%;
+  --map-a1: 16%;
+  --map-a2: 10%;
+  --map-a3: 7%;
+  /* On a light page the brand colour is darkened when it is itself very light. */
+  --brand-text: color-mix(in srgb, black calc(var(--k-light) * 50%), var(--brand));
+  --brand-soft: color-mix(in srgb, var(--brand) 8%, transparent);
+}
+
+[data-template="pro-company"][data-theme="dark"] {
+  --bg: #0b1220;
+  --surface: #121a2b;
+  --text: #e5e9f0;
+  --text-soft: #c2cad6;
+  --text-dim: #8c97a8; /* 6.4:1 on --bg */
+  --border: #1f2a3d;
+  --brand-shadow-amount: 40%;
+  --map-a1: 35%;
+  --map-a2: 25%;
+  --map-a3: 14%;
+  /* On a dark page a dark brand colour is lightened so it can be read as text. */
+  --brand-text: color-mix(in srgb, white calc(var(--k-dark) * 55%), var(--brand));
+  --brand-soft: color-mix(in srgb, color-mix(in srgb, white calc(var(--k-dark) * 100%), var(--brand)) 8%, transparent);
+}
+
+[data-template="pro-company"] {
+  --text-muted: var(--text-dim);
+  --focus: #1d4ed8;
+  --brand: var(--accent);
+  /* 1 when the brand colour is dark / light (by quick brightness), else 0: lets CSS branch. */
+  --k-dark: clamp(0, calc((0.45 - var(--accent-luma, 0.3)) * 1000), 1);
+  --k-light: clamp(0, calc((var(--accent-luma, 0.3) - 0.6) * 1000), 1);
+  --brand-ink: color-mix(in srgb, #0f172a calc(var(--k-light) * 100%), #ffffff);
+  --save-ink: color-mix(in srgb, #0f172a calc(var(--k-light) * 100%), var(--brand));
+  --stage-end: color-mix(in srgb, var(--brand) 38%, black);
+  --stage: linear-gradient(180deg, var(--stage-end) 0%, var(--stage-end) 50%, color-mix(in srgb, var(--brand) 75%, black) 100%);
+  --panel-bg: linear-gradient(
+    135deg,
+    color-mix(in srgb, white 8%, var(--brand)) 0%,
+    color-mix(in srgb, var(--brand) 60%, black) 100%
+  );
+  --badge-bg: linear-gradient(135deg, color-mix(in srgb, white 12%, var(--brand)), color-mix(in srgb, var(--brand) 80%, black));
+  --badge-ring: var(--stage-end);
+  --glow: radial-gradient(circle, color-mix(in srgb, var(--brand) 55%, transparent) 0%, transparent 70%);
+  --brand-shadow: color-mix(in srgb, var(--brand) var(--brand-shadow-amount), transparent);
+  --map-bg:
+    linear-gradient(118deg, transparent 0 46%, color-mix(in srgb, var(--brand) var(--map-a1), transparent) 46% 53%, transparent 53%),
+    linear-gradient(28deg, transparent 0 62%, color-mix(in srgb, var(--brand) var(--map-a2), transparent) 62% 66%, transparent 66%),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--brand) var(--map-a3), transparent) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--brand) var(--map-a3), transparent) 0 1px, transparent 1px 16px);
+  --foil: linear-gradient(110deg, #c9ced6 0%, #ffffff 28%, #9aa3ae 52%, #eef1f5 74%, #b4bcc6 100%);
+  --saved-bg: #10b981;
+  --on-stage: #ffffff;
+  --on-stage-faint: rgba(255, 255, 255, 0.55);
+  --on-stage-line: rgba(255, 255, 255, 0.14);
+  --glass: rgba(255, 255, 255, 0.1);
+  --glass-line: rgba(255, 255, 255, 0.3);
+  --qr-bg: #ffffff;
+  --scrim: rgba(15, 23, 42, 0.55);
+}
+
+/* ---------- Base ---------- */
+.pco {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 430px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  line-height: normal;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 400ms ease,
+    color 400ms ease;
+}
+
+:where(.pco) a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:where(.pco) button {
+  font: inherit;
+}
+
+.pco a:focus-visible,
+.pco button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Stage (hero) ---------- */
+.pco-stage {
+  position: relative;
+  padding: 4px 16px 24px;
+  overflow: hidden;
+  border-radius: 0 0 32px 32px;
+  background: var(--stage);
+  color: var(--on-stage);
+}
+
+.pco-watermark {
+  position: absolute;
+  left: 50%;
+  top: 40px;
+  transform: translateX(-50%);
+  font-size: min(300px, 77vw);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -16px;
+  color: rgba(255, 255, 255, 0.04);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.pco-glow {
+  position: absolute;
+  left: -120px;
+  top: 300px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: var(--glow);
+  pointer-events: none;
+}
+
+.pco-topbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  margin-right: -8px;
+}
+
+.pco-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  max-width: 60%;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: var(--glass);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.pco-logo span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pco-logo img {
+  height: 20px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.pco-topbar-actions {
+  display: flex;
+}
+
+.pco-icon-btn {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+}
+
+.pco-icon-btn:focus-visible {
+  outline: 2px solid var(--on-stage);
+  outline-offset: -4px;
+  border-radius: 8px;
+}
+
+/* Photo in an arch, ringed, with the rotating tap badge. */
+.pco-arch-wrap {
+  position: relative;
+  width: min(256px, 100%);
+  aspect-ratio: 256 / 330;
+  margin: 14px auto 0;
+  animation: pco-card-in 1000ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.pco-arch-ring {
+  position: absolute;
+  inset: -9px;
+  border-radius: 137px 137px 26px 26px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+}
+
+.pco-arch {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 128px 128px 18px 18px;
+  background: #0b0d12;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+}
+
+.pco-arch img {
+  object-fit: cover;
+  object-position: 50% 12%;
+}
+
+/* With no photo the arch shows the person's initials on a brand-tinted background. */
+.pco-arch-empty {
+  background: linear-gradient(160deg, color-mix(in srgb, var(--brand) 70%, black), color-mix(in srgb, var(--brand) 38%, black));
+}
+
+.pco-arch-initials {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 96px;
+  font-weight: 800;
+  letter-spacing: -4px;
+  color: rgba(255, 255, 255, 0.2);
+  user-select: none;
+}
+
+.pco-arch-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 62%, rgba(0, 0, 0, 0.35) 100%);
+}
+
+.pco-badge {
+  position: absolute;
+  right: -30px;
+  bottom: -26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 48px;
+  background: var(--badge-bg);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.4),
+    0 0 0 5px var(--badge-ring);
+}
+
+.pco-badge-ring {
+  position: absolute;
+  inset: 0;
+  animation: pco-spin 22s linear infinite;
+}
+
+.pco-badge-ring span {
+  position: absolute;
+  left: 44px;
+  top: 5px;
+  width: 8px;
+  height: 43px;
+  transform-origin: 4px 43px;
+  text-align: center;
+  font-size: 8.5px;
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.pco-badge svg {
+  position: relative;
+  color: var(--on-stage);
+}
+
+.pco-id {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  text-align: center;
+  animation: pco-fade-up 800ms cubic-bezier(0.2, 0.8, 0.2, 1) 200ms both;
+}
+
+.pco-name {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  overflow-wrap: anywhere;
+}
+
+.pco-role {
+  margin-top: 10px;
+  max-width: 100%;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-wrap: balance;
+  background: var(--foil);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.pco-info {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  margin-top: 22px;
+  padding: 14px 0;
+  box-shadow:
+    inset 0 1px 0 var(--on-stage-line),
+    inset 0 -1px 0 var(--on-stage-line);
+}
+
+.pco-info > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+  padding: 0 6px;
+  text-align: center;
+}
+
+.pco-info > div + div {
+  box-shadow: inset 1px 0 0 var(--on-stage-line);
+}
+
+.pco-info-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--on-stage-faint);
+}
+
+.pco-info-value {
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.pco-cta {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pco-save {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-sizing: border-box;
+  height: 56px;
+  border-radius: 16px;
+  background: #ffffff;
+  color: var(--save-ink);
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.pco-save.is-saved {
+  background: var(--saved-bg);
+  color: #ffffff;
+}
+
+.pco-qr-btn {
+  all: unset;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--glass);
+  box-shadow: inset 0 0 0 1px var(--glass-line);
+  color: var(--on-stage);
+  cursor: pointer;
+}
+
+.pco-qr-btn:focus-visible {
+  outline: 2px solid var(--on-stage);
+  outline-offset: 2px;
+}
+
+/* ---------- Sections ---------- */
+.pco-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 28px 16px 0;
+}
+
+.pco-touch {
+  gap: 8px;
+}
+
+.pco-sec-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 4px;
+}
+
+.pco-touch .pco-sec-head {
+  padding-bottom: 6px;
+}
+
+.pco-sec-num {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  color: var(--brand-text);
+}
+
+.pco-sec-title {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+}
+
+.pco-sec-rule {
+  flex-grow: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Get in touch */
+.pco-phone {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+  min-height: 108px;
+  padding: 16px 12px 16px 18px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--panel-bg);
+  color: #ffffff;
+  box-shadow: 0 12px 26px var(--brand-shadow);
+}
+
+.pco-phone-ghost {
+  position: absolute;
+  right: 96px;
+  bottom: -44px;
+  opacity: 0.1;
+}
+
+.pco-phone-main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.pco-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+.pco-phone-main .pco-kicker {
+  opacity: 0.75;
+}
+
+.pco-phone-number {
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+}
+
+.pco-phone-note {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.pco-phone-btns {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pco-round {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  cursor: pointer;
+}
+
+.pco-round-call {
+  background: #ffffff;
+  color: var(--save-ink);
+}
+
+.pco-round-copy {
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+/* A light brand colour (yellow, pale green) cannot carry white text: the panel keeps its colour and uses dark text. */
+[data-template="pro-company"][data-accent-tone="light"] .pco-phone {
+  background: linear-gradient(135deg, color-mix(in srgb, white 8%, var(--brand)) 0%, var(--brand) 100%);
+  color: var(--on-accent);
+}
+
+[data-template="pro-company"][data-accent-tone="light"] .pco-round-copy {
+  background: rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.16);
+  color: var(--on-accent);
+}
+
+.pco-round:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.pco-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.pco-email {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 76px;
+  padding: 0 8px 0 16px;
+}
+
+.pco-ghost-mail {
+  position: absolute;
+  right: 52px;
+  bottom: -34px;
+  color: var(--brand-text);
+  opacity: 0.08;
+}
+
+.pco-chip {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--brand-soft);
+  color: var(--brand-text);
+}
+
+.pco-email-main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.pco-email-main .pco-kicker {
+  color: var(--text-dim);
+}
+
+.pco-email-value {
+  font-size: 16px;
+  font-weight: 600;
+  overflow-wrap: anywhere; /* wraps on very narrow screens instead of cutting the address off */
+}
+
+.pco-plain-btn {
+  all: unset;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.pco-plain-btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.pco-tiles {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
+  gap: 8px;
+}
+
+.pco-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  height: 128px;
+  padding: 14px;
+  overflow: hidden;
+  border-radius: 18px;
+  background-color: var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.pco-tile-map {
+  background-image: var(--map-bg);
+}
+
+.pco-tile-ghost {
+  position: absolute;
+  right: -26px;
+  bottom: -30px;
+  color: var(--brand-text);
+  opacity: 0.08;
+}
+
+.pco-tile-top {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.pco-tile-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--brand-soft);
+  color: var(--brand-text);
+}
+
+.pco-tile-arrow {
+  display: flex;
+  color: var(--text-dim);
+}
+
+.pco-tile-text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.pco-tile-text .pco-kicker {
+  color: var(--text-dim);
+}
+
+.pco-tile-text strong {
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.pco-pin {
+  position: absolute;
+  right: 22px;
+  top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background: var(--brand-soft);
+}
+
+.pco-pin span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 14px;
+  background: var(--brand);
+  color: var(--brand-ink);
+  box-shadow: 0 0 0 3px var(--surface);
+}
+
+.pco-map-label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 0 -14px -14px;
+  padding: 18px 14px 14px;
+  background: linear-gradient(180deg, transparent, var(--surface) 45%);
+}
+
+.pco-map-label .pco-kicker {
+  color: var(--text-dim);
+}
+
+.pco-map-label strong {
+  font-size: 15px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* About */
+.pco-about {
+  box-sizing: border-box;
+  padding: 18px;
+}
+
+.pco-about-quote {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.pco-quote-mark {
+  position: absolute;
+  left: -4px;
+  top: -26px;
+  font-family: Georgia, serif;
+  font-size: 96px;
+  line-height: 1;
+  color: var(--brand-text);
+  opacity: 0.18;
+}
+
+.pco-about-quote p {
+  position: relative;
+  margin: 14px 0 0;
+  font-size: 19px;
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  overflow-wrap: anywhere;
+}
+
+/* Network tiles share a gradient per network. */
+.pco-net {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  border-radius: 16px;
+  color: #ffffff;
+  background: var(--net-bg, linear-gradient(135deg, #475569, #1e293b));
+  box-shadow: 0 10px 20px var(--net-shadow, rgba(15, 23, 42, 0.3));
+}
+
+.pco-net[data-net="linkedin"] {
+  --net-bg: linear-gradient(135deg, #0a66c2, #084a8c);
+  --net-shadow: rgba(10, 102, 194, 0.28);
+}
+.pco-net[data-net="facebook"] {
+  --net-bg: linear-gradient(160deg, #3b8cff, #0866ff 60%, #0550c4);
+  --net-shadow: rgba(8, 102, 255, 0.3);
+}
+.pco-net[data-net="instagram"] {
+  --net-bg: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+  --net-shadow: rgba(214, 36, 159, 0.3);
+}
+.pco-net[data-net="tiktok"] {
+  --net-bg: linear-gradient(160deg, #2a2a2e, #0b0b0d);
+  --net-shadow: rgba(0, 0, 0, 0.3);
+}
+.pco-net[data-net="messenger"] {
+  --net-bg: radial-gradient(circle at 19% 100%, #0099ff 0%, #a033ff 60%, #ff5280 93%, #ff7061 100%);
+  --net-shadow: rgba(160, 51, 255, 0.28);
+}
+.pco-net[data-net="whatsapp"] {
+  --net-bg: linear-gradient(135deg, #3be07a, #1ebe5a);
+  --net-shadow: rgba(37, 211, 102, 0.28);
+}
+.pco-net[data-net="viber"] {
+  --net-bg: linear-gradient(135deg, #8a79f7, #6550e6);
+  --net-shadow: rgba(115, 96, 242, 0.28);
+}
+
+.pco-net-ghost {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.16;
+}
+
+.pco-net-glyph {
+  position: relative;
+  display: flex;
+}
+
+.pco-net-glyph svg[data-glyph="tiktok"] {
+  filter: drop-shadow(-1px -1px 0 var(--brand-tiktok-cyan)) drop-shadow(1px 1px 0 var(--brand-tiktok-red));
+}
+
+.pco-net-text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pco-net-text strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pco-net-text span {
+  font-size: 11px;
+  opacity: 0.85;
+  overflow-wrap: anywhere;
+}
+
+.pco-net-arrow {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.pco-net-wide {
+  align-items: center;
+  gap: 14px;
+  min-height: 84px;
+  padding: 0 14px;
+}
+
+.pco-net-wide .pco-net-ghost {
+  right: -24px;
+  bottom: -40px;
+  opacity: 0.12;
+}
+
+.pco-net-wide-chip {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--chip-color, #0a66c2);
+}
+
+.pco-net-wide[data-net="facebook"] {
+  --chip-color: #0866ff;
+}
+.pco-net-wide[data-net="instagram"] {
+  --chip-color: #d6249f;
+}
+.pco-net-wide[data-net="tiktok"] {
+  --chip-color: #0b0b0d;
+}
+.pco-net-wide[data-net="messenger"] {
+  --chip-color: #a033ff;
+}
+.pco-net-wide[data-net="whatsapp"] {
+  --chip-color: #1ebe5a;
+}
+.pco-net-wide[data-net="viber"] {
+  --chip-color: #6550e6;
+}
+
+.pco-net-wide .pco-net-text {
+  flex-grow: 1;
+  gap: 2px;
+}
+
+.pco-net-wide .pco-net-text strong {
+  font-size: 17px;
+}
+
+.pco-net-wide .pco-net-text span {
+  font-size: 13px;
+}
+
+.pco-net-wide .pco-net-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+}
+
+.pco-grid3 {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: 8px;
+}
+
+.pco-net-tile {
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  min-height: 116px;
+  padding: 12px;
+}
+
+.pco-net-tile .pco-net-ghost {
+  right: -18px;
+  bottom: -22px;
+}
+
+.pco-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pco-net-row {
+  align-items: center;
+  gap: 12px;
+  min-height: 66px;
+  padding: 0 12px 0 14px;
+  box-shadow: 0 8px 18px var(--net-shadow, rgba(15, 23, 42, 0.28));
+}
+
+.pco-net-row .pco-net-ghost {
+  right: 30px;
+  bottom: -34px;
+}
+
+.pco-net-row .pco-net-text {
+  flex-grow: 1;
+  gap: 1px;
+}
+
+.pco-net-row .pco-net-text strong {
+  font-size: 16px;
+}
+
+.pco-net-row .pco-net-text span {
+  font-size: 12px;
+}
+
+.pco-net-row .pco-net-arrow {
+  width: 34px;
+  height: 34px;
+  border-radius: 17px;
+}
+
+/* ---------- Footer, sheet, toast, motion ---------- */
+.pco-footer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: auto;
+  padding: 28px 20px 24px;
+}
+
+.pco-footer p:first-child {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+.pco-footer p:last-child {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.pco-footer a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pco-sheet {
+  margin: auto auto 0;
+  width: min(430px, 100%);
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  overflow: visible;
+}
+
+.pco-sheet::backdrop {
+  background: var(--scrim);
+}
+
+.pco-sheet-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  padding: 14px 24px 26px;
+  border-radius: 22px 22px 0 0;
+  background: var(--surface);
+  animation: pco-sheet-up 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.pco-sheet-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+}
+
+.pco-sheet-title {
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.pco-sheet-qr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 220px;
+  max-width: 100%;
+  aspect-ratio: 1;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--qr-bg);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.pco-sheet-qr img {
+  width: 100%;
+  height: 100%;
+}
+
+.pco-sheet-url {
+  font-size: 13px;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+.pco-sheet-done {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pco-sheet-done:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.pco-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 22px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  transform: translateX(-50%);
+  animation: pco-toast-in 260ms ease-out both;
+}
+
+@keyframes pco-card-in {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pco-fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pco-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pco-sheet-up {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes pco-toast-in {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pco-arch-wrap,
+  .pco-id,
+  .pco-badge-ring,
+  .pco-sheet-card,
+  .pco-toast {
+    animation: none;
+  }
+}

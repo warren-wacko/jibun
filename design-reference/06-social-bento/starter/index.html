@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Warren Jacob Abdon — Digital Card</title>
+<meta name="description" content="Software Engineer · Full-Stack Developer. Save my contact in one tap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Caveat:wght@600;700&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible{outline:2px solid #2F54EB;outline-offset:3px}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes tileIn{0%{opacity:0;transform:translateY(14px) scale(.97)}100%{opacity:1;transform:none}}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes sheetUp{0%{transform:translateY(100%)}100%{transform:none}}
+@keyframes toastIn{0%{opacity:0;transform:translate(-50%,12px)}100%{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion: reduce){.anim{animation:none !important}}
+</style>
+<style>
+html,body{margin:0;padding:0}
+body{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+#app>div{width:100% !important;max-width:430px;margin:0 auto;min-height:100vh !important;min-height:100dvh !important}
+</style>
+</head>
+<body>
+<!-- 06-social-bento — starter — from StudentBentoStarter.dc.html -->
+<div id="app"></div>
+<template id="dc-template">
+<div style="position: relative; width: 390px; min-height: {{pageMin}}; box-sizing: border-box; background: {{bg}}; font-family: 'Space Grotesk', system-ui, sans-serif; color: {{ink}}; display: flex; flex-direction: column; overflow: hidden; padding: 0 12px; transition: background 400ms ease, color 400ms ease">
+
+  <div style="height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 0 4px">
+    <span style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1.4px; color: {{dim}}">[YOUR BRAND]</span>
+    <span style="font-family: 'DM Mono', monospace; font-size: 11px; color: {{dim}}">tap a tile</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(4, 84px); grid-auto-rows: 84px; gap: 10px">
+
+    <div class="anim" style="grid-column: 1 / 4; grid-row: 1 / 4; border-radius: 26px; overflow: hidden; position: relative; background: #2A2A2A; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) both">
+      <img src="assets/photo.jpg" alt="Photo of Warren Jacob Abdon" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%">
+      <span style="position: absolute; left: 12px; bottom: 12px; height: 28px; padding: 0 11px; border-radius: 14px; background: #FFFFFF; color: #111111; display: flex; align-items: center; font-size: 12px; font-weight: 700">hi, I'm Warren</span>
+    </div>
+
+    <button type="button" onClick="{{toggleTheme}}" aria-label="{{themeAria}}" class="anim" style="all: unset; cursor: pointer; grid-column: 4; grid-row: 1; border-radius: 26px; background: {{tile}}; color: {{ink}}; display: flex; align-items: center; justify-content: center; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 60ms both">
+      <sc-if value="{{isDark}}" hint-placeholder-val="{{ false }}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+      </sc-if>
+      <sc-if value="{{isLight}}" hint-placeholder-val="{{ true }}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+      </sc-if>
+    </button>
+
+    <button type="button" onClick="{{shareCard}}" aria-label="Share this card" class="anim" style="all: unset; cursor: pointer; grid-column: 4; grid-row: 2; border-radius: 26px; background: {{tile}}; color: {{ink}}; display: flex; align-items: center; justify-content: center; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 100ms both">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"></path><path d="m16 6-4-4-4 4"></path><path d="M12 2v13"></path></svg>
+    </button>
+
+    <div class="anim" style="grid-column: 4; grid-row: 3; border-radius: 26px; background: {{accent}}; color: {{accentInk}}; display: flex; flex-direction: column; align-items: center; justify-content: center; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 140ms both">
+      <span style="font-size: 30px; font-weight: 700; line-height: 1; letter-spacing: -1px">3rd</span>
+      <span style="font-family: 'DM Mono', monospace; font-size: 10px; margin-top: 4px">BSCS</span>
+    </div>
+
+    <div class="anim" style="grid-column: 1 / 5; grid-row: 4 / 6; border-radius: 26px; background: {{tile}}; padding: 18px 20px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 180ms both">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <span style="display: flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 12px; color: {{dim}}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"></path><path d="M6 12v5c3 2 9 2 12 0v-5"></path></svg>
+          [School name]
+        </span>
+        <span style="width: 10px; height: 10px; border-radius: 5px; background: {{accent}}"></span>
+      </div>
+      <h1 style="margin: 0; font-size: 58px; line-height: 0.9; font-weight: 700; letter-spacing: -2.6px">Warren</h1>
+      <p style="margin: 0; font-size: 16px; line-height: 1.35; color: {{soft}}">coffee, anime &amp; last-minute requirements</p>
+    </div>
+
+    <a href="https://instagram.com/yourname" class="anim" style="grid-column: 1 / 5; grid-row: 6; border-radius: 26px; background: {{heroBg}}; color: {{heroInk}}; display: flex; align-items: center; gap: 14px; padding: 0 12px 0 14px; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 220ms both">
+      <div style="width: 54px; height: 54px; border-radius: 18px; background: #FF3D7F; color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="26" height="26" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" role="img" aria-hidden="true"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"></path></svg></div>
+      <div style="display: flex; flex-direction: column; flex-grow: 1">
+        <span style="font-size: 19px; font-weight: 700; letter-spacing: -0.4px">Follow me on IG</span>
+        <span style="font-family: 'DM Mono', monospace; font-size: 11px; opacity: 0.6">@yourname</span>
+      </div>
+      <div style="height: 42px; padding: 0 16px; border-radius: 21px; background: {{accent}}; color: {{accentInk}}; display: flex; align-items: center; font-size: 14px; font-weight: 700">Follow</div>
+    </a>
+
+    <a href="https://tiktok.com/@yourname" class="anim" style="grid-column: 1 / 3; grid-row: 7 / 9; border-radius: 26px; background: #111111; color: #FFFFFF; box-shadow: {{tkBorder}}; padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 260ms both">
+      <svg width="150" height="150" viewBox="-1.44 -1.44 26.88 26.88" fill="rgba(255,255,255,0.07)" style="position: absolute; right: -36px; bottom: -30px" role="img" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"></path></svg>
+      <div style="display: flex; justify-content: space-between">
+        <svg width="28" height="28" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" style="filter: drop-shadow(-1.5px -1.5px 0 #25F4EE) drop-shadow(1.5px 1.5px 0 #FE2C55)" role="img" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"></path></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+      </div>
+      <div style="position: relative; display: flex; flex-direction: column">
+        <span style="font-size: 26px; font-weight: 700; letter-spacing: -0.8px">TikTok</span>
+        <span style="font-family: 'DM Mono', monospace; font-size: 11px; opacity: 0.6">@yourname</span>
+      </div>
+    </a>
+
+    <a href="https://facebook.com/yourname" class="anim" style="grid-column: 3 / 5; grid-row: 7; border-radius: 26px; background: {{tile}}; display: flex; align-items: center; gap: 10px; padding: 0 14px; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 300ms both">
+      <div style="width: 40px; height: 40px; border-radius: 14px; background: #0866FF; color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="19" height="19" viewBox="-126.72 -30.72 573.44 573.44" fill="currentColor" role="img" aria-hidden="true"><path d="M80 299.3l0 212.7 116 0 0-212.7 86.5 0 18-97.8-104.5 0 0-34.6c0-51.7 20.3-71.5 72.7-71.5 16.3 0 29.4 .4 37 1.2l0-88.7C291.4 4 256.4 0 236.2 0 129.3 0 80 50.5 80 159.4l0 42.1-66 0 0 97.8 66 0z"></path></svg></div>
+      <div style="display: flex; flex-direction: column; min-width: 0"><span style="font-size: 16px; font-weight: 700">Facebook</span><span style="font-family: 'DM Mono', monospace; font-size: 10px; color: {{dim}}">/yourname</span></div>
+    </a>
+
+    <a href="https://m.me/yourname" class="anim" style="grid-column: 3 / 5; grid-row: 8; border-radius: 26px; background: {{tile}}; display: flex; align-items: center; gap: 10px; padding: 0 14px; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 340ms both">
+      <div style="width: 40px; height: 40px; border-radius: 14px; background: #0A7CFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="19" height="19" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" role="img" aria-hidden="true"><path d="M12 0C5.24 0 0 4.952 0 11.64c0 3.499 1.434 6.521 3.769 8.61a.96.96 0 0 1 .323.683l.065 2.135a.96.96 0 0 0 1.347.85l2.381-1.053a.96.96 0 0 1 .641-.046A13 13 0 0 0 12 23.28c6.76 0 12-4.952 12-11.64S18.76 0 12 0m6.806 7.44c.522-.03.971.567.63 1.094l-4.178 6.457a.707.707 0 0 1-.977.208l-3.87-2.504a.44.44 0 0 0-.49.007l-4.363 3.01c-.637.438-1.415-.317-.995-.966l4.179-6.457a.706.706 0 0 1 .977-.21l3.87 2.505c.15.097.344.094.491-.007l4.362-3.008a.7.7 0 0 1 .364-.13"></path></svg></div>
+      <div style="display: flex; flex-direction: column; min-width: 0"><span style="font-size: 16px; font-weight: 700">Messenger</span><span style="font-family: 'DM Mono', monospace; font-size: 10px; color: {{dim}}">say hi!</span></div>
+    </a>
+
+    <a href="https://discord.com/users/yourname" class="anim" style="grid-column: 1 / 3; grid-row: 9; border-radius: 26px; background: #5865F2; color: #FFFFFF; display: flex; align-items: center; gap: 10px; padding: 0 14px; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 380ms both">
+      <svg width="30" height="30" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" style="flex-shrink: 0" role="img" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"></path></svg>
+      <div style="display: flex; flex-direction: column"><span style="font-size: 16px; font-weight: 700">Discord</span><span style="font-family: 'DM Mono', monospace; font-size: 10px; opacity: 0.75">yourname</span></div>
+    </a>
+
+    <div class="anim" style="grid-column: 3 / 5; grid-row: 9; border-radius: 26px; background: {{accentSoft}}; color: {{accentText}}; padding: 14px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 420ms both">
+      <span style="display: flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px"><span class="anim" style="width: 7px; height: 7px; border-radius: 4px; background: currentColor; animation: blink 1.6s ease-in-out infinite"></span>CURRENTLY</span>
+      <span style="font-size: 15px; font-weight: 700; line-height: 1.15">surviving finals</span>
+    </div>
+
+    <a href="https://open.spotify.com/user/yourname" aria-label="Spotify" class="anim" style="grid-column: 1; grid-row: 10; border-radius: 26px; background: #1DB954; color: #0F1210; display: flex; align-items: center; justify-content: center; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 460ms both"><svg width="30" height="30" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" role="img" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"></path></svg></a>
+    <a href="https://x.com/yourname" aria-label="X" class="anim" style="grid-column: 2; grid-row: 10; border-radius: 26px; background: {{xBg}}; color: {{xInk}}; display: flex; align-items: center; justify-content: center; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 490ms both"><svg width="24" height="24" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" role="img" aria-hidden="true"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"></path></svg></a>
+    <a href="https://pinterest.com/yourname" aria-label="Pinterest" class="anim" style="grid-column: 3; grid-row: 10; border-radius: 26px; background: #E60023; color: #FFFFFF; display: flex; align-items: center; justify-content: center; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 520ms both"><svg width="26" height="26" viewBox="-94.72 -30.72 573.44 573.44" fill="currentColor" role="img" aria-hidden="true"><path d="M204 6.5c-102.6 0-204 68.4-204 179.1 0 70.4 39.6 110.4 63.6 110.4 9.9 0 15.6-27.6 15.6-35.4 0-9.3-23.7-29.1-23.7-67.8 0-80.4 61.2-137.4 140.4-137.4 68.1 0 118.5 38.7 118.5 109.8 0 53.1-21.3 152.7-90.3 152.7-24.9 0-46.2-18-46.2-43.8 0-37.8 26.4-74.4 26.4-113.4 0-66.2-93.9-54.2-93.9 25.8 0 16.8 2.1 35.4 9.6 50.7-13.8 59.4-42 147.9-42 209.1 0 18.9 2.7 37.5 4.5 56.4 3.4 3.8 1.7 3.4 6.9 1.5 50.4-69 48.6-82.5 71.4-172.8 12.3 23.4 44.1 36 69.3 36 106.2 0 153.9-103.5 153.9-196.8 0-99.3-85.8-164.1-180-164.1z"></path></svg></a>
+    <a href="https://youtube.com/@yourname" aria-label="YouTube" class="anim" style="grid-column: 4; grid-row: 10; border-radius: 26px; background: {{tile}}; color: #FF0000; display: flex; align-items: center; justify-content: center; animation: tileIn 600ms cubic-bezier(.2,.8,.2,1) 550ms both"><svg width="30" height="30" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" role="img" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg></a>
+  </div>
+
+  <sc-if value="{{isStandard}}" hint-placeholder-val="{{ true }}">
+    <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 10px">
+
+      <div style="height: 64px; border-radius: 26px; background: {{heroBg}}; overflow: hidden; display: flex; align-items: center">
+        <div class="anim" style="display: flex; width: max-content; gap: 8px; animation: marquee 24s linear infinite">
+          <sc-for list="{{interestLoop}}" as="it" hint-placeholder-count="14">
+            <span style="height: 38px; padding: 0 16px; border-radius: 19px; background: {{it.bg}}; color: {{it.ink}}; display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; white-space: nowrap">
+              <svg width="11" height="11" viewBox="0 0 24 24"><path d="M12 1.5c.6 4.9 2.6 7 9 10.5-6.4 3.5-8.4 5.6-9 10.5-.6-4.9-2.6-7-9-10.5 6.4-3.5 8.4-5.6 9-10.5z" fill="currentColor"></path></svg>
+              {{it.label}}
+            </span>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="position: relative; height: 178px; border-radius: 26px; background: {{tile}}; overflow: hidden; display: flex; align-items: center">
+        <button type="button" onClick="{{togglePlay}}" aria-label="{{playAria}}" style="all: unset; cursor: pointer; position: absolute; left: -28px; top: 14px; width: 150px; height: 150px; border-radius: 75px">
+          <div class="anim" style="width: 150px; height: 150px; border-radius: 75px; background: repeating-radial-gradient(circle, #121212 0 2px, #1E1E1E 2px 4px); display: flex; align-items: center; justify-content: center; animation: spin 3.2s linear infinite; animation-play-state: {{spinState}}">
+            <div style="width: 56px; height: 56px; border-radius: 28px; background: {{accent}}; display: flex; align-items: center; justify-content: center">
+              <div style="width: 9px; height: 9px; border-radius: 5px; background: #121212"></div>
+            </div>
+          </div>
+        </button>
+        <div style="margin-left: 138px; padding-right: 18px; display: flex; flex-direction: column; gap: 4px; min-width: 0; flex-grow: 1">
+          <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: {{dim}}">on repeat</span>
+          <span style="font-size: 20px; font-weight: 700; letter-spacing: -0.4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">[Favorite song]</span>
+          <span style="font-size: 14px; color: {{dim}}">[Artist]</span>
+          <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px">
+            <div style="flex-grow: 1; height: 4px; border-radius: 2px; background: {{line}}; overflow: hidden">
+              <div style="width: {{progress}}; height: 100%; border-radius: 2px; background: {{ink}}; transition: width 600ms ease"></div>
+            </div>
+            <span style="font-family: 'DM Mono', monospace; font-size: 10px; color: {{playColor}}">{{playLabel}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="position: relative; height: 366px; border-radius: 26px; background: {{accentSoft}}; overflow: hidden">
+        <div style="position: absolute; left: 18px; top: 14px; right: 18px; display: flex; justify-content: space-between; align-items: baseline">
+          <span style="font-size: 22px; font-weight: 700; letter-spacing: -0.6px; color: {{accentText}}">photo dump</span>
+          <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: {{accentText}}">recent-ish</span>
+        </div>
+        <sc-for list="{{dump}}" as="d" hint-placeholder-count="5">
+          <div style="position: absolute; left: {{d.x}}; top: {{d.y}}; width: 132px; padding: 7px 7px 30px; box-sizing: border-box; border-radius: 5px; background: #FFFFFF; box-shadow: 0 10px 22px rgba(0,0,0,0.16); transform: {{d.rot}}">
+            <div style="width: 100%; aspect-ratio: 1; border-radius: 3px; background-color: {{d.base}}; background-image: {{d.pattern}}"></div>
+            <span style="position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-family: 'Caveat', cursive; font-size: 18px; font-weight: 700; color: #2A2A2A">{{d.cap}}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="border-radius: 26px; background: {{tile}}; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+        <span style="font-size: 22px; font-weight: 700; letter-spacing: -0.6px">orgs &amp; clubs</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px">
+          <sc-for list="{{orgs}}" as="o" hint-placeholder-count="3">
+            <div style="padding: 9px 14px 9px 9px; border-radius: 16px; background: {{o.bg}}; color: {{o.ink}}; display: flex; align-items: center; gap: 10px; transform: {{o.rot}}">
+              <div style="width: 36px; height: 36px; border-radius: 11px; background: {{o.badge}}; color: {{o.badgeInk}}; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0">{{o.initials}}</div>
+              <div style="display: flex; flex-direction: column">
+                <span style="font-size: 15px; font-weight: 700">{{o.role}}</span>
+                <span style="font-size: 12px; opacity: 0.7">{{o.org}}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="margin-top: 10px; border-radius: 26px; background: {{tile}}; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 20px; font-weight: 700; letter-spacing: -0.4px">Want my contact?</span>
+      <span style="font-size: 14px; color: {{dim}}; line-height: 1.4">DM me on IG or Messenger, that's the fastest.</span>
+    </div>
+    <div style="display: flex; gap: 10px">
+      <button type="button" onClick="{{save}}" style="all: unset; cursor: pointer; flex-grow: 1; box-sizing: border-box; height: 52px; border-radius: 18px; background: {{saveBg}}; color: {{saveInk}}; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 700">
+        <sc-if value="{{saved}}" hint-placeholder-val="{{ false }}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+        </sc-if>
+        <sc-if value="{{notSaved}}" hint-placeholder-val="{{ true }}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6M22 11h-6"></path></svg>
+        </sc-if>
+        {{saveLabel}}
+      </button>
+      <button type="button" onClick="{{openQr}}" aria-label="Show QR code" style="all: unset; cursor: pointer; width: 52px; height: 52px; border-radius: 18px; background: {{accent}}; color: {{accentInk}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 17h4v4h-4"></path></svg>
+      </button>
+    </div>
+    <sc-if value="{{showPhone}}" hint-placeholder-val="{{ false }}">
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <a href="tel:+630000000000" style="height: 46px; border-radius: 16px; background: {{chipBg}}; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700">Call</a>
+        <a href="sms:+630000000000" style="height: 46px; border-radius: 16px; background: {{chipBg}}; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700">Text</a>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="position: relative; margin-top: auto; padding: 22px 4px 18px; display: flex; justify-content: space-between; align-items: center">
+    <span style="font-family: 'Caveat', cursive; font-size: 24px; font-weight: 700; color: {{dim}}">Always One Tap Away.</span>
+    <button type="button" onClick="{{togglePalette}}" aria-label="Change accent color" aria-expanded="{{paletteAria}}" style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: {{dim}}">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 400ms cubic-bezier(.2,.8,.2,1); transform: {{cogTurn}}"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    </button>
+    <sc-if value="{{paletteOpen}}" hint-placeholder-val="{{ false }}">
+      <div class="anim" role="dialog" aria-label="Accent color" style="position: absolute; right: 4px; bottom: 64px; z-index: 10; width: 268px; box-sizing: border-box; padding: 16px; border-radius: 22px; background: {{tile}}; border: 1px solid {{line}}; box-shadow: 0 18px 40px rgba(0,0,0,0.18); display: flex; flex-direction: column; gap: 12px; animation: tileIn 240ms ease-out both">
+        <div style="display: flex; justify-content: space-between; align-items: baseline">
+          <span style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1.4px; color: {{dim}}">ACCENT</span>
+          <span style="font-size: 14px; font-weight: 700">{{accentName}}</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px">
+          <sc-for list="{{swatches}}" as="sw" hint-placeholder-count="6">
+            <button type="button" onClick="{{sw.pick}}" aria-label="{{sw.name}}" style="all: unset; cursor: pointer; width: 34px; height: 34px; border-radius: 11px; background: {{sw.c}}; box-shadow: {{sw.ring}}"></button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{qrOpen}}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; z-index: 25; background: rgba(10,10,10,0.45); display: flex; align-items: flex-end">
+      <div class="anim" role="dialog" aria-label="QR code" style="width: 100%; box-sizing: border-box; border-radius: 30px 30px 0 0; background: {{tile}}; padding: 14px 24px 28px; display: flex; flex-direction: column; align-items: center; gap: 14px; animation: sheetUp 360ms cubic-bezier(.2,.8,.2,1) both">
+        <div style="width: 40px; height: 4px; border-radius: 2px; background: {{line}}"></div>
+        <span style="font-size: 22px; font-weight: 700">Scan to add Warren</span>
+        <div style="width: 228px; height: 228px; border-radius: 26px; padding: 6px; box-sizing: border-box; background: {{accent}}">
+          <div style="width: 100%; height: 100%; border-radius: 20px; background: #FFFFFF; padding: 12px; box-sizing: border-box; display: grid; grid-template-columns: {{qrCols}}">
+            <sc-for list="{{qr}}" as="cell" hint-placeholder-count="441">
+              <div style="aspect-ratio: 1; background: {{cell.c}}"></div>
+            </sc-for>
+          </div>
+        </div>
+        <button type="button" onClick="{{closeQr}}" style="all: unset; cursor: pointer; box-sizing: border-box; width: 100%; height: 52px; border-radius: 18px; background: {{ink}}; color: {{bg}}; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700">Done</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+    <div class="anim" role="status" style="position: fixed; left: 50%; bottom: 28px; z-index: 30; height: 44px; padding: 0 18px; border-radius: 16px; background: {{ink}}; color: {{bg}}; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; white-space: nowrap; box-shadow: 0 12px 30px rgba(0,0,0,0.25); animation: toastIn 260ms ease-out both; transform: translateX(-50%)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+      {{toast}}
+    </div>
+  </sc-if>
+</div>
+</template>
+<!-- EDIT ME: the contact that "Save contact" adds to the visitor's phone -->
+<script type="application/json" id="dc-contact">{
+  "fullName": "Warren Jacob Abdon",
+  "firstName": "Warren Jacob",
+  "lastName": "Abdon",
+  "title": "BS Computer Science student",
+  "org": "[School name]",
+  "phone": "",
+  "email": "hello@warrenabdon.dev",
+  "website": "",
+  "city": "",
+  "country": "",
+  "note": "",
+  "photo": "assets/photo.jpg"
+}</script>
+<script type="application/json" id="dc-props">{"package": "Starter", "theme": "Light", "accent": "Butter", "showPhone": false}</script>
+<script type="text/plain" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { themeOverride: null, accentPick: null, paletteOpen: false, saved: false, qrOpen: false, playing: false, toast: '' };
+  }
+  componentWillUnmount() {
+    if (this._toastT) { clearTimeout(this._toastT); }
+  }
+  showToast(msg) {
+    var self = this;
+    if (this._toastT) { clearTimeout(this._toastT); }
+    this.setState({ toast: msg });
+    this._toastT = setTimeout(function () { self.setState({ toast: '' }); }, 2200);
+  }
+  resolveTheme() {
+    if (this.state.themeOverride) { return this.state.themeOverride; }
+    var pref = this.props.theme ?? 'Light';
+    if (pref === 'Dark') { return 'dark'; }
+    if (pref === 'Match phone') {
+      try { if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { return 'dark'; } } catch (err) {}
+    }
+    return 'light';
+  }
+  rgb(hex) {
+    var n = String(hex || '#000000').replace('#', '');
+    return [parseInt(n.slice(0, 2), 16), parseInt(n.slice(2, 4), 16), parseInt(n.slice(4, 6), 16)];
+  }
+  mix(hex, toward, amt) {
+    var c = this.rgb(hex);
+    var m = function (v) { return Math.round(v + (toward - v) * amt); };
+    return 'rgb(' + m(c[0]) + ',' + m(c[1]) + ',' + m(c[2]) + ')';
+  }
+  rgba(hex, a) {
+    var c = this.rgb(hex);
+    return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+  }
+  qrEncode(text) {
+    var bytes = [];
+    var u = unescape(encodeURIComponent(String(text)));
+    for (var i = 0; i < u.length; i++) { bytes.push(u.charCodeAt(i)); }
+    var EC = [null, [10, 1, 16, 0, 0], [16, 1, 28, 0, 0], [26, 1, 44, 0, 0], [18, 2, 32, 0, 0], [24, 2, 43, 0, 0], [16, 4, 27, 0, 0], [18, 4, 31, 0, 0], [22, 2, 38, 2, 39], [22, 3, 36, 2, 37], [26, 4, 43, 1, 44], [30, 1, 50, 4, 51], [22, 6, 36, 2, 37], [22, 8, 37, 1, 38], [24, 4, 40, 5, 41], [24, 5, 41, 5, 42]];
+    var AL = [null, [], [6, 18], [6, 22], [6, 26], [6, 30], [6, 34], [6, 22, 38], [6, 24, 42], [6, 26, 46], [6, 28, 50], [6, 30, 54], [6, 32, 58], [6, 34, 62], [6, 26, 46, 66], [6, 26, 48, 70]];
+    var ver = 0, e;
+    for (var v = 1; v <= 15; v++) {
+      e = EC[v];
+      var cap = e[1] * e[2] + e[3] * e[4];
+      var need = 4 + (v < 10 ? 8 : 16) + bytes.length * 8;
+      if (need <= cap * 8) { ver = v; break; }
+    }
+    if (!ver) { return null; }
+    e = EC[ver];
+    var dataCap = e[1] * e[2] + e[3] * e[4];
+    var bits = [];
+    var put = function (val, len) { for (var k = len - 1; k >= 0; k--) { bits.push((val >>> k) & 1); } };
+    put(4, 4); put(bytes.length, ver < 10 ? 8 : 16);
+    bytes.forEach(function (b) { put(b, 8); });
+    for (var t = 0; t < 4 && bits.length < dataCap * 8; t++) { bits.push(0); }
+    while (bits.length % 8) { bits.push(0); }
+    var data = [];
+    for (var p = 0; p < bits.length; p += 8) { var by = 0; for (var q = 0; q < 8; q++) { by = (by << 1) | bits[p + q]; } data.push(by); }
+    for (var pad = 0; data.length < dataCap; pad++) { data.push(pad % 2 ? 0x11 : 0xEC); }
+    var EXP = new Array(512), LOG = new Array(256), x = 1;
+    for (var z = 0; z < 255; z++) { EXP[z] = x; LOG[x] = z; x <<= 1; if (x & 0x100) { x ^= 0x11D; } }
+    for (z = 255; z < 512; z++) { EXP[z] = EXP[z - 255]; }
+    var mul = function (a, b) { return (a && b) ? EXP[LOG[a] + LOG[b]] : 0; };
+    var ecn = e[0], gen = [1];
+    for (z = 0; z < ecn; z++) {
+      var ng = new Array(gen.length + 1).fill(0);
+      for (var j = 0; j < gen.length; j++) { ng[j] ^= gen[j]; ng[j + 1] ^= mul(gen[j], EXP[z]); }
+      gen = ng;
+    }
+    var rs = function (msg) {
+      var res = msg.concat(new Array(ecn).fill(0));
+      for (var a = 0; a < msg.length; a++) {
+        var c = res[a];
+        if (c) { for (var b = 0; b < gen.length; b++) { res[a + b] ^= mul(gen[b], c); } }
+      }
+      return res.slice(msg.length);
+    };
+    var blocks = [], ecs = [], off = 0;
+    for (var g = 0; g < e[1] + e[3]; g++) {
+      var len = g < e[1] ? e[2] : e[4];
+      var blk = data.slice(off, off + len); off += len;
+      blocks.push(blk); ecs.push(rs(blk));
+    }
+    var final = [];
+    var maxLen = Math.max(e[2], e[4]);
+    for (var i2 = 0; i2 < maxLen; i2++) { blocks.forEach(function (bk) { if (i2 < bk.length) { final.push(bk[i2]); } }); }
+    for (i2 = 0; i2 < ecn; i2++) { ecs.forEach(function (ek) { final.push(ek[i2]); }); }
+    var n = ver * 4 + 17;
+    var M = [], R = [];
+    for (var r = 0; r < n; r++) { M.push(new Array(n).fill(0)); R.push(new Array(n).fill(false)); }
+    var set = function (rr, cc, val) { M[rr][cc] = val ? 1 : 0; R[rr][cc] = true; };
+    var finder = function (rr, cc) {
+      for (var dr = -1; dr <= 7; dr++) {
+        for (var dc = -1; dc <= 7; dc++) {
+          var y = rr + dr, xx = cc + dc;
+          if (y < 0 || xx < 0 || y >= n || xx >= n) { continue; }
+          var on = (dr >= 0 && dr <= 6 && (dc === 0 || dc === 6)) || (dc >= 0 && dc <= 6 && (dr === 0 || dr === 6)) || (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4);
+          set(y, xx, on);
+        }
+      }
+    };
+    finder(0, 0); finder(0, n - 7); finder(n - 7, 0);
+    for (i2 = 8; i2 < n - 8; i2++) { set(6, i2, i2 % 2 === 0); set(i2, 6, i2 % 2 === 0); }
+    var al = AL[ver];
+    al.forEach(function (ar) {
+      al.forEach(function (ac) {
+        if ((ar === 6 && ac === 6) || (ar === 6 && ac === n - 7) || (ar === n - 7 && ac === 6)) { return; }
+        for (var dr = -2; dr <= 2; dr++) { for (var dc = -2; dc <= 2; dc++) { set(ar + dr, ac + dc, Math.max(Math.abs(dr), Math.abs(dc)) !== 1); } }
+      });
+    });
+    set(n - 8, 8, true);
+    for (i2 = 0; i2 < 9; i2++) { if (!R[8][i2]) { R[8][i2] = true; } if (!R[i2][8]) { R[i2][8] = true; } }
+    for (i2 = 0; i2 < 8; i2++) { R[8][n - 1 - i2] = true; R[n - 1 - i2][8] = true; }
+    if (ver >= 7) {
+      var vb = ver << 12, rem = ver << 12;
+      for (var k2 = 17; k2 >= 12; k2--) { if ((rem >>> k2) & 1) { rem ^= 0x1F25 << (k2 - 12); } }
+      vb |= rem;
+      for (i2 = 0; i2 < 18; i2++) {
+        var bit = (vb >>> i2) & 1;
+        var a1 = Math.floor(i2 / 3), b1 = n - 11 + (i2 % 3);
+        set(a1, b1, bit); set(b1, a1, bit);
+      }
+    }
+    var fbits = [];
+    final.forEach(function (cw) { for (var k3 = 7; k3 >= 0; k3--) { fbits.push((cw >>> k3) & 1); } });
+    var idx = 0, up = true;
+    for (var col = n - 1; col > 0; col -= 2) {
+      if (col === 6) { col--; }
+      for (var s = 0; s < n; s++) {
+        var row = up ? n - 1 - s : s;
+        for (var cdx = 0; cdx < 2; cdx++) {
+          var cc2 = col - cdx;
+          if (R[row][cc2]) { continue; }
+          M[row][cc2] = idx < fbits.length ? fbits[idx] : 0; idx++;
+        }
+      }
+      up = !up;
+    }
+    var maskFn = [
+      function (i, j) { return (i + j) % 2 === 0; },
+      function (i) { return i % 2 === 0; },
+      function (i, j) { return j % 3 === 0; },
+      function (i, j) { return (i + j) % 3 === 0; },
+      function (i, j) { return (Math.floor(i / 2) + Math.floor(j / 3)) % 2 === 0; },
+      function (i, j) { return (i * j) % 2 + (i * j) % 3 === 0; },
+      function (i, j) { return ((i * j) % 2 + (i * j) % 3) % 2 === 0; },
+      function (i, j) { return ((i + j) % 2 + (i * j) % 3) % 2 === 0; }
+    ];
+    var build = function (mk) {
+      var A = M.map(function (rw) { return rw.slice(); });
+      for (var i = 0; i < n; i++) { for (var j = 0; j < n; j++) { if (!R[i][j] && maskFn[mk](i, j)) { A[i][j] ^= 1; } } }
+      var fmt = (0 << 3) | mk, fr = fmt << 10;
+      for (var k = 14; k >= 10; k--) { if ((fr >>> k) & 1) { fr ^= 0x537 << (k - 10); } }
+      var fb = ((fmt << 10) | fr) ^ 0x5412;
+      for (i = 0; i < 15; i++) {
+        var bt = (fb >>> i) & 1;
+        if (i < 6) { A[i][8] = bt; } else if (i < 8) { A[i + 1][8] = bt; } else { A[n - 15 + i][8] = bt; }
+        if (i < 8) { A[8][n - i - 1] = bt; } else if (i < 9) { A[8][15 - i - 1 + 1] = bt; } else { A[8][15 - i - 1] = bt; }
+      }
+      A[n - 8][8] = 1;
+      return A;
+    };
+    var penalty = function (A) {
+      var pen = 0, i, j, run, dark = 0;
+      for (i = 0; i < n; i++) {
+        run = 1;
+        for (j = 1; j < n; j++) { if (A[i][j] === A[i][j - 1]) { run++; } else { if (run >= 5) { pen += run - 2; } run = 1; } }
+        if (run >= 5) { pen += run - 2; }
+        run = 1;
+        for (j = 1; j < n; j++) { if (A[j][i] === A[j - 1][i]) { run++; } else { if (run >= 5) { pen += run - 2; } run = 1; } }
+        if (run >= 5) { pen += run - 2; }
+      }
+      for (i = 0; i < n - 1; i++) { for (j = 0; j < n - 1; j++) { var c = A[i][j]; if (c === A[i][j + 1] && c === A[i + 1][j] && c === A[i + 1][j + 1]) { pen += 3; } } }
+      for (i = 0; i < n; i++) { for (j = 0; j < n; j++) { dark += A[i][j]; } }
+      pen += Math.floor(Math.abs(dark * 20 / (n * n) - 10)) * 10;
+      return pen;
+    };
+    var best = null, bestP = Infinity;
+    for (var m2 = 0; m2 < 8; m2++) { var cand = build(m2), pp = penalty(cand); if (pp < bestP) { bestP = pp; best = cand; } }
+    return best;
+  }
+  buildQr() {
+    var url = '';
+    try { if (typeof location !== 'undefined' && location.href) { url = String(location.href); } } catch (err) {}
+    if (!/^https?:/i.test(url)) { url = 'https://yourbrand.com/yourname'; }
+    if (this._qr && this._qrUrl === url) { return this._qr; }
+    var mx = this.qrEncode(url) || this.qrEncode(url.slice(0, 300));
+    var cells = [];
+    for (var i = 0; i < mx.length; i++) { for (var j = 0; j < mx.length; j++) { cells.push({ c: mx[i][j] ? '#111111' : '#FFFFFF' }); } }
+    this._qrUrl = url;
+    this._qrN = mx.length;
+    this._qr = cells;
+    return cells;
+  }
+  renderVals() {
+    var self = this;
+    var s = this.state;
+    var dark = this.resolveTheme() === 'dark';
+    var std = (this.props.package ?? 'Starter') === 'Standard';
+    var accents = { Butter: ['#F6D55C', '#111111'], Cherry: ['#E5382B', '#FFFFFF'], Cobalt: ['#2F54EB', '#FFFFFF'], Matcha: ['#A3C585', '#111111'], Bubblegum: ['#F7A8C4', '#111111'], Tangerine: ['#FF8A3D', '#111111'] };
+    var order = ['Butter', 'Cherry', 'Cobalt', 'Matcha', 'Bubblegum', 'Tangerine'];
+    var name = s.accentPick || (this.props.accent ?? 'Butter');
+    if (!accents[name]) { name = 'Butter'; }
+    var A = accents[name][0], AInk = accents[name][1];
+    var t = dark
+      ? { bg: '#0E0E0E', tile: '#1C1C1C', ink: '#F2F0EA', soft: '#D6D3CC', dim: '#9C9890', line: '#2C2C2C', chipBg: '#262626' }
+      : { bg: '#ECEAE4', tile: '#FFFFFF', ink: '#111111', soft: '#3A3835', dim: '#77736C', line: '#E4E1DA', chipBg: '#F1EFEA' };
+    var accentText = dark ? this.mix(A, 255, 0.35) : this.mix(A, 0, 0.62);
+    var softBg = this.rgba(A, dark ? 0.2 : 0.38);
+    var interests = ['Anime', 'Iced coffee', 'Volleyball', 'Hackathons', 'K-drama', 'Thrifting', 'Night walks'];
+    var loop = interests.concat(interests).map(function (l, i) {
+      var on = i % 3 === 0;
+      return { label: l, bg: on ? A : (dark ? '#0E0E0E' : 'rgba(255,255,255,0.12)'), ink: on ? AInk : (dark ? '#111111' : '#FFFFFF') };
+    });
+    if (dark) { loop = loop.map(function (it, i) { return i % 3 === 0 ? it : { label: it.label, bg: 'rgba(0,0,0,0.08)', ink: '#111111' }; }); }
+    var base = dark ? '#2A2A2A' : '#EFEDE8';
+    var pats = [
+      'radial-gradient(circle at 35% 40%, ' + A + ' 0 28%, transparent 29%)',
+      'repeating-linear-gradient(45deg, ' + this.rgba(A, 0.9) + ' 0 10px, transparent 10px 20px)',
+      'radial-gradient(' + A + ' 3px, transparent 3.5px)',
+      'linear-gradient(180deg, ' + A + ' 0 50%, transparent 50%)',
+      'conic-gradient(' + A + ' 0 25%, transparent 0 50%, ' + A + ' 0 75%, transparent 0)'
+    ];
+    return {
+      pageMin: std ? '2200px' : '1300px',
+      isStandard: std,
+      bg: t.bg, tile: t.tile, ink: t.ink, soft: t.soft, dim: t.dim, line: t.line, chipBg: t.chipBg,
+      accent: A,
+      accentInk: AInk,
+      accentSoft: softBg,
+      accentText: accentText,
+      accentName: name,
+      heroBg: dark ? '#F2F0EA' : '#111111',
+      heroInk: dark ? '#111111' : '#FFFFFF',
+      tkBorder: dark ? 'inset 0 0 0 1px #2C2C2C' : 'none',
+      xBg: dark ? '#F2F0EA' : '#111111',
+      xInk: dark ? '#111111' : '#FFFFFF',
+      isDark: dark,
+      isLight: !dark,
+      themeAria: dark ? 'Switch to light theme' : 'Switch to dark theme',
+      toggleTheme: function () { self.setState({ themeOverride: self.resolveTheme() === 'dark' ? 'light' : 'dark' }); },
+      interestLoop: loop,
+      spinState: s.playing ? 'running' : 'paused',
+      playAria: s.playing ? 'Pause preview' : 'Play preview',
+      playLabel: s.playing ? 'PLAYING' : 'PAUSED',
+      playColor: s.playing ? '#1DB954' : t.dim,
+      progress: s.playing ? '62%' : '18%',
+      togglePlay: function () { self.setState({ playing: !self.state.playing }); },
+      dump: [
+        { x: '14px', y: '52px', rot: 'rotate(-7deg)', base: base, pattern: pats[0], cap: 'finals szn' },
+        { x: '120px', y: '44px', rot: 'rotate(4deg)', base: base, pattern: pats[1], cap: 'beach day' },
+        { x: '218px', y: '62px', rot: 'rotate(-3deg)', base: base, pattern: pats[2], cap: 'the org' },
+        { x: '40px', y: '196px', rot: 'rotate(5deg)', base: base, pattern: pats[3], cap: 'con haul' },
+        { x: '178px', y: '200px', rot: 'rotate(-5deg)', base: base, pattern: pats[4], cap: 'sunday' }
+      ],
+      orgs: [
+        { initials: 'CS', role: '[PR Officer]', org: '[CS Society]', rot: 'rotate(-2deg)', bg: A, ink: AInk, badge: AInk, badgeInk: A },
+        { initials: 'VB', role: '[Member]', org: '[Volleyball Club]', rot: 'rotate(1.5deg)', bg: dark ? '#F2F0EA' : '#111111', ink: dark ? '#111111' : '#FFFFFF', badge: A, badgeInk: AInk },
+        { initials: 'AN', role: '[Founder]', org: '[Anime Org]', rot: 'rotate(-1deg)', bg: t.chipBg, ink: t.ink, badge: dark ? '#F2F0EA' : '#111111', badgeInk: dark ? '#111111' : '#FFFFFF' }
+      ],
+      showPhone: this.props.showPhone ?? false,
+      saved: s.saved,
+      notSaved: !s.saved,
+      saveLabel: s.saved ? 'Saved!' : 'Save contact',
+      saveBg: s.saved ? '#BFE8CC' : (dark ? '#F2F0EA' : '#111111'),
+      saveInk: s.saved ? '#111111' : (dark ? '#111111' : '#FFFFFF'),
+      save: function () {
+        if (!self.state.saved) { self.setState({ saved: true }); self.showToast('Contact saved'); }
+      },
+      qr: this.buildQr(),
+      qrCols: 'repeat(' + (this._qrN || 21) + ', minmax(0, 1fr))',
+      qrOpen: s.qrOpen,
+      openQr: function () { self.setState({ qrOpen: true }); },
+      closeQr: function () { self.setState({ qrOpen: false }); },
+      paletteOpen: s.paletteOpen,
+      paletteAria: s.paletteOpen ? 'true' : 'false',
+      cogTurn: s.paletteOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+      togglePalette: function () { self.setState({ paletteOpen: !self.state.paletteOpen }); },
+      swatches: order.map(function (n) {
+        var on = n === name;
+        return {
+          name: n,
+          c: accents[n][0],
+          ring: on ? '0 0 0 2px ' + t.tile + ', 0 0 0 4px ' + t.ink : 'inset 0 0 0 1px rgba(0,0,0,0.1)',
+          pick: function () { self.setState({ accentPick: n }); }
+        };
+      }),
+      shareCard: function () {
+        var url = (typeof location !== 'undefined') ? location.href : '';
+        try {
+          if (navigator.share) { navigator.share({ title: 'Warren Jacob Abdon', url: url }); return; }
+          if (navigator.clipboard) { navigator.clipboard.writeText(url); }
+        } catch (err) {}
+        self.showToast('Link copied');
+      },
+      hasToast: !!s.toast,
+      toast: s.toast
+    };
+  }
+}
+</script>
+<script>(function(global,factory){typeof exports==="object"&&typeof module!=="undefined"?module.exports=factory():typeof define==="function"&&define.amd?define(factory):(global=global||self,global.morphdom=factory())})(this,function(){"use strict";var DOCUMENT_FRAGMENT_NODE=11;function morphAttrs(fromNode,toNode){var toNodeAttrs=toNode.attributes;var attr;var attrName;var attrNamespaceURI;var attrValue;var fromValue;if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE||fromNode.nodeType===DOCUMENT_FRAGMENT_NODE){return}for(var i=toNodeAttrs.length-1;i>=0;i--){attr=toNodeAttrs[i];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;attrValue=attr.value;if(attrNamespaceURI){attrName=attr.localName||attrName;fromValue=fromNode.getAttributeNS(attrNamespaceURI,attrName);if(fromValue!==attrValue){if(attr.prefix==="xmlns"){attrName=attr.name}fromNode.setAttributeNS(attrNamespaceURI,attrName,attrValue)}}else{fromValue=fromNode.getAttribute(attrName);if(fromValue!==attrValue){fromNode.setAttribute(attrName,attrValue)}}}var fromNodeAttrs=fromNode.attributes;for(var d=fromNodeAttrs.length-1;d>=0;d--){attr=fromNodeAttrs[d];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;if(attrNamespaceURI){attrName=attr.localName||attrName;if(!toNode.hasAttributeNS(attrNamespaceURI,attrName)){fromNode.removeAttributeNS(attrNamespaceURI,attrName)}}else{if(!toNode.hasAttribute(attrName)){fromNode.removeAttribute(attrName)}}}}var range;var NS_XHTML="http://www.w3.org/1999/xhtml";var doc=typeof document==="undefined"?undefined:document;var HAS_TEMPLATE_SUPPORT=!!doc&&"content"in doc.createElement("template");var HAS_RANGE_SUPPORT=!!doc&&doc.createRange&&"createContextualFragment"in doc.createRange();function createFragmentFromTemplate(str){var template=doc.createElement("template");template.innerHTML=str;return template.content.childNodes[0]}function createFragmentFromRange(str){if(!range){range=doc.createRange();range.selectNode(doc.body)}var fragment=range.createContextualFragment(str);return fragment.childNodes[0]}function createFragmentFromWrap(str){var fragment=doc.createElement("body");fragment.innerHTML=str;return fragment.childNodes[0]}function toElement(str){str=str.trim();if(HAS_TEMPLATE_SUPPORT){return createFragmentFromTemplate(str)}else if(HAS_RANGE_SUPPORT){return createFragmentFromRange(str)}return createFragmentFromWrap(str)}function compareNodeNames(fromEl,toEl){var fromNodeName=fromEl.nodeName;var toNodeName=toEl.nodeName;var fromCodeStart,toCodeStart;if(fromNodeName===toNodeName){return true}fromCodeStart=fromNodeName.charCodeAt(0);toCodeStart=toNodeName.charCodeAt(0);if(fromCodeStart<=90&&toCodeStart>=97){return fromNodeName===toNodeName.toUpperCase()}else if(toCodeStart<=90&&fromCodeStart>=97){return toNodeName===fromNodeName.toUpperCase()}else{return false}}function createElementNS(name,namespaceURI){return!namespaceURI||namespaceURI===NS_XHTML?doc.createElement(name):doc.createElementNS(namespaceURI,name)}function moveChildren(fromEl,toEl){var curChild=fromEl.firstChild;while(curChild){var nextChild=curChild.nextSibling;toEl.appendChild(curChild);curChild=nextChild}return toEl}function syncBooleanAttrProp(fromEl,toEl,name){if(fromEl[name]!==toEl[name]){fromEl[name]=toEl[name];if(fromEl[name]){fromEl.setAttribute(name,"")}else{fromEl.removeAttribute(name)}}}var specialElHandlers={OPTION:function(fromEl,toEl){var parentNode=fromEl.parentNode;if(parentNode){var parentName=parentNode.nodeName.toUpperCase();if(parentName==="OPTGROUP"){parentNode=parentNode.parentNode;parentName=parentNode&&parentNode.nodeName.toUpperCase()}if(parentName==="SELECT"&&!parentNode.hasAttribute("multiple")){if(fromEl.hasAttribute("selected")&&!toEl.selected){fromEl.setAttribute("selected","selected");fromEl.removeAttribute("selected")}parentNode.selectedIndex=-1}}syncBooleanAttrProp(fromEl,toEl,"selected")},INPUT:function(fromEl,toEl){syncBooleanAttrProp(fromEl,toEl,"checked");syncBooleanAttrProp(fromEl,toEl,"disabled");if(fromEl.value!==toEl.value){fromEl.value=toEl.value}if(!toEl.hasAttribute("value")){fromEl.removeAttribute("value")}},TEXTAREA:function(fromEl,toEl){var newValue=toEl.value;if(fromEl.value!==newValue){fromEl.value=newValue}var firstChild=fromEl.firstChild;if(firstChild){var oldValue=firstChild.nodeValue;if(oldValue==newValue||!newValue&&oldValue==fromEl.placeholder){return}firstChild.nodeValue=newValue}},SELECT:function(fromEl,toEl){if(!toEl.hasAttribute("multiple")){var selectedIndex=-1;var i=0;var curChild=fromEl.firstChild;var optgroup;var nodeName;while(curChild){nodeName=curChild.nodeName&&curChild.nodeName.toUpperCase();if(nodeName==="OPTGROUP"){optgroup=curChild;curChild=optgroup.firstChild}else{if(nodeName==="OPTION"){if(curChild.hasAttribute("selected")){selectedIndex=i;break}i++}curChild=curChild.nextSibling;if(!curChild&&optgroup){curChild=optgroup.nextSibling;optgroup=null}}}fromEl.selectedIndex=selectedIndex}}};var ELEMENT_NODE=1;var DOCUMENT_FRAGMENT_NODE$1=11;var TEXT_NODE=3;var COMMENT_NODE=8;function noop(){}function defaultGetNodeKey(node){if(node){return node.getAttribute&&node.getAttribute("id")||node.id}}function morphdomFactory(morphAttrs){return function morphdom(fromNode,toNode,options){if(!options){options={}}if(typeof toNode==="string"){if(fromNode.nodeName==="#document"||fromNode.nodeName==="HTML"||fromNode.nodeName==="BODY"){var toNodeHtml=toNode;toNode=doc.createElement("html");toNode.innerHTML=toNodeHtml}else{toNode=toElement(toNode)}}else if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE$1){toNode=toNode.firstElementChild}var getNodeKey=options.getNodeKey||defaultGetNodeKey;var onBeforeNodeAdded=options.onBeforeNodeAdded||noop;var onNodeAdded=options.onNodeAdded||noop;var onBeforeElUpdated=options.onBeforeElUpdated||noop;var onElUpdated=options.onElUpdated||noop;var onBeforeNodeDiscarded=options.onBeforeNodeDiscarded||noop;var onNodeDiscarded=options.onNodeDiscarded||noop;var onBeforeElChildrenUpdated=options.onBeforeElChildrenUpdated||noop;var skipFromChildren=options.skipFromChildren||noop;var addChild=options.addChild||function(parent,child){return parent.appendChild(child)};var childrenOnly=options.childrenOnly===true;var fromNodesLookup=Object.create(null);var keyedRemovalList=[];function addKeyedRemoval(key){keyedRemovalList.push(key)}function walkDiscardedChildNodes(node,skipKeyedNodes){if(node.nodeType===ELEMENT_NODE){var curChild=node.firstChild;while(curChild){var key=undefined;if(skipKeyedNodes&&(key=getNodeKey(curChild))){addKeyedRemoval(key)}else{onNodeDiscarded(curChild);if(curChild.firstChild){walkDiscardedChildNodes(curChild,skipKeyedNodes)}}curChild=curChild.nextSibling}}}function removeNode(node,parentNode,skipKeyedNodes){if(onBeforeNodeDiscarded(node)===false){return}if(parentNode){parentNode.removeChild(node)}onNodeDiscarded(node);walkDiscardedChildNodes(node,skipKeyedNodes)}function indexTree(node){if(node.nodeType===ELEMENT_NODE||node.nodeType===DOCUMENT_FRAGMENT_NODE$1){var curChild=node.firstChild;while(curChild){var key=getNodeKey(curChild);if(key){fromNodesLookup[key]=curChild}indexTree(curChild);curChild=curChild.nextSibling}}}indexTree(fromNode);function handleNodeAdded(el){onNodeAdded(el);var curChild=el.firstChild;while(curChild){var nextSibling=curChild.nextSibling;var key=getNodeKey(curChild);if(key){var unmatchedFromEl=fromNodesLookup[key];if(unmatchedFromEl&&compareNodeNames(curChild,unmatchedFromEl)){curChild.parentNode.replaceChild(unmatchedFromEl,curChild);morphEl(unmatchedFromEl,curChild)}else{handleNodeAdded(curChild)}}else{handleNodeAdded(curChild)}curChild=nextSibling}}function cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey){while(curFromNodeChild){var fromNextSibling=curFromNodeChild.nextSibling;if(curFromNodeKey=getNodeKey(curFromNodeChild)){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}}function morphEl(fromEl,toEl,childrenOnly){var toElKey=getNodeKey(toEl);if(toElKey){delete fromNodesLookup[toElKey]}if(!childrenOnly){var beforeUpdateResult=onBeforeElUpdated(fromEl,toEl);if(beforeUpdateResult===false){return}else if(beforeUpdateResult instanceof HTMLElement){fromEl=beforeUpdateResult;indexTree(fromEl)}morphAttrs(fromEl,toEl);onElUpdated(fromEl);if(onBeforeElChildrenUpdated(fromEl,toEl)===false){return}}if(fromEl.nodeName!=="TEXTAREA"){morphChildren(fromEl,toEl)}else{specialElHandlers.TEXTAREA(fromEl,toEl)}}function morphChildren(fromEl,toEl){var skipFrom=skipFromChildren(fromEl,toEl);var curToNodeChild=toEl.firstChild;var curFromNodeChild=fromEl.firstChild;var curToNodeKey;var curFromNodeKey;var fromNextSibling;var toNextSibling;var matchingFromEl;outer:while(curToNodeChild){toNextSibling=curToNodeChild.nextSibling;curToNodeKey=getNodeKey(curToNodeChild);while(!skipFrom&&curFromNodeChild){fromNextSibling=curFromNodeChild.nextSibling;if(curToNodeChild.isSameNode&&curToNodeChild.isSameNode(curFromNodeChild)){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}curFromNodeKey=getNodeKey(curFromNodeChild);var curFromNodeType=curFromNodeChild.nodeType;var isCompatible=undefined;if(curFromNodeType===curToNodeChild.nodeType){if(curFromNodeType===ELEMENT_NODE){if(curToNodeKey){if(curToNodeKey!==curFromNodeKey){if(matchingFromEl=fromNodesLookup[curToNodeKey]){if(fromNextSibling===matchingFromEl){isCompatible=false}else{fromEl.insertBefore(matchingFromEl,curFromNodeChild);if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=matchingFromEl;curFromNodeKey=getNodeKey(curFromNodeChild)}}else{isCompatible=false}}}else if(curFromNodeKey){isCompatible=false}isCompatible=isCompatible!==false&&compareNodeNames(curFromNodeChild,curToNodeChild);if(isCompatible){morphEl(curFromNodeChild,curToNodeChild)}}else if(curFromNodeType===TEXT_NODE||curFromNodeType==COMMENT_NODE){isCompatible=true;if(curFromNodeChild.nodeValue!==curToNodeChild.nodeValue){curFromNodeChild.nodeValue=curToNodeChild.nodeValue}}}if(isCompatible){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}if(curToNodeKey&&(matchingFromEl=fromNodesLookup[curToNodeKey])&&compareNodeNames(matchingFromEl,curToNodeChild)){if(!skipFrom){addChild(fromEl,matchingFromEl)}morphEl(matchingFromEl,curToNodeChild)}else{var onBeforeNodeAddedResult=onBeforeNodeAdded(curToNodeChild);if(onBeforeNodeAddedResult!==false){if(onBeforeNodeAddedResult){curToNodeChild=onBeforeNodeAddedResult}if(curToNodeChild.actualize){curToNodeChild=curToNodeChild.actualize(fromEl.ownerDocument||doc)}addChild(fromEl,curToNodeChild);handleNodeAdded(curToNodeChild)}}curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling}cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey);var specialElHandler=specialElHandlers[fromEl.nodeName];if(specialElHandler){specialElHandler(fromEl,toEl)}}var morphedNode=fromNode;var morphedNodeType=morphedNode.nodeType;var toNodeType=toNode.nodeType;if(!childrenOnly){if(morphedNodeType===ELEMENT_NODE){if(toNodeType===ELEMENT_NODE){if(!compareNodeNames(fromNode,toNode)){onNodeDiscarded(fromNode);morphedNode=moveChildren(fromNode,createElementNS(toNode.nodeName,toNode.namespaceURI))}}else{morphedNode=toNode}}else if(morphedNodeType===TEXT_NODE||morphedNodeType===COMMENT_NODE){if(toNodeType===morphedNodeType){if(morphedNode.nodeValue!==toNode.nodeValue){morphedNode.nodeValue=toNode.nodeValue}return morphedNode}else{morphedNode=toNode}}}if(morphedNode===toNode){onNodeDiscarded(fromNode)}else{if(toNode.isSameNode&&toNode.isSameNode(morphedNode)){return}morphEl(morphedNode,toNode,childrenOnly);if(keyedRemovalList){for(var i=0,len=keyedRemovalList.length;i<len;i++){var elToRemove=fromNodesLookup[keyedRemovalList[i]];if(elToRemove){removeNode(elToRemove,elToRemove.parentNode,false)}}}}if(!childrenOnly&&morphedNode!==fromNode&&fromNode.parentNode){if(morphedNode.actualize){morphedNode=morphedNode.actualize(fromNode.ownerDocument||doc)}fromNode.parentNode.replaceChild(morphedNode,fromNode)}return morphedNode}}var morphdom=morphdomFactory(morphAttrs);return morphdom});</script>
+<script>(function () {
+  function legacyCopy(t) { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); }
+  var nativeWrite = navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText.bind(navigator.clipboard) : null;
+  var shim = function (t) { if (!nativeWrite) { legacyCopy(t); return Promise.resolve(); } return nativeWrite(t).catch(function () { legacyCopy(t); }); };
+  try { if (navigator.clipboard) { navigator.clipboard.writeText = shim; } else { Object.defineProperty(navigator, 'clipboard', { value: { writeText: shim } }); } } catch (e) {}
+})();
+(function () {
+  var C = JSON.parse(document.getElementById('dc-contact').textContent);
+  var photoB64 = '';
+  if (C.photo) {
+    fetch(C.photo).then(function (r) { return r.blob(); }).then(function (b) {
+      var fr = new FileReader(); fr.onload = function () { photoB64 = String(fr.result).split(',')[1] || ''; }; fr.readAsDataURL(b);
+    }).catch(function () {});
+  }
+  function esc(v) { return String(v || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1'); }
+  function fold(line) { var out = []; while (line.length > 75) { out.push(line.slice(0, 75)); line = ' ' + line.slice(75); } out.push(line); return out.join('\r\n'); }
+  window.__dcSaveContact = function () {
+    var url = C.website || location.href;
+    var L = ['BEGIN:VCARD', 'VERSION:3.0',
+      'N:' + esc(C.lastName) + ';' + esc(C.firstName) + ';;;',
+      'FN:' + esc(C.fullName)];
+    if (C.title) { L.push('TITLE:' + esc(C.title)); }
+    if (C.org) { L.push('ORG:' + esc(C.org)); }
+    if (C.phone) { L.push('TEL;TYPE=CELL:' + C.phone); }
+    if (C.email) { L.push('EMAIL;TYPE=INTERNET:' + C.email); }
+    if (url) { L.push('URL:' + url); }
+    if (C.city || C.country) { L.push('ADR;TYPE=WORK:;;;' + esc(C.city) + ';;;' + esc(C.country)); }
+    if (C.note) { L.push('NOTE:' + esc(C.note)); }
+    if (photoB64) { L.push('PHOTO;ENCODING=b;TYPE=JPEG:' + photoB64); }
+    L.push('END:VCARD');
+    var text = L.map(fold).join('\r\n') + '\r\n';
+    var blob = new Blob([text], { type: 'text/vcard;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (C.fullName || 'contact').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.vcf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  };
+})();
+(function () {
+  var tpl = document.getElementById('dc-template');
+  var root = document.getElementById('app');
+  var PROPS = JSON.parse(document.getElementById('dc-props').textContent);
+  function DCLogic(props) { this.props = props || {}; this.state = {}; }
+  DCLogic.prototype.setState = function (p) {
+    var next = typeof p === 'function' ? p(this.state, this.props) : p;
+    this.state = Object.assign({}, this.state, next);
+    schedule();
+  };
+  var Component = new Function('DCLogic', document.getElementById('dc-logic').textContent + '\nreturn Component;')(DCLogic);
+  var comp = new Component(PROPS);
+  if (!comp.state) { comp.state = {}; }
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  function get(scope, path) {
+    if (path === 'true') { return true; }
+    if (path === 'false') { return false; }
+    return path.split('.').reduce(function (a, k) { return a == null ? a : a[k]; }, scope);
+  }
+  function sub(str, scope) {
+    return str.replace(HOLE, function (m, p) { var v = get(scope, p); return (v == null || typeof v === 'function') ? '' : String(v); });
+  }
+  function build(node, scope, parent) {
+    var kids = node.childNodes;
+    for (var i = 0; i < kids.length; i++) {
+      var ch = kids[i];
+      if (ch.nodeType === 3) { parent.appendChild(document.createTextNode(sub(ch.textContent, scope))); continue; }
+      if (ch.nodeType !== 1) { continue; }
+      var tag = ch.localName;
+      if (tag === 'sc-if') {
+        var m = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('value') || '');
+        if (m && get(scope, m[1])) { build(ch, scope, parent); }
+        continue;
+      }
+      if (tag === 'sc-for') {
+        var lm = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('list') || '');
+        var as = ch.getAttribute('as');
+        var list = (lm && get(scope, lm[1])) || [];
+        for (var j = 0; j < list.length; j++) { var sc = Object.create(scope); sc[as] = list[j]; build(ch, sc, parent); }
+        continue;
+      }
+      var el = ch.namespaceURI && ch.namespaceURI !== 'http://www.w3.org/1999/xhtml' ? document.createElementNS(ch.namespaceURI, ch.localName) : document.createElement(tag);
+      var attrs = ch.attributes;
+      for (var a = 0; a < attrs.length; a++) {
+        var at = attrs[a];
+        if (/^on[a-z]/i.test(at.name)) {
+          var hm = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/.exec(at.value);
+          var fn = hm ? get(scope, hm[1]) : null;
+          if (typeof fn === 'function') { el['on' + at.name.slice(2).toLowerCase()] = fn; }
+          continue;
+        }
+        if (at.name.indexOf('hint-') === 0) { continue; }
+        el.setAttribute(at.name, sub(at.value, scope));
+      }
+      build(ch.content || ch, scope, el);
+      parent.appendChild(el);
+    }
+  }
+  var EVTS = ['click', 'mousemove', 'mouseleave', 'touchmove', 'touchend', 'touchstart', 'input', 'change', 'keydown'];
+  function render() {
+    var vals = comp.renderVals();
+    if (typeof vals.save === 'function') { var origSave = vals.save; vals.save = function () { window.__dcSaveContact(); return origSave.apply(this, arguments); }; }
+    var next = document.createElement('div');
+    next.id = 'app';
+    build(tpl.content, vals, next);
+    morphdom(root, next, {
+      onBeforeElUpdated: function (from, to) {
+        for (var i = 0; i < EVTS.length; i++) { var k = 'on' + EVTS[i]; if (from[k] !== to[k]) { from[k] = to[k] || null; } }
+        return !from.isEqualNode(to);
+      }
+    });
+    var first = root.firstElementChild;
+    if (first) { document.body.style.background = getComputedStyle(first).backgroundColor; }
+  }
+  var queued = false;
+  function schedule() { if (queued) { return; } queued = true; requestAnimationFrame(function () { queued = false; render(); }); }
+  render();
+  if (comp.componentDidMount) { comp.componentDidMount(); }
+})();
+</script>
+</body>
+</html>

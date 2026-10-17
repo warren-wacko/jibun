@@ -1,0 +1,782 @@
+/*
+ * pro-classic: tokens and layout. Every colour is a variable defined here (or by ThemeScope);
+ * the component files contain no colour values.
+ * Source design: design-reference/01-pro-classic/starter/index.html
+ */
+
+/* ---------- Tokens ---------- */
+[data-template="pro-classic"][data-theme="dark"] {
+  --bg: #0c0d0f;
+  --surface: #17191c;
+  --text: #f2f2f0;
+  --text-muted: #9aa0a9; /* 7.6:1 on --bg */
+  --border: #2b2f35;
+  --text-soft: #c9cdd3;
+  --text-dim: #a3a8b0;
+  --text-faint: #8d939c;
+  --glow-opacity: 0.55;
+  --card-shadow: 0 30px 60px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --focus: #6c7cf0;
+  --saved-chip: rgba(52, 199, 123, 0.18);
+  --chip-ring: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
+  --toast-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+[data-template="pro-classic"][data-theme="light"] {
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --text: #121417;
+  --text-muted: #5c626b; /* 5.7:1 on --bg */
+  --border: #e1e3e7;
+  --text-soft: #3a3f46;
+  --text-dim: #5c626b;
+  --text-faint: #6b7079;
+  --glow-opacity: 0.35;
+  --card-shadow: 0 24px 48px rgba(18, 20, 23, 0.22), inset 0 0 0 1px rgba(18, 20, 23, 0.08);
+  --focus: #6c7cf0;
+  --saved-chip: rgba(52, 199, 123, 0.18);
+  --chip-ring: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  --toast-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* The card face is painted in the page accent. A light face needs dark glare/photo tints. */
+[data-template="pro-classic"] {
+  --glare-alpha: 0.22;
+  --photo-bg: rgba(244, 244, 242, 0.1);
+  --photo-line: rgba(244, 244, 242, 0.16);
+  --holo-blend: screen;
+  --qr-bg: #ffffff;
+}
+
+/* The glow behind the card uses the accent, unless the accent is about the same as the page
+   background (light card on the light theme, dark card on the dark theme): then a soft violet. */
+[data-template="pro-classic"] {
+  --glow: var(--accent);
+  --glow-fallback: #8b9bff;
+}
+
+[data-template="pro-classic"][data-theme="light"][data-accent-tone="light"],
+[data-template="pro-classic"][data-theme="dark"][data-accent-tone="dark"] {
+  --glow: var(--glow-fallback);
+}
+
+[data-template="pro-classic"][data-accent-tone="light"] {
+  --glare-alpha: 0.55;
+  --photo-bg: rgba(17, 19, 21, 0.07);
+  --photo-line: rgba(17, 19, 21, 0.1);
+  --holo-blend: multiply;
+}
+
+/* ---------- Base ---------- */
+.pc {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 430px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  font-family: var(--font-bricolage), system-ui, sans-serif;
+  /* the design uses the browser default, not the app-wide 1.5 */
+  line-height: normal;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 350ms ease,
+    color 350ms ease;
+}
+
+/* :where() keeps this reset at zero specificity so component classes can set their own colour. */
+:where(.pc) a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.pc a:focus-visible,
+.pc button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+:where(.pc) button {
+  font: inherit;
+}
+
+.pc-mono {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+.pc-label {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 1.6px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.pc-glow {
+  position: absolute;
+  left: 11%;
+  top: 60px;
+  width: 77%;
+  height: 260px;
+  border-radius: 50%;
+  background: var(--glow);
+  filter: blur(70px);
+  opacity: var(--glow-opacity);
+  pointer-events: none;
+  transition: opacity 350ms ease;
+}
+
+/* ---------- Header ---------- */
+.pc-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: content-box;
+  height: 64px;
+  margin: 0 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.pc-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pc-icon-btn,
+.pc-share-btn {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  cursor: pointer;
+}
+
+.pc-icon-btn:focus-visible,
+.pc-share-btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.pc-icon-ring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  color: var(--text);
+}
+
+.pc-share-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px 0 14px;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 1.6px;
+  color: var(--text);
+}
+
+/* ---------- Hero card ---------- */
+.pc-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 26px 24px 0;
+  perspective: 1400px;
+}
+
+.pc-card-btn {
+  all: unset;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  perspective: 1200px;
+  container-type: inline-size;
+}
+
+.pc-card-btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+  border-radius: 18px;
+}
+
+.pc-flip {
+  --rx: 0deg;
+  --ry: 0deg;
+  --flip: 0deg;
+  --gx: 50;
+  --gy: 30;
+  display: grid;
+  aspect-ratio: 342 / 206;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx)) rotateY(calc(var(--ry) + var(--flip)));
+  transition: transform 750ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.pc-flip.is-flipped {
+  --flip: 180deg;
+}
+
+.pc-flip[data-moving="true"] {
+  transition: transform 120ms ease-out;
+}
+
+.pc-face {
+  position: relative;
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  padding: 22px 22px 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: var(--card-shadow);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.pc-back {
+  transform: rotateY(180deg);
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 20px;
+}
+
+.pc-holo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(
+    115deg,
+    transparent 18%,
+    rgba(255, 90, 200, 0.22) 34%,
+    rgba(80, 200, 255, 0.22) 46%,
+    rgba(255, 230, 90, 0.2) 58%,
+    rgba(120, 255, 190, 0.18) 68%,
+    transparent 82%
+  );
+  background-size: 260% 260%;
+  background-position: calc(100% - var(--gx) * 1%) calc(100% - var(--gy) * 1%);
+  mix-blend-mode: var(--holo-blend);
+  transition: background-position 120ms ease-out;
+}
+
+.pc-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at calc(var(--gx) * 1%) calc(var(--gy) * 1%),
+    rgba(255, 255, 255, var(--glare-alpha)),
+    rgba(255, 255, 255, 0) 55%
+  );
+}
+
+.pc-face-top,
+.pc-face-bottom {
+  position: relative;
+}
+
+.pc-face-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pc-face-label {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.pc-nfc {
+  flex-shrink: 0;
+  margin-left: auto;
+  opacity: 0.8;
+}
+
+.pc-face-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: auto;
+}
+
+.pc-name-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pc-name {
+  font-size: clamp(20px, 8.2cqw, 28px);
+  line-height: 1.02;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  overflow-wrap: anywhere;
+}
+
+.pc-title {
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.pc-photo {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--photo-bg);
+  box-shadow: inset 0 0 0 1px var(--photo-line);
+}
+
+.pc-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 25%;
+}
+
+.pc-qr {
+  position: relative; /* paints above the glare layer */
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: min(150px, 44cqw);
+  aspect-ratio: 1;
+  box-sizing: border-box;
+  padding: 9px;
+  border-radius: 12px;
+  background: var(--qr-bg);
+}
+
+.pc-qr img {
+  width: 100%;
+  height: 100%;
+}
+
+.pc-back-text {
+  position: relative; /* paints above the glare layer */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pc-back-title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.pc-back-url {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  opacity: 0.75;
+  overflow-wrap: anywhere;
+}
+
+.pc-pill {
+  display: flex;
+  gap: 4px;
+  height: 40px;
+  padding: 4px;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.pc-pill button {
+  all: unset;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-width: 44px;
+  height: 30px;
+  padding: 0 16px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: background 200ms;
+}
+
+.pc-pill button[aria-pressed="true"] {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.pc-pill button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Save and actions ---------- */
+.pc-actions {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px 24px 0;
+}
+
+.pc-save {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  height: 60px;
+  padding: 0 8px 0 22px;
+  border-radius: 18px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 17px;
+  font-weight: 600;
+  transition:
+    background 300ms,
+    color 300ms;
+}
+
+.pc-save.is-saved {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.pc-save-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: var(--chip-ring);
+  transition: background 300ms;
+}
+
+/* A light card on the dark theme (or a dark card on the light theme) matches the button itself,
+   so the chip becomes a see-through tint instead of a same-colour square. */
+[data-theme="dark"][data-accent-tone="light"] .pc-save-chip,
+[data-theme="light"][data-accent-tone="dark"] .pc-save-chip {
+  background: color-mix(in srgb, var(--bg) 18%, transparent);
+  color: var(--bg);
+  box-shadow: none;
+}
+
+.pc-save.is-saved .pc-save-chip {
+  background: var(--saved-chip);
+  color: var(--text);
+  box-shadow: none;
+}
+
+/* Up to four buttons per row on equal columns; a fifth (Book) starts a new row. */
+.pc-quick {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+  gap: 16px 8px;
+}
+
+.pc-quick a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 13px;
+  white-space: nowrap;
+  color: var(--text-soft);
+}
+
+.pc-quick-ring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box; /* 58px plus the 1px ring, as in the design */
+  width: 58px;
+  height: 58px;
+  border: 1px solid var(--border);
+  border-radius: 29px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* ---------- Sections ---------- */
+.pc-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 32px 24px 0;
+}
+
+.pc-about {
+  padding-top: 40px;
+  gap: 12px;
+}
+
+.pc-about p {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.35;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  overflow-wrap: anywhere;
+}
+
+.pc-connect {
+  padding-top: 36px;
+}
+
+.pc-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
+
+.pc-row-link {
+  min-height: 68px;
+  padding: 0 16px;
+  background: var(--surface);
+}
+
+.pc-row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.pc-row-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.pc-row-sub {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+.pc-row-arrow {
+  flex-shrink: 0;
+  color: var(--text-dim);
+}
+
+.pc-row-email {
+  min-height: 60px;
+  padding: 0 8px 0 16px;
+}
+
+.pc-row-email > a {
+  flex-grow: 1;
+  min-width: 0;
+  padding: 8px 0;
+  font-size: 15px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.pc-copy {
+  all: unset;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+  cursor: pointer;
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+.pc-copy:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.pc-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pc-tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 104px;
+  box-sizing: border-box;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.pc-tile-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  /* the design lets short handles use the tile's right padding; longer ones still wrap */
+  margin-right: -8px;
+}
+
+.pc-tile-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pc-tile-handle {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Footer ---------- */
+.pc-footer {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 36px 24px 24px;
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.pc-footer a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ---------- Toast ---------- */
+.pc-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 22px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: var(--toast-shadow);
+  transform: translateX(-50%);
+  animation: pc-toast-in 260ms ease-out both;
+}
+
+/* ---------- Motion ---------- */
+.pc-anim-card {
+  animation: pc-card-in 900ms cubic-bezier(0.2, 0.8, 0.2, 1) 120ms both;
+}
+
+.pc-anim-rise {
+  animation: pc-rise-in 700ms ease-out 450ms both;
+}
+
+@keyframes pc-card-in {
+  0% {
+    opacity: 0;
+    transform: translateY(48px) rotateX(28deg) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pc-rise-in {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pc-toast-in {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-anim-card,
+  .pc-anim-rise,
+  .pc-toast {
+    animation: none;
+  }
+  .pc-flip,
+  .pc-holo {
+    transition: none;
+  }
+}

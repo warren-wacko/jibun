@@ -73,8 +73,8 @@ describe("placeholder template", () => {
 });
 
 describe("registry", () => {
-  it("falls back to the placeholder for launch templates not converted yet", () => {
-    expect(hasTemplate("pro-classic")).toBe(false);
-    expect(getTemplate("pro-classic")).toBe(getTemplate("placeholder"));
+  it("falls back to the placeholder for keys that are not registered", () => {
+    expect(hasTemplate("not-a-template")).toBe(false);
+    expect(getTemplate("not-a-template")).toBe(getTemplate("placeholder"));
   });
 });

@@ -24,12 +24,11 @@ Rule: one phase per session; review and pass the gate before starting the next.
 ## Phase 2 (M2): Public page and tap flow
 - [x] Shared components: ActionRow, SaveContact, SocialGrid, FeaturedLink, Footer (+ client components for QR toggle, share, theme toggle)
 - [x] `/[username]` (cached with `use cache`, expired on admin save via `revalidatePage`), `/[username]/vcard`, `/[username]/qr`
-- [ ] `/c/[code]`: status checks, non-blocking tap logging, 10-minute de-dup, bot filtering, rate limit (~30/min/IP), 302 redirect
 - [x] `/inactive`, `robots.txt`, `noindex`, Open Graph tags
 - [x] `/c/[code]`: status checks, non-blocking tap logging (`after`), 10-minute de-dup, bot filtering, rate limit (~30/min/IP), 302 redirect
-- [ ] Convert `pro-classic` when `starter-package-professional-template-1.html` arrives
-- [ ] Deploy `release` to Hostinger, connect domain, write a real NFC tag
-- **Gate:** tap → page → Save Contact works on a real iPhone and Android; QR scans
+- [x] Convert `pro-classic` Starter from `design-reference/01-pro-classic/starter/` (verified against the reference at 390/375/320 px, light and dark; QR decodes). Its Standard sections come from `01-pro-classic/standard/` in Phase 4
+- [ ] Missing brand glyphs (YouTube, X, Spotify, Pinterest, GitHub, LinkedIn variants, Telegram, Discord, website): add to `components/brand-glyphs.ts` as the templates that contain them are converted; until then they show a neutral link icon
+- **Gate:** tap → page → Save Contact works locally with the real card, against the seeded page. The real-phone and NFC tag test moves to Phase 5 with the Hostinger deploy
 
 ## Phase 3 (M3): Admin panel
 - [ ] Auth.js credentials login, bcrypt, middleware on `/admin/*` only, login rate limiting
@@ -41,7 +40,14 @@ Rule: one phase per session; review and pass the gate before starting the next.
 - **Gate:** a Starter client is created in under 10 minutes with no code changes
 
 ## Phase 4 (M4): Templates and Standard
-- [ ] Convert, one per session, as reference files arrive: `pro-magazine`, `pro-signature`, `pro-company`, `student-notebook`, `social-bento`, `social-scrapbook`
+- [x] Template preview at `/preview` (dev only) with fictional sample data, light/dark, full/sparse, any accent via `?accent=`
+- [x] `pro-magazine` Starter converted (positions match the reference exactly at 390 px; 30-character names fit on two lines; QR dialog decodes)
+- [x] `pro-signature` Starter converted (positions match the reference; flip card QR decodes; handwritten signature; light-theme footer text darkened one step to meet AA)
+- [x] `pro-company` Starter converted (positions match the reference exactly at 390 px; brand colours derived in CSS from any accent; light-accent and no-photo cases handled). The Standard file of this design adds optional sections (services, experience, skills, stats, gallery, portfolio, résumé) and 4 font pairs: those come with the Standard package below
+- [x] `student-notebook` Starter converted (positions match the reference to 0.1 px at 390 px; polaroid scene scales down to 320 px; dark school colours handled). Its Standard file adds extra sections: Phase 4
+- [x] `social-bento` Starter converted (tile positions and sizes match the reference exactly at 390 px; the tile layout adapts to whichever links exist and never leaves a gap). Its Standard package (interests marquee, music record, photo dump, orgs & clubs) comes in Phase 4
+- [x] `social-scrapbook` Starter converted (positions match the reference to 0.1 px at 390 px; cutout-letter name scales and wraps in balanced rows for names up to 30 characters). Its Standard package (interest tape, record, photo dump, orgs) comes in Phase 4
+- [x] `social-minimalist` Starter converted (the 8th and last launch template). Its Standard package (interests marquee, record player, photo dump, orgs & clubs) comes in Phase 4
 - [ ] Accent palette and school color presets
 - [ ] Standard sections with styled variants per launch template
 - [ ] Font pairs and section reordering
@@ -53,6 +59,7 @@ Rule: one phase per session; review and pass the gate before starting the next.
 - [ ] Lighthouse mobile ≥ 90 (performance and accessibility)
 - [ ] Playwright tests: tap → page → vCard
 - [ ] Production checklist: env vars, backups, hosting resource monitoring
+- [ ] **Last step:** buy Hostinger + domain, deploy `release`, write a real NFC tag, test tap/QR/Save Contact on a real iPhone and Android
 - **Gate:** launch-ready
 
 ## Later
@@ -60,7 +67,7 @@ Rule: one phase per session; review and pass the gate before starting the next.
 - v3: client/org dashboards, team cards, digital menus, product and event pages
 
 ## Open questions (from PRD)
-- Domain for Jibun (replaces `tapcard.ph`); needed before the Phase 2 deploy
+- Domain for Jibun (replaces `tapcard.ph`); needed only for the final deploy (Phase 5)
 - Cloudinary account and API keys; needed in Phase 3 (image upload)
 - ~~Brand name~~ decided: Jibun
 - Renewal fee (draft ₱300–500)
@@ -73,3 +80,4 @@ Rule: one phase per session; review and pass the gate before starting the next.
 ## Notes
 - PRD file tree lists `pro-centered` and `social-pop`; the template table is authoritative.
 - No template is invented before its reference file exists; use `placeholder`.
+- Reference designs live in `design-reference/[nn]-[templateKey]/{starter,standard}/index.html`. Never edit them.

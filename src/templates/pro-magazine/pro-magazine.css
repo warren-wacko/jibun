@@ -1,0 +1,814 @@
+/*
+ * pro-magazine: tokens and layout. Every colour is a variable defined here (or by ThemeScope);
+ * the component files contain no colour values.
+ * Source design: design-reference/02-pro-magazine/starter/index.html
+ */
+
+/* ---------- Tokens ---------- */
+[data-template="pro-magazine"][data-theme="light"] {
+  --bg: #f5f4f1;
+  --surface: #ffffff;
+  --text: #111213;
+  --text-muted: #5e6168; /* 5.6:1 on --bg */
+  --border: #dedcd7;
+  --text-soft: #3a3d42;
+  --text-dim: #55585f;
+  --text-faint: #6b6e75;
+  --scrim: rgba(17, 18, 19, 0.45);
+  --bar-fade: linear-gradient(180deg, rgba(245, 244, 241, 0) 0%, rgba(245, 244, 241, 0.92) 40%);
+}
+
+[data-template="pro-magazine"][data-theme="dark"] {
+  --bg: #0e0f11;
+  --surface: #18191c;
+  --text: #f2f1ee;
+  --text-muted: #9aa0a9; /* 7.4:1 on --bg */
+  --border: #2c2f34;
+  --text-soft: #c9cdd3;
+  --text-dim: #a9aeb6;
+  --text-faint: #8d939c;
+  --scrim: rgba(5, 6, 8, 0.66);
+  --bar-fade: linear-gradient(180deg, rgba(14, 15, 17, 0) 0%, rgba(14, 15, 17, 0.92) 40%);
+}
+
+[data-template="pro-magazine"] {
+  /* Text on top of the cover photo is always white; the glass buttons and gradient keep it readable. */
+  --on-photo: #ffffff;
+  --on-photo-soft: rgba(255, 255, 255, 0.85);
+  --on-photo-line: rgba(255, 255, 255, 0.35);
+  --glass-bg: rgba(12, 13, 15, 0.32);
+  --glass-line: rgba(255, 255, 255, 0.28);
+  --cover-empty: #26282c; /* cover colour when the page has no photo */
+  --focus: #6c7cf0;
+  --accent-text: var(--accent);
+  --chip-fill: var(--accent);
+  --chip-ink: var(--on-accent);
+  --saved-chip: rgba(52, 199, 123, 0.18);
+}
+
+/* An accent too faint to read as text on this theme falls back to the normal text colour. */
+[data-template="pro-magazine"][data-theme="light"][data-weak-on-light="true"],
+[data-template="pro-magazine"][data-theme="dark"][data-weak-on-dark="true"] {
+  --accent-text: var(--text);
+}
+
+/* The save button is filled with --text, so an accent that matches it becomes a see-through tint. */
+[data-template="pro-magazine"][data-theme="light"][data-weak-on-dark="true"],
+[data-template="pro-magazine"][data-theme="dark"][data-weak-on-light="true"] {
+  --chip-fill: color-mix(in srgb, var(--bg) 18%, transparent);
+  --chip-ink: var(--bg);
+}
+
+/* ---------- Base ---------- */
+.pm {
+  position: relative; /* no overflow here: the bottom bar is sticky */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 430px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  font-family: var(--font-archivo), system-ui, sans-serif;
+  line-height: normal;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 350ms ease,
+    color 350ms ease;
+}
+
+:where(.pm) a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:where(.pm) button {
+  font: inherit;
+}
+
+.pm a:focus-visible,
+.pm button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.pm-label {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 1.6px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* ---------- Cover ---------- */
+.pm-cover {
+  position: relative;
+  height: 600px;
+  overflow: hidden;
+  background: var(--cover-empty);
+  container-type: inline-size;
+}
+
+.pm-cover-photo {
+  object-fit: cover;
+  object-position: 50% 15%;
+}
+
+.pm-cover-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.38) 0%,
+    rgba(0, 0, 0, 0) 22%,
+    rgba(0, 0, 0, 0) 48%,
+    rgba(0, 0, 0, 0.72) 100%
+  );
+}
+
+.pm-cover-top {
+  position: absolute;
+  inset: 0 0 auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px 0;
+  color: var(--on-photo);
+}
+
+.pm-mono {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+.pm-brand {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 1.6px;
+}
+
+.pm-cover-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pm-icon-btn,
+.pm-share-btn {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  cursor: pointer;
+}
+
+.pm-icon-btn:focus-visible,
+.pm-share-btn:focus-visible {
+  outline: 2px solid var(--on-photo);
+  outline-offset: 2px;
+}
+
+.pm-glass {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 36px;
+  border: 1px solid var(--glass-line);
+  border-radius: 18px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.pm-glass-round {
+  width: 36px;
+}
+
+.pm-glass-pill {
+  gap: 8px;
+  padding: 0 12px 0 14px;
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 1.6px;
+}
+
+.pm-issue {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 66px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--on-photo-line);
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  color: var(--on-photo-soft);
+}
+
+.pm-headline {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--on-photo);
+  animation: pm-name-up 900ms cubic-bezier(0.2, 0.8, 0.2, 1) 150ms both;
+}
+
+.pm-chip {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 8px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.6px;
+}
+
+/* The headline is sized so its widest line (--em, in em) fills the cover padding, never past 76px. */
+.pm-name {
+  margin: 0;
+  font-size: clamp(22px, calc((100cqw - 40px) / var(--em, 4)), 76px);
+  line-height: 0.86;
+  font-weight: 800;
+  font-stretch: 72%;
+  letter-spacing: -1.5px;
+  word-spacing: 0.12em; /* this condensed face has a very narrow space; counted in model.ts */
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.pm-name span {
+  display: block;
+}
+
+.pm-subtitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.pm-subtitle-rule {
+  width: 18px;
+  height: 1.5px;
+  background: var(--on-photo-soft);
+}
+
+.pm-subtitle-second {
+  opacity: 0.85;
+}
+
+/* ---------- Sections ---------- */
+.pm-brief {
+  padding: 32px 24px 0;
+  animation: pm-rise-in 700ms ease-out 450ms both;
+}
+
+.pm-brief .pm-label {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.pm-bio {
+  margin: 0;
+  font-size: 23px;
+  line-height: 1.32;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  overflow-wrap: anywhere;
+}
+
+.pm-bio::first-letter {
+  float: left;
+  margin: 4px 10px 0 0;
+  font-size: 74px;
+  line-height: 0.82;
+  font-weight: 800;
+  font-stretch: 72%;
+  color: var(--accent-text);
+}
+
+.pm-section {
+  display: flex;
+  flex-direction: column;
+  padding: 36px 24px 0;
+}
+
+.pm-touch-head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 16px;
+}
+
+.pm-touch-title {
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.pm-touch-note {
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+
+.pm-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pm-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  min-height: 76px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--text);
+  background: var(--surface);
+}
+
+.pm-row-primary {
+  min-height: 84px;
+  padding: 14px 16px;
+  border: 0;
+  background: var(--text);
+  color: var(--bg);
+}
+
+.pm-row-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.pm-row-primary .pm-row-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 27px;
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: none;
+}
+
+.pm-row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.pm-row-title {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.pm-row-sub {
+  font-size: 15px;
+  line-height: 1.3;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+.pm-row-primary .pm-row-title {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.pm-row-primary .pm-row-sub {
+  font-size: 17px;
+  line-height: normal;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: inherit;
+  opacity: 0.85;
+}
+
+.pm-row-chevron {
+  flex-shrink: 0;
+}
+
+.pm-connect {
+  gap: 10px;
+}
+
+.pm-link-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+}
+
+.pm-link-row-featured {
+  min-height: 72px;
+  padding: 0 16px;
+  background: var(--surface);
+}
+
+.pm-link-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.pm-link-title {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.pm-link-sub {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+.pm-link-arrow {
+  flex-shrink: 0;
+}
+
+.pm-email-row {
+  min-height: 60px;
+  padding: 0 8px 0 16px;
+}
+
+.pm-email-row > a {
+  flex-grow: 1;
+  min-width: 0;
+  padding: 8px 0;
+  font-size: 15px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.pm-copy {
+  all: unset;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 0 12px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+  cursor: pointer;
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--text-soft);
+}
+
+.pm-copy:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.pm-lists {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
+  column-gap: 16px;
+  padding: 32px 24px 0;
+}
+
+.pm-list {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pm-list .pm-label {
+  padding-bottom: 10px;
+}
+
+.pm-list a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: content-box; /* 52px plus the 1px rule, as in the design */
+  min-height: 52px;
+  border-top: 1px solid var(--border);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.pm-list a:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+/* ---------- Footer and bottom bar ---------- */
+.pm-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 40px 24px 16px;
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.pm-footer a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pm-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 15;
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px 16px;
+  background: var(--bar-fade);
+}
+
+.pm-save {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  min-width: 0;
+  height: 62px;
+  padding: 0 8px 0 20px;
+  background: var(--text);
+  color: var(--bg);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  transition:
+    background 300ms,
+    color 300ms;
+}
+
+.pm-save.is-saved {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.pm-save-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pm-save-label {
+  font-size: 17px;
+  font-weight: 700;
+  font-stretch: 85%;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.pm-save-sub {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  opacity: 0.7;
+}
+
+.pm-save-chip {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  background: var(--chip-fill);
+  color: var(--chip-ink);
+  transition: background 300ms;
+}
+
+.pm-save.is-saved .pm-save-chip {
+  background: var(--saved-chip);
+  color: var(--text);
+}
+
+.pm-qr-btn {
+  all: unset;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 62px;
+  height: 62px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.pm-qr-btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---------- QR dialog ---------- */
+.pm-qr-dialog {
+  margin: auto; /* Tailwind's reset zeroes the browser's auto margin that centres a modal */
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  max-width: none;
+  max-height: none;
+  overflow: visible;
+}
+
+.pm-qr-dialog::backdrop {
+  background: var(--scrim);
+  animation: pm-fade-in 200ms ease-out both;
+}
+
+.pm-qr-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-sizing: border-box;
+  width: min(300px, calc(100vw - 32px));
+  padding: 24px;
+  background: var(--surface);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  animation: pm-rise-in 280ms ease-out both;
+}
+
+.pm-qr-card .pm-label {
+  align-self: flex-start;
+  font-size: 10px;
+}
+
+.pm-qr-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 220px;
+  max-width: 100%;
+  aspect-ratio: 1;
+  padding: 12px;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.pm-qr-box img {
+  width: 100%;
+  height: 100%;
+}
+
+.pm-qr-who {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pm-qr-name {
+  font-size: 22px;
+  font-weight: 800;
+  font-stretch: 75%;
+  letter-spacing: -0.3px;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.pm-qr-url {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+.pm-qr-close {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  box-sizing: border-box;
+  height: 48px;
+  background: var(--text);
+  color: var(--bg);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  font-stretch: 85%;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.pm-qr-close:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Toast and motion ---------- */
+.pm-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 100px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  transform: translateX(-50%);
+  animation: pm-toast-in 260ms ease-out both;
+}
+
+@keyframes pm-name-up {
+  0% {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pm-rise-in {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pm-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes pm-toast-in {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pm-headline,
+  .pm-brief,
+  .pm-toast,
+  .pm-qr-card,
+  .pm-qr-dialog::backdrop {
+    animation: none;
+  }
+}

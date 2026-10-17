@@ -1,7 +1,7 @@
 import type { PageData } from "@/lib/page-schema";
 import { TILE, gridCols } from "./tile";
 
-type Action = { key: string; label: string; href: string; external?: boolean };
+export type Action = { key: "call" | "text" | "email" | "directions" | "book"; label: string; href: string; external?: boolean };
 
 /**
  * Call, Text, Email, Directions and Book. Every phone-number action is hidden when

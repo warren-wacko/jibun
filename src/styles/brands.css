@@ -1,0 +1,29 @@
+/* Brand colours for social network chips. The same in light and dark. */
+:root {
+  --brand-ink: #ffffff;
+  --brand-linkedin: #0a66c2;
+  --brand-facebook: #0866ff;
+  --brand-instagram: radial-gradient(
+    circle at 30% 107%,
+    #fdf497 0%,
+    #fdf497 5%,
+    #fd5949 45%,
+    #d6249f 60%,
+    #285aeb 90%
+  );
+  --brand-tiktok: #000000;
+  --brand-tiktok-ring: #33373d;
+  --brand-tiktok-cyan: #25f4ee;
+  --brand-tiktok-red: #fe2c55;
+  --brand-messenger: radial-gradient(circle at 19% 100%, #0099ff 0%, #a033ff 60%, #ff5280 93%, #ff7061 100%);
+  --brand-whatsapp: #25d366;
+  --brand-viber: #7360f2;
+  --brand-discord: #5865f2;
+  --brand-spotify: #1db954;
+  --brand-x: #000000;
+  --brand-pinterest: #e60023;
+  --brand-youtube: #ff0000;
+  /* Neutral chip for networks without a glyph yet. */
+  --brand-generic: #3a3f46;
+  --brand-generic-ink: #ffffff;
+}
