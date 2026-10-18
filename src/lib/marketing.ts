@@ -5,7 +5,7 @@ import { displayUrl } from "@/templates/shared/model";
  *
  * The contact values come from environment variables (read at BUILD time, like every NEXT_PUBLIC_ variable) and
  * fall back to obvious dummy values until the real ones exist. Set them before the real launch:
- * see docs/PRODUCTION.md. Privacy and Terms have no pages yet, so their links show only when a URL is set.
+ * see docs/PRODUCTION.md. The Privacy and Terms links go to the built-in pages (/privacy, /terms) unless a URL is set.
  */
 export function marketingContact() {
   const messenger = process.env.NEXT_PUBLIC_CONTACT_MESSENGER || "https://m.me/jibun.ph";
@@ -18,8 +18,8 @@ export function marketingContact() {
     email,
     phone,
     paymentMethods: process.env.NEXT_PUBLIC_CONTACT_PAYMENT_METHODS || "GCash or Maya",
-    privacyUrl: process.env.NEXT_PUBLIC_PRIVACY_URL || null,
-    termsUrl: process.env.NEXT_PUBLIC_TERMS_URL || null,
+    privacyUrl: process.env.NEXT_PUBLIC_PRIVACY_URL || "/privacy",
+    termsUrl: process.env.NEXT_PUBLIC_TERMS_URL || "/terms",
     /** Where every "Message us" button goes. */
     cta: messenger,
     messengerLabel: displayUrl(messenger),

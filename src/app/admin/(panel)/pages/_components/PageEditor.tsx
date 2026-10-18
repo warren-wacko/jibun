@@ -258,7 +258,7 @@ export function PageEditor({ mode, initial, page }: { mode: "create" | "edit"; i
               role="tab"
               aria-selected={view === t}
               onClick={() => setView(t)}
-              className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium ${FOCUS} ${view === t ? "bg-white shadow-sm" : "text-neutral-600"}`}
+              className={`min-h-10 flex-1 rounded-md px-3 py-1.5 text-sm font-medium ${FOCUS} ${view === t ? "bg-white shadow-sm" : "text-neutral-600"}`}
             >
               {t === "edit" ? "Edit" : "Preview"}
             </button>

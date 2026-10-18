@@ -72,7 +72,7 @@ async function RenewalList({ searchParams }: Pick<PageProps<"/admin/renewals">, 
             </span>
           )}
         </p>
-        <Link href={includeInactive ? "/admin/renewals" : "/admin/renewals?show=all"} className="underline">
+        <Link href={includeInactive ? "/admin/renewals" : "/admin/renewals?show=all"} className="inline-flex min-h-10 items-center underline">
           {includeInactive ? "Hide inactive pages" : "Include inactive pages"}
         </Link>
       </div>

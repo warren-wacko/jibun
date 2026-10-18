@@ -15,11 +15,13 @@ Set these in the Hostinger panel (never in the repo). `.env.example` lists the s
 | `NEXT_PUBLIC_CONTACT_EMAIL` | **yes, before launch** | Shown on the "inactive" page and on the homepage. Baked in at build time. If unset the homepage shows the dummy `hello@jibun.example`. |
 | `NEXT_PUBLIC_CONTACT_MESSENGER`, `NEXT_PUBLIC_CONTACT_INSTAGRAM`, `NEXT_PUBLIC_CONTACT_PHONE` | **yes, before launch** | The homepage's "Message us" buttons and contact cards. Full links for Messenger and Instagram (for example `https://m.me/yourpage`), a phone number with country code. Dummy values (`m.me/jibun.ph`, `+63 900 000 0000`) show until set. |
 | `NEXT_PUBLIC_CONTACT_PAYMENT_METHODS` | optional | Text in the FAQ answer "How do I pay?" (for example `GCash or Maya`). |
-| `NEXT_PUBLIC_PRIVACY_URL`, `NEXT_PUBLIC_TERMS_URL` | optional | Footer links on the homepage. Hidden while empty; there are no Privacy or Terms pages yet. |
+| `NEXT_PUBLIC_PRIVACY_URL`, `NEXT_PUBLIC_TERMS_URL` | optional | Footer links on the homepage. Optional: they go to the built-in `/privacy` and `/terms` pages unless you set a URL. |
 | `ENABLE_PREVIEW` | no | Leave **unset** in production. `1` opens the `/preview` template gallery to the public. |
 | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | later | Not read by the code yet. They are needed when image upload is built (last step of the plan). |
 
 `NODE_ENV` is set to `production` by `next build` / `next start`; it turns on secure admin cookies.
+
+The Privacy and Terms pages (`src/lib/legal.ts`) are plain-language drafts written from how the app works today, and they use `NEXT_PUBLIC_CONTACT_EMAIL` as the contact. Have them checked before launch, and update them (and the date) when the service changes, for example when photo upload or a contact form is added.
 
 ## 2. Before every deploy to `release`
 

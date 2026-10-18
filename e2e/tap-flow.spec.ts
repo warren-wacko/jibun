@@ -131,6 +131,6 @@ test("unknown, lost and lapsed cards all land on /inactive", async ({ request, p
 test("a page that does not exist shows the not-found page, and a lapsed page offers no contact download", async ({ page, request }) => {
   // the page streams, so the status line is already 200 when the not-found page is chosen
   await page.goto(`/nobody-${run}`);
-  await expect(page.getByText("This page could not be found")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "We can't find that page." })).toBeVisible();
   expect((await request.get(`/${LAPSED.username}/vcard`)).status()).toBe(404);
 });

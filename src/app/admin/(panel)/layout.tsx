@@ -22,21 +22,21 @@ async function Gate({ children }: { children: ReactNode }) {
   const admin = await requireAdmin();
   return (
     <div className="mx-auto w-full max-w-6xl px-4 pb-16">
-      <header className="flex items-center justify-between gap-4 py-4">
+      <header className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-2">
         <nav className="flex items-center gap-4 text-sm sm:gap-5">
-          <Link href="/admin" className="whitespace-nowrap text-lg font-bold">
+          <Link href="/admin" className="inline-flex min-h-11 items-center whitespace-nowrap text-lg font-bold">
             Jibun admin
           </Link>
-          <Link href="/admin/clients" className="underline-offset-4 hover:underline">
+          <Link href="/admin/clients" className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">
             Clients
           </Link>
-          <Link href="/admin/renewals" className="underline-offset-4 hover:underline">
+          <Link href="/admin/renewals" className="inline-flex min-h-11 items-center underline-offset-4 hover:underline">
             Renewals
           </Link>
         </nav>
         <form action={logout} className="flex items-center gap-3 text-sm">
           <span className="hidden text-neutral-600 sm:inline">{admin.email}</span>
-          <button type="submit" className="whitespace-nowrap rounded-lg border border-neutral-300 px-3 py-1.5">
+          <button type="submit" className="min-h-10 whitespace-nowrap rounded-lg border border-neutral-300 px-3 py-1.5">
             Sign out
           </button>
         </form>

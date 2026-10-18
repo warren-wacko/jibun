@@ -128,11 +128,6 @@ body:has(.jb){background:#FBF8F3}
 .jb .channels a{min-height:76px;border-radius:20px;background:rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:12px 14px;text-align:left}
 .jb .channels span{font-weight:700;font-size:15px;margin-top:4px}
 .jb .channels small{font-size:12px;color:rgba(255,255,255,.65);word-break:break-all}
-.jb .ftr{margin-top:56px;padding:28px 0 36px;border-top:1px solid var(--line)}
-.jb .ftr-in{display:flex;flex-direction:column;gap:18px}
-.jb .ftr-line{margin-top:6px;color:var(--muted);font-size:14px}
-.jb .ftr-links{display:flex;flex-wrap:wrap;gap:4px 20px;font-size:15px;font-weight:600;color:var(--muted)}
-.jb .ftr-links a{min-height:44px;display:inline-flex;align-items:center}
 @media (prefers-reduced-motion: reduce){.jb .tapcard,.jb .waves path{animation:none}.jb .waves path{opacity:1}}
 .jb .feat{display:grid;grid-template-columns:48px 1fr;column-gap:16px;align-items:start;padding:20px}
 .jb .feat .ficon{grid-row:span 2;margin-bottom:0}
@@ -241,7 +236,6 @@ body:has(.jb){background:#FBF8F3}
 .jb .final{padding:72px 48px 40px}
 .jb .final-h{font-size:68px;letter-spacing:-2.6px}
 .jb .channels{grid-template-columns:repeat(4,minmax(0,1fr));max-width:900px}
-.jb .ftr-in{flex-direction:row;justify-content:space-between;align-items:flex-start}
 .jb .feat{display:block;padding:24px}
 .jb .feat .ficon{margin-bottom:14px}
 .jb .step{display:block;padding:24px}
@@ -281,4 +275,42 @@ body:has(.jb){background:#FBF8F3}
 .jb .vs-old{font-size:21px;padding:0 24px 0 0}
 .jb .vs-new{font-size:28px;color:var(--ink)}
 
+}
+
+/* Privacy, Terms and "page not found": plain text pages in the homepage's look */
+.jb .legal{max-width:760px;padding-top:44px;padding-bottom:12px}
+.jb .legal-h,.jb .nf-h{font-size:40px;letter-spacing:-1.4px;margin-top:10px}
+.jb .legal-sec{margin-top:34px}
+.jb .legal-sec p,.jb .legal-sec li{color:var(--muted);margin-top:10px}
+.jb .legal-sec ul{margin-top:2px}
+.jb .legal-sec li{position:relative;padding-left:20px}
+.jb .legal-sec li::before{content:"";position:absolute;left:2px;top:.72em;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.jb .legal-back{margin-top:36px}
+.jb .nf{padding-top:72px;padding-bottom:40px;min-height:56vh}
+@media (min-width: 1024px){
+.jb .legal-h,.jb .nf-h{font-size:56px;letter-spacing:-2px}
+.jb .legal{padding-top:72px}
+.jb .nf{padding-top:110px}
+}
+
+/* Footer: wordmark and call to action, three link columns, a bottom bar and a cropped watermark */
+.jb .ftr{position:relative;margin-top:72px;background:var(--band);border-top:1px solid var(--line);overflow:hidden}
+.jb .ftr-top{display:flex;flex-direction:column;gap:38px;padding:52px 0 36px}
+.jb .logo-lg{font-size:56px;letter-spacing:-2.2px}
+.jb .ftr-tag{margin-top:12px;font-size:18px;color:var(--muted)}
+.jb .ftr-brand .btn{margin-top:22px}
+.jb .ftr-cols{display:grid;grid-template-columns:1fr 1fr;gap:30px 20px}
+.jb .ftr-h{font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--accent-ink);margin-bottom:6px}
+.jb .ftr-cols a{min-height:44px;display:inline-flex;align-items:center;gap:10px;font-weight:600}
+.jb .ftr-cols a svg{color:var(--accent-ink);flex-shrink:0}
+.jb .ftr-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 16px;padding:8px 0;border-top:1px solid #DDD5C8;font-size:14px;color:var(--muted)}
+.jb .ftr-bar p{padding:10px 0}
+.jb .ftr-bar a{min-height:44px;display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--ink)}
+.jb .ftr-mark{height:.74em;margin-top:6px;overflow:hidden;font-family:var(--font-jb-display),system-ui,sans-serif;font-weight:800;font-size:min(30vw,420px);line-height:1;letter-spacing:-.025em;text-align:center;white-space:nowrap;color:var(--accent-soft);user-select:none;pointer-events:none}
+.jb .ftr-mark::before{content:"jibun."}
+@media (min-width: 1024px){
+.jb .ftr{margin-top:110px}
+.jb .ftr-top{flex-direction:row;justify-content:space-between;align-items:flex-start;gap:60px;padding:72px 0 52px}
+.jb .logo-lg{font-size:84px;letter-spacing:-3.4px}
+.jb .ftr-cols{grid-template-columns:repeat(3,auto);gap:30px 72px}
 }

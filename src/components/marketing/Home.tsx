@@ -21,8 +21,7 @@ import {
   TickIcon,
   WandIcon,
 } from "./Icons";
-import { bricolage, inter } from "./fonts";
-import "./marketing.css";
+import { SiteFooter, SiteFrame, SiteHeader } from "./SiteChrome";
 
 const WHO_ICONS = { briefcase: <BriefcaseIcon />, cap: <CapIcon />, sparkle: <SparkleIcon /> };
 
@@ -35,30 +34,13 @@ function PhoneShot({ image, alt, className = "", priority = false }: { image: st
   );
 }
 
-const Wordmark = ({ small = false }: { small?: boolean }) => (
-  <a href="#top" className={`logo${small ? " logo-sm" : ""}`} aria-label={small ? undefined : "Jibun home"}>
-    jibun<span className="dot">.</span>
-  </a>
-);
-
 /** The marketing homepage. Server-rendered, no client JavaScript: the compare toggle and the FAQ are plain CSS and <details>. */
 export function MarketingHome() {
   const c = marketingContact();
 
   return (
-    <div className={`jb ${bricolage.variable} ${inter.variable}`}>
-      <header className="hdr">
-        <div className="wrap hdr-in">
-          <Wordmark />
-          <nav className="nav">
-            <a href="#how-it-works">How it works</a>
-            <a href="#faq">FAQ</a>
-          </nav>
-          <a className="btn btn-sm btn-ink" href={c.cta}>
-            Message us
-          </a>
-        </div>
-      </header>
+    <SiteFrame>
+      <SiteHeader home />
 
       <main id="top">
         <section className="hero wrap">
@@ -367,26 +349,7 @@ export function MarketingHome() {
         </section>
       </main>
 
-      <footer className="ftr">
-        <div className="wrap ftr-in">
-          <div>
-            <Wordmark small />
-            <p className="ftr-line">Digital card by Jibun</p>
-          </div>
-          <div className="ftr-links">
-            <a href={c.messenger}>Messenger</a>
-            <a href={c.instagram}>Instagram</a>
-            <a href={c.emailHref}>Email</a>
-            <a href={c.phoneHref}>Phone</a>
-          </div>
-          {(c.privacyUrl || c.termsUrl) && (
-            <div className="ftr-links">
-              {c.privacyUrl && <a href={c.privacyUrl}>Privacy</a>}
-              {c.termsUrl && <a href={c.termsUrl}>Terms</a>}
-            </div>
-          )}
-        </div>
-      </footer>
-    </div>
+      <SiteFooter home />
+    </SiteFrame>
   );
 }

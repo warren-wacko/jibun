@@ -85,7 +85,7 @@ async function Dashboard() {
           <h2 id="renewals-title" className="text-base font-semibold">
             Next renewals
           </h2>
-          <Link href="/admin/renewals" className="text-sm underline">
+          <Link href="/admin/renewals" className="inline-flex min-h-10 items-center text-sm underline">
             All renewals
           </Link>
         </div>

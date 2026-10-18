@@ -42,10 +42,10 @@ async function Editor({ params, searchParams }: Pick<PageProps<"/admin/pages/[us
         {row.client.name} <span className="font-mono text-base font-normal text-neutral-600">/{row.username}</span>
       </h1>
       <nav className="flex gap-4 text-sm">
-        <a href="#cards" className="underline">
+        <a href="#cards" className="inline-flex min-h-10 items-center underline">
           Cards and QR
         </a>
-        <Link href="/admin/clients" className="underline">
+        <Link href="/admin/clients" className="inline-flex min-h-10 items-center underline">
           Back to clients
         </Link>
       </nav>

@@ -10,7 +10,7 @@ export default function NewPage() {
     <>
       <div className="flex items-baseline justify-between gap-4 pb-4">
         <h1 className="text-xl font-semibold">New page</h1>
-        <Link href="/admin/clients" className="text-sm underline">
+        <Link href="/admin/clients" className="inline-flex min-h-10 items-center text-sm underline">
           Back to clients
         </Link>
       </div>

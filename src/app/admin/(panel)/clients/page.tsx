@@ -113,7 +113,7 @@ async function ClientList({ searchParams }: Pick<PageProps<"/admin/clients">, "s
               {rows.map((r) => (
                 <tr key={r.id}>
                   <td className="px-3 py-2">
-                    <Link href={`/admin/pages/${r.username}`} className="font-medium underline-offset-2 hover:underline">
+                    <Link href={`/admin/pages/${r.username}`} className="inline-block py-1 font-medium underline-offset-2 hover:underline">
                       {r.name}
                     </Link>
                     <div>
