@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jibun — Yourself, One tap away.</title>
+<meta name="description" content="Jibun NFC digital cards. Tap the card on any phone and your profile opens. No app needed.">
+<meta name="theme-color" content="#FBF8F3">
+<!-- Placeholders to fill in: {{contact-link}} {{messenger}} {{instagram}} {{email}} {{phone}} {{payment-methods}} {{privacy-link}} {{terms-link}} -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="images/pro-classic.webp" type="image/webp">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#FBF8F3}
+.jb{--bg:#FBF8F3;--surface:#FFFFFF;--ink:#17161B;--muted:#55525C;--line:#ECE5DA;--accent:#FF5A2E;--accent-ink:#B83A12;--accent-soft:#FFE8DE;--band:#F3EEE6;
+  background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100%;overflow:hidden}
+.jb *{box-sizing:border-box}
+.jb a{color:inherit;text-decoration:none}
+.jb a:focus-visible,.jb summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:12px}
+.jb p{margin:0}
+.jb ul,.jb ol{margin:0;padding:0;list-style:none}
+.jb .wrap{width:100%;max-width:1160px;margin:0 auto;padding:0 20px}
+.jb .hdr{position:sticky;top:0;z-index:20;background:rgba(251,248,243,.88);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.jb .hdr-in{height:64px;display:flex;align-items:center;gap:16px}
+.jb .logo{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:26px;letter-spacing:-1px;line-height:1}
+.jb .logo .dot{color:var(--accent)}
+.jb .logo-sm{font-size:24px}
+.jb .nav{display:none;gap:28px;margin-left:auto;font-weight:600;color:var(--muted)}
+.jb .nav a{min-height:44px;display:inline-flex;align-items:center}
+.jb .hdr .btn{margin-left:auto}
+.jb .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:999px;font-weight:700;font-size:16px;transition:transform .15s ease,box-shadow .15s ease}
+.jb .btn:active{transform:scale(.98)}
+.jb .btn-sm{min-height:44px;padding:0 16px;font-size:15px}
+.jb .btn-lg{min-height:56px;padding:0 26px;font-size:17px}
+.jb .btn-ink{background:var(--ink);color:#fff}
+.jb .btn-accent{background:var(--ink);color:#fff;box-shadow:0 0 0 4px var(--accent-soft)}
+.jb .btn-line{background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.jb .link{font-weight:700;min-height:44px;display:inline-flex;align-items:center;border-bottom:2px solid var(--accent)}
+.jb .h1{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:46px;line-height:1;letter-spacing:-1.8px;margin:14px 0 0}
+.jb .h2{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:32px;line-height:1.08;letter-spacing:-1px;margin:8px 0 0}
+.jb .h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:20px;line-height:1.2;letter-spacing:-.3px;margin:0}
+.jb .hl{position:relative;white-space:nowrap;background:linear-gradient(transparent 62%,var(--accent-soft) 62%)}
+.jb .lead{font-size:18px;color:var(--muted);margin-top:14px}
+.jb .sub{color:var(--muted);margin-top:10px;font-size:17px}
+.jb .kicker{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--accent-ink)}
+.jb .eyebrow{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);font-size:13px;font-weight:600;color:var(--muted)}
+.jb .pulse{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(255,90,46,.5);animation:jbpulse 2s infinite}
+@keyframes jbpulse{0%{box-shadow:0 0 0 0 rgba(255,90,46,.5)}70%{box-shadow:0 0 0 10px rgba(255,90,46,0)}100%{box-shadow:0 0 0 0 rgba(255,90,46,0)}}
+.jb .hero{padding-top:28px;padding-bottom:12px;display:flex;flex-direction:column;gap:30px}
+.jb .cta-row{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:24px}
+.jb .ticks{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:20px;font-size:14px;font-weight:600;color:var(--muted)}
+.jb .ticks li{display:flex;align-items:center;gap:6px}
+.jb .ticks svg{color:var(--accent-ink)}
+.jb .hero-art{position:relative;display:flex;justify-content:center;padding:10px 0 20px}
+.jb .blob{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFD9C9,#FFEFE7 60%,transparent 70%);top:40px;left:50%;transform:translateX(-50%)}
+.jb .phone{position:relative;width:250px;aspect-ratio:390/844;border-radius:38px;padding:8px;background:#141318;box-shadow:0 30px 60px rgba(23,22,27,.22),0 0 0 1px rgba(0,0,0,.05);flex-shrink:0}
+.jb .phone::before{content:"";position:absolute;top:16px;left:50%;transform:translateX(-50%);width:70px;height:20px;border-radius:12px;background:#141318;z-index:2}
+.jb .phone img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:31px}
+.jb .phone-hero{width:260px}
+.jb .phone-sm{width:190px;border-radius:30px;padding:6px;margin:18px auto 0;box-shadow:0 18px 36px rgba(23,22,27,.16)}
+.jb .phone-sm img{border-radius:25px}
+.jb .phone-sm::before{top:12px;width:54px;height:15px}
+.jb .tapart{position:absolute;left:calc(50% - 205px);bottom:56px;filter:drop-shadow(0 12px 20px rgba(23,22,27,.25))}
+.jb .tapcard{animation:jbtap 3.2s ease-in-out infinite;transform-origin:50px 62px}
+@keyframes jbtap{0%,100%{transform:translateX(0) rotate(-8deg)}45%,60%{transform:translateX(16px) rotate(-2deg)}}
+.jb .waves path{opacity:0;animation:jbwave 3.2s ease-out infinite}
+.jb .waves path:nth-child(2){animation-delay:.15s}.jb .waves path:nth-child(3){animation-delay:.3s}
+@keyframes jbwave{0%,40%{opacity:0}55%{opacity:1}85%,100%{opacity:0}}
+.jb .sec{padding-top:72px}
+.jb .grid4{display:grid;grid-template-columns:1fr;gap:12px;margin-top:24px}
+.jb .feat{background:var(--surface);border-radius:24px;padding:22px;box-shadow:inset 0 0 0 1px var(--line)}
+.jb .feat p,.jb .step p,.jb .who p{color:var(--muted);margin-top:6px}
+.jb .ficon{width:48px;height:48px;border-radius:16px;background:var(--accent-soft);color:var(--accent-ink);display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;flex-shrink:0}
+.jb .band{margin-top:72px;padding:64px 0;background:var(--band)}
+.jb .band.sec{padding-top:64px}
+.jb .steps{display:grid;grid-template-columns:1fr;gap:12px;margin-top:26px;counter-reset:s}
+.jb .step{position:relative;background:var(--surface);border-radius:24px;padding:22px 22px 22px 22px}
+.jb .snum{position:absolute;top:18px;right:20px;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:40px;line-height:1;color:var(--line)}
+.jb .sicon{width:46px;height:46px;border-radius:50%;background:var(--ink);color:#fff;display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px}
+.jb .grid3{display:grid;grid-template-columns:1fr;gap:14px;margin-top:24px}
+.jb .who{background:var(--surface);border-radius:28px;padding:22px 22px 0;box-shadow:inset 0 0 0 1px var(--line);overflow:hidden;max-height:470px}
+.jb .who-top{display:flex;align-items:center;gap:14px}
+.jb .who-top .ficon{margin-bottom:0}
+.jb .tag{display:inline-block;margin-top:4px;font-size:13px;font-weight:700;color:var(--accent-ink)}
+.jb .who p{margin-top:14px}
+.jb .shelf{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:26px 20px 30px;scroll-padding-left:20px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.jb .shelf::-webkit-scrollbar{display:none}
+.jb .des{margin:0;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;gap:14px}
+.jb .des .phone{width:220px}
+.jb .des figcaption{font-weight:700;font-size:15px}
+.jb .plans{display:grid;grid-template-columns:1fr;gap:16px;margin-top:26px}
+.jb .plan{position:relative;background:var(--surface);border-radius:28px;padding:26px 22px 22px;box-shadow:inset 0 0 0 1px var(--line);display:flex;flex-direction:column}
+.jb .plan-hi{box-shadow:inset 0 0 0 2px var(--ink)}
+.jb .ribbon{position:absolute;top:22px;right:20px;height:28px;padding:0 12px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-size:12px;font-weight:700;display:flex;align-items:center}
+.jb .plan-n{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:28px;letter-spacing:-.8px;margin:0}
+.jb .plan-b{color:var(--muted);margin-top:4px}
+.jb .plan-l{margin:18px 0 20px}
+.jb .plan-l li{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--line);font-size:15px}
+.jb .pl{color:var(--muted)}
+.jb .val{font-weight:700;text-align:right}
+.jb .yes,.jb .no{display:inline-flex;align-items:center;gap:4px;font-weight:700}
+.jb .yes{color:#13794B}.jb .no{color:#8B8790}
+.jb .plan-x{font-size:13px;color:var(--muted);margin:-8px 0 18px}
+.jb .plan .btn{margin-top:auto;width:100%}
+.jb .price-cta{margin-top:22px;padding:22px;border-radius:24px;background:var(--ink);color:#fff;display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.jb .price-cta .btn-ink{background:#fff;color:var(--ink)}
+.jb .addons{margin-top:22px}
+.jb .addons-t{font-weight:700;font-size:15px}
+.jb .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.jb .chips li{height:38px;padding:0 14px;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);display:flex;align-items:center;font-size:14px;font-weight:600}
+.jb .note{margin-top:14px;font-size:15px;color:var(--muted)}
+.jb .years{display:flex;flex-direction:column;gap:20px;background:var(--surface);border-radius:32px;padding:28px 24px;box-shadow:inset 0 0 0 1px var(--line)}
+.jb .years-badge{width:104px;height:104px;border-radius:50%;background:var(--accent);color:#17161B;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;transform:rotate(-8deg)}
+.jb .years-n{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:46px;line-height:.9}
+.jb .years-l{font-weight:800;font-size:14px}
+.jb .faq{margin-top:22px;border-top:1px solid var(--line)}
+.jb .q{border-bottom:1px solid var(--line)}
+.jb .q summary{list-style:none;cursor:pointer;min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-weight:700;font-size:17px;padding:10px 0}
+.jb .q summary::-webkit-details-marker{display:none}
+.jb .plus{position:relative;width:32px;height:32px;border-radius:50%;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);flex-shrink:0}
+.jb .plus::before,.jb .plus::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:2px;margin:-1px 0 0 -6px;background:var(--ink);border-radius:2px;transition:transform .2s}
+.jb .plus::after{transform:rotate(90deg)}
+.jb .q[open] .plus::after{transform:rotate(0)}
+.jb .q p{padding:0 44px 18px 0;color:var(--muted)}
+.jb .final{text-align:center;background:var(--ink);color:#fff;border-radius:36px;padding:44px 22px 24px;display:flex;flex-direction:column;align-items:center}
+.jb .final-h{margin:0;color:#fff;font-size:40px}
+.jb .final .hl{background:linear-gradient(transparent 62%,rgba(255,90,46,.55) 62%)}
+.jb .final-l{color:rgba(255,255,255,.75)}
+.jb .final .btn{margin-top:24px;background:#fff;color:var(--ink);box-shadow:0 0 0 5px rgba(255,90,46,.35)}
+.jb .channels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:30px;width:100%}
+.jb .channels a{min-height:76px;border-radius:20px;background:rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:12px 14px;text-align:left}
+.jb .channels span{font-weight:700;font-size:15px;margin-top:4px}
+.jb .channels small{font-size:12px;color:rgba(255,255,255,.65);word-break:break-all}
+.jb .ftr{margin-top:56px;padding:28px 0 36px;border-top:1px solid var(--line)}
+.jb .ftr-in{display:flex;flex-direction:column;gap:18px}
+.jb .ftr-line{margin-top:6px;color:var(--muted);font-size:14px}
+.jb .ftr-links{display:flex;flex-wrap:wrap;gap:4px 20px;font-size:15px;font-weight:600;color:var(--muted)}
+.jb .ftr-links a{min-height:44px;display:inline-flex;align-items:center}
+@media (prefers-reduced-motion: reduce){.jb .pulse,.jb .tapcard,.jb .waves path{animation:none}.jb .waves path{opacity:1}}
+.jb .feat{display:grid;grid-template-columns:48px 1fr;column-gap:16px;align-items:start;padding:20px}
+.jb .feat .ficon{grid-row:span 2;margin-bottom:0}
+.jb .feat p{margin-top:4px}
+.jb .step{display:grid;grid-template-columns:46px 1fr;column-gap:16px;padding:20px 56px 20px 20px}
+.jb .step .sicon{grid-row:span 2;margin-bottom:0}
+.jb .step p{margin-top:4px}
+.jb .snum{font-size:34px;top:16px;right:18px}
+.jb .phone-hero{width:230px}
+.jb .blob{width:260px;height:260px}
+.jb .tapart{left:4px;bottom:70px;z-index:3}
+.jb .hero-art{padding-top:74px}
+.jb .blob{top:110px}
+.jb .tapart{left:calc(50% - 132px);top:-4px;bottom:auto;transform:rotate(24deg);transform-origin:120px 60px}
+.jb .tapart{left:calc(50% - 118px);top:22px;transform:rotate(16deg) scale(1.3);transform-origin:60px 62px}
+@keyframes jbtap{0%,100%{transform:translate(-10px,-22px) rotate(-6deg)}45%,62%{transform:translate(6px,10px) rotate(0deg)}}
+.jb .tapart{overflow:visible}
+.jb .vs{margin-top:26px;border-top:2px solid var(--ink)}
+.jb .vs-head{display:none}
+.jb .vs-row{padding:18px 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.jb .vs-old{font-size:15px;color:#8A857C;text-decoration:line-through;text-decoration-color:#C7BFB2;text-decoration-thickness:1.5px}
+.jb .vs-old::before{content:"Paper: ";text-decoration:none;font-weight:600}
+.jb .vs-new{display:flex;align-items:flex-start;gap:10px;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;font-size:21px;line-height:1.25;letter-spacing:-.4px}
+.jb .vs-ck{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#17161B;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.jb .how{display:flex;flex-direction:column;gap:28px}
+.jb .how-list{display:none}
+.jb .chat{background:var(--surface);border-radius:30px;box-shadow:0 24px 50px rgba(23,22,27,.10),0 0 0 1px var(--line);overflow:hidden;max-width:440px;width:100%;align-self:center}
+.jb .chat-top{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.jb .chat-top b{display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:17px;line-height:1.1}
+.jb .chat-top small{font-size:12px;color:var(--muted)}
+.jb .chat-av{width:38px;height:38px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:18px}
+.jb .chat-body{padding:16px 16px 20px;display:flex;flex-direction:column;gap:8px}
+.jb .chat-step{align-self:center;display:inline-flex;align-items:center;gap:6px;margin:10px 0 2px;height:28px;padding:0 12px;border-radius:999px;background:var(--band);font-size:12px;font-weight:700;color:var(--muted)}
+.jb .chat-step:first-child{margin-top:0}
+.jb .bub{max-width:82%;padding:11px 14px;font-size:15px;line-height:1.45;border-radius:20px}
+.jb .bub.me{align-self:flex-end;background:var(--ink);color:#fff;border-bottom-right-radius:6px}
+.jb .bub.them{align-self:flex-start;background:#F1ECE4;border-bottom-left-radius:6px}
+.jb .bub.friend{align-self:flex-start;background:var(--accent-soft);border-bottom-left-radius:6px}
+.jb .bub-who{display:block;font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--accent-ink);margin-bottom:2px}
+.jb .bub-img{padding:6px;width:150px}
+.jb .bub-img img{display:block;width:100%;height:150px;object-fit:cover;object-position:top;border-radius:14px}
+.jb .bub-card{padding:8px}
+.jb .mini-card{width:170px;height:106px;border-radius:12px;background:#17161B;color:#fff;padding:12px 14px;box-sizing:border-box;display:flex;align-items:flex-end;justify-content:space-between;box-shadow:0 10px 20px rgba(23,22,27,.25)}
+.jb .mc-logo{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;font-size:20px;letter-spacing:-.6px}
+.jb .mc-logo i{font-style:normal;color:var(--accent)}
+.jb .vs{border-top:0;display:flex;flex-direction:column;gap:12px}
+.jb .vs-row{padding:0;border:0;border-radius:22px;overflow:hidden;box-shadow:0 0 0 1px var(--line),0 10px 24px rgba(23,22,27,.06);gap:0}
+.jb .vs-old{display:flex;align-items:center;gap:10px;background:#FFFFFF;padding:14px 16px;font-size:15px;line-height:1.35;color:#57524A;text-decoration:none}
+.jb .vs-old::before{content:none}
+.jb .vs-t{text-decoration:line-through;text-decoration-color:rgba(23,22,27,.45);text-decoration-thickness:1.5px}
+.jb .vs-x{width:24px;height:24px;border-radius:50%;background:#EEE8DE;color:#7A746A;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.jb .vs-new{background:var(--ink);color:#FFFFFF;padding:16px;font-size:19px;align-items:center}
+
+/* paper vs jibun: mobile toggle */
+.jb .vs-r{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+.jb .vs-toggle{position:relative;display:grid;grid-template-columns:1fr 1fr;margin-top:22px;height:54px;padding:5px;border-radius:999px;background:#ECE5DA}
+.jb .vs-toggle label{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;min-height:44px;border-radius:999px;font-weight:700;font-size:16px;color:var(--muted);cursor:pointer;transition:color .3s}
+.jb .vs-knob{position:absolute;top:5px;left:5px;width:calc(50% - 5px);height:44px;border-radius:999px;background:#FFFFFF;box-shadow:0 4px 12px rgba(23,22,27,.12);transition:transform .35s cubic-bezier(.2,.8,.2,1),background .35s}
+.jb .vs-r:checked + .vs-r + .vs-toggle label:first-child{color:var(--ink)}
+.jb .vs-r:checked + .vs-toggle .vs-knob{transform:translateX(100%);background:var(--ink)}
+.jb .vs-r:checked + .vs-toggle label:nth-child(2){color:#FFFFFF}
+.jb .vs-r:focus-visible + .vs-r + .vs-toggle label:first-child,.jb .vs-r:focus-visible + .vs-toggle label:nth-child(2){outline:3px solid var(--accent);outline-offset:2px}
+.jb .vs{margin-top:16px;display:block;border:0;border-radius:26px;padding:6px 20px;transition:background .35s,transform .35s,color .35s}
+.jb .vs-row{display:block;border-radius:0;box-shadow:none;overflow:visible;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.12)}
+.jb .vs-row:last-child{border-bottom:0}
+.jb .vs-old,.jb .vs-new{background:none;padding:0}
+.jb .vs-new{color:inherit;font-size:21px;gap:12px}
+.jb .vs-old{font-size:18px;color:#57524A;gap:12px}
+/* jibun mode (default) */
+.jb .vs-r:checked + .vs-toggle + .vs{background:var(--ink);color:#FFFFFF;box-shadow:0 20px 40px rgba(23,22,27,.18)}
+.jb .vs-r:checked + .vs-toggle + .vs .vs-old{display:none}
+/* paper mode */
+.jb .vs-r:checked + .vs-r + .vs-toggle + .vs{background-color:#FFFDF8;background-image:repeating-linear-gradient(180deg,transparent 0 31px,#EFE7DA 31px 32px);color:var(--ink);transform:rotate(-1.2deg);box-shadow:0 14px 30px rgba(23,22,27,.10),0 0 0 1px var(--line)}
+.jb .vs-r:checked + .vs-r + .vs-toggle + .vs .vs-new{display:none}
+.jb .vs-r:checked + .vs-r + .vs-toggle + .vs .vs-row{border-bottom-color:transparent}
+
+@media (min-width: 1024px){
+.jb .wrap{padding:0 40px}
+.jb .nav{display:flex}
+.jb .hdr .btn{margin-left:0}
+.jb .hdr-in{height:76px}
+.jb .hero{flex-direction:row;align-items:center;gap:60px;padding-top:60px;padding-bottom:40px}
+.jb .hero-copy{flex:1}
+.jb .hero-art{width:460px;flex-shrink:0}
+.jb .h1{font-size:76px;letter-spacing:-3px}
+.jb .h2{font-size:46px;letter-spacing:-1.6px}
+.jb .lead{font-size:20px;max-width:560px}
+.jb .phone-hero{width:300px}
+.jb .blob{width:420px;height:420px;top:30px}
+.jb .tapart{left:-10px;bottom:90px;transform:scale(1.2)}
+.jb .sec{padding-top:110px}
+.jb .band{margin-top:110px;padding:96px 0}
+.jb .grid4{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:36px}
+.jb .steps{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:36px}
+.jb .grid3{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:36px}
+.jb .shelf{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:20px;max-width:1160px;margin:0 auto;padding:36px 40px 10px;overflow:visible}
+.jb .des .phone{width:100%}
+.jb .plans{grid-template-columns:1fr 1fr;gap:20px;margin-top:36px}
+.jb .plan{padding:32px 30px 28px}
+.jb .price-cta{flex-direction:row;align-items:center;justify-content:space-between;padding:26px 30px}
+.jb .years{flex-direction:row;align-items:center;gap:40px;padding:44px 48px}
+.jb .years-badge{width:150px;height:150px}
+.jb .years-n{font-size:68px}
+.jb .faq{display:grid;grid-template-columns:1fr 1fr;column-gap:48px;border-top:0}
+.jb .q:nth-child(1),.jb .q:nth-child(2){border-top:1px solid var(--line)}
+.jb .final{padding:72px 48px 40px}
+.jb .final-h{font-size:68px;letter-spacing:-2.6px}
+.jb .channels{grid-template-columns:repeat(4,minmax(0,1fr));max-width:900px}
+.jb .ftr-in{flex-direction:row;justify-content:space-between;align-items:flex-start}
+.jb .feat{display:block;padding:24px}
+.jb .feat .ficon{margin-bottom:14px}
+.jb .step{display:block;padding:24px}
+.jb .step .sicon{margin-bottom:14px}
+.jb .snum{font-size:40px}
+.jb .phone-hero{width:300px}
+.jb .blob{width:420px;height:420px}
+.jb .tapart{left:-10px;bottom:90px}
+.jb .hero-art{padding-top:84px}
+.jb .blob{top:120px}
+.jb .tapart{left:calc(50% - 140px);top:-2px;bottom:auto;transform:rotate(24deg) scale(1.15);transform-origin:120px 60px}
+.jb .tapart{left:calc(50% - 124px);top:30px;transform:rotate(16deg) scale(1.45);transform-origin:60px 62px}
+.jb .vs{margin-top:40px}
+.jb .vs-head{display:grid;grid-template-columns:1fr 1fr;padding:16px 0;border-bottom:1px solid var(--line)}
+.jb .vs-lab{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.jb .vs-lab-old{color:#8A857C}
+.jb .vs-row{display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:26px 0}
+.jb .vs-old{font-size:20px}
+.jb .vs-old::before{content:none}
+.jb .vs-new{font-size:28px;letter-spacing:-.8px}
+.jb .vs-ck{width:32px;height:32px;margin-top:0}
+.jb .how{display:grid;grid-template-columns:1fr 440px;gap:80px;align-items:center}
+.jb .how-list{display:flex;flex-direction:column;margin-top:30px;border-top:1px solid #DDD5C8}
+.jb .how-list li{display:flex;gap:18px;padding:18px 0;border-bottom:1px solid #DDD5C8;font-size:18px;font-weight:600}
+.jb .hn{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;color:var(--accent-ink);width:30px;flex-shrink:0}
+.jb .chat{max-width:none}
+.jb .vs{display:block;border-top:2px solid var(--ink)}
+.jb .vs-row{border-radius:0;box-shadow:none;overflow:visible;border-bottom:1px solid var(--line);padding:26px 0}
+.jb .vs-old{background:none;padding:0 24px 0 0;font-size:21px;gap:14px;color:#57524A}
+.jb .vs-x{width:30px;height:30px}
+.jb .vs-new{background:none;color:var(--ink);padding:0;font-size:28px}
+
+.jb .vs-toggle{display:none}
+.jb .vs-r:checked + .vs-toggle + .vs,.jb .vs-r:checked + .vs-r + .vs-toggle + .vs{background:none;color:var(--ink);transform:none;box-shadow:none;border-radius:0;padding:0;margin-top:40px;border-top:2px solid var(--ink)}
+.jb .vs-r:checked + .vs-toggle + .vs .vs-old,.jb .vs-r:checked + .vs-r + .vs-toggle + .vs .vs-new{display:flex}
+.jb .vs-row,.jb .vs-row:last-child{display:grid;border-bottom:1px solid var(--line)}
+.jb .vs-old{font-size:21px;padding:0 24px 0 0}
+.jb .vs-new{font-size:28px;color:var(--ink)}
+
+}
+</style>
+</head>
+<body>
+
+<div class="jb ">
+  <header class="hdr">
+    <div class="wrap hdr-in">
+      <a href="#top" class="logo" aria-label="Jibun home">jibun<span class="dot">.</span></a>
+      <nav class="nav"><a href="#how-it-works">How it works</a><a href="#faq">FAQ</a></nav>
+      <a class="btn btn-sm btn-ink" href="{{contact-link}}">Message us</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="pulse"></span>NFC digital cards · Philippines</span>
+        <h1 class="h1">Yourself, <span class="hl">One tap</span> away.</h1>
+        <p class="lead">A digital card that opens your whole profile with a tap. No app needed. Pang-professional, pang-estudyante, pang-creator.</p>
+        <div class="cta-row">
+          <a class="btn btn-ink btn-lg" href="{{contact-link}}">Get your card <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+          <a class="link" href="#how-it-works">See how it works</a>
+        </div>
+        <ul class="ticks">
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg> Works on iPhone and Android</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg> QR code backup on every card</li>
+        </ul>
+      </div>
+      <div class="hero-art">
+        <div class="blob"></div>
+        <div class="phone phone-hero"><img src="images/pro-classic.webp" alt="Sample card of a fictional professional on a phone" width="390" height="844"></div>
+        <svg class="tapart" width="150" height="120" viewBox="0 0 150 120" aria-hidden="true">
+  <g class="tapcard"><rect x="8" y="34" width="86" height="56" rx="10" fill="#17161B"/><rect x="18" y="46" width="30" height="6" rx="3" fill="#FF5A2E"/><rect x="18" y="58" width="44" height="4" rx="2" fill="#ffffff55"/><rect x="18" y="66" width="34" height="4" rx="2" fill="#ffffff33"/><path d="M76 52a8 8 0 0 1 0 14M81 48a14 14 0 0 1 0 22" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/></g>
+  <g fill="none" stroke="#FF5A2E" stroke-width="2.6" stroke-linecap="round" class="waves"><path d="M104 46a14 14 0 0 1 0 28"/><path d="M112 38a26 26 0 0 1 0 44"/><path d="M120 30a38 38 0 0 1 0 60"/></g>
+</svg>
+      </div>
+    </section>
+
+    <section class="sec wrap" aria-labelledby="why-h">
+      <span class="kicker">Paper vs Jibun</span>
+      <h2 class="h2" id="why-h">Why it beats a paper card</h2>
+      <input class="vs-r" type="radio" name="vsmode-m" id="vs-paper-m">
+      <input class="vs-r" type="radio" name="vsmode-m" id="vs-jibun-m" checked>
+      <div class="vs-toggle" role="group" aria-label="Compare"><label for="vs-paper-m">Paper card</label><label for="vs-jibun-m">Jibun</label><span class="vs-knob" aria-hidden="true"></span></div>
+      <div class="vs">
+        <div class="vs-head"><span class="vs-lab vs-lab-old"><svg width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><rect x="1" y="1" width="28" height="18" rx="2" fill="#fff" stroke="#CFC8BC" stroke-width="1.5"/><path d="M5 7h12M5 11h8" stroke="#CFC8BC" stroke-width="1.5"/></svg> Paper card</span><span class="vs-lab vs-lab-new"><svg width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" rx="4" fill="#17161B"/><rect x="5" y="6" width="9" height="2.5" rx="1.2" fill="#FF5A2E"/><path d="M21 7a4 4 0 0 1 0 6M23.5 5a7 7 0 0 1 0 10" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg> Jibun</span></div>
+        <div class="vs-row"><p class="vs-old"><span class="vs-x"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"></path></svg></span><span class="vs-t">They type your number by hand.</span></p><p class="vs-new"><span class="vs-ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>One tap or scan opens your whole profile.</span></p></div><div class="vs-row"><p class="vs-old"><span class="vs-x"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"></path></svg></span><span class="vs-t">New job? Reprint the whole box.</span></p><p class="vs-new"><span class="vs-ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>Update your page anytime. No reprinting.</span></p></div><div class="vs-row"><p class="vs-old"><span class="vs-x"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"></path></svg></span><span class="vs-t">Lost in a wallet or a drawer.</span></p><p class="vs-new"><span class="vs-ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>Save Contact puts you straight into their phone.</span></p></div><div class="vs-row"><p class="vs-old"><span class="vs-x"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"></path></svg></span><span class="vs-t">Runs out, so you order again.</span></p><p class="vs-new"><span class="vs-ck"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span><span>Works for 4 years, no monthly fees.</span></p></div>
+      </div>
+    </section>
+
+    <section class="sec band" id="how-it-works" aria-labelledby="how-h">
+      <div class="wrap how">
+        <div class="how-intro">
+          <span class="kicker">How it works</span>
+          <h2 class="h2" id="how-h">Four easy steps, zero apps.</h2>
+          <p class="sub">It all starts with a message. Here's how a typical order goes.</p>
+          <ol class="how-list"><li><span class="hn">01</span><span>You message us and choose a design.</span></li><li><span class="hn">02</span><span>We build your page.</span></li><li><span class="hn">03</span><span>We give you your card. Plain, unless you ask for a customized printed one.</span></li><li><span class="hn">04</span><span>People tap and save your contact.</span></li></ol>
+        </div>
+        <div class="chat" role="img" aria-label="Example chat: you message Jibun, choose a design, get your page and card, then a new contact taps and saves you">
+          <div class="chat-top"><span class="chat-av">j</span><div><b>jibun.</b><small>Usually replies within the day</small></div></div>
+          <div class="chat-body">
+            <span class="chat-step"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Step 1 · Message us</span>
+            <p class="bub me">Hi! I'd love a Jibun card. Pwede po the Student Notebook design?</p>
+            <span class="chat-step"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8 19 13M17.8 6.2 19 5M3 21l9-9M12.2 6.2 11 5"></path></svg> Step 2 · We build your page</span>
+            <p class="bub them">Love that pick! Building your page now. Here's a preview:</p>
+            <div class="bub them bub-img"><img src="images/student-notebook.webp" alt="" width="390" height="844"></div>
+            <span class="chat-step"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3"></rect><path d="M2 10h20"></path></svg> Step 3 · Get your card</span>
+            <p class="bub them">Your card is ready. Plain black, or we can print a custom one if you ask.</p>
+            <div class="bub them bub-card"><div class="mini-card"><span class="mc-logo">jibun<i>.</i></span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 7.5a6 6 0 0 1 0 9M12 5a10 10 0 0 1 0 14M15.5 2.5a14 14 0 0 1 0 19M5 10.5a2 2 0 0 1 0 3"></path></svg></div></div>
+            <span class="chat-step"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"></rect><path d="M11 18h2"></path></svg> Step 4 · Tap and connect</span>
+            <p class="bub friend"><span class="bub-who">New contact</span>Just tapped your card. Saved you na!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec wrap" aria-labelledby="who-h">
+      <span class="kicker">Who it's for</span>
+      <h2 class="h2" id="who-h">Made for how you connect.</h2>
+      <div class="grid3">
+        <article class="who"><div class="who-top"><span class="ficon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"></rect><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg></span><div><h3 class="h3">Professionals</h3><span class="tag">Contact-first</span></div></div><p>Call, email and Save Contact up front. Clean and ready for meetings.</p><div class="phone phone-sm"><img src="images/pro-magazine.webp" alt="Sample professional card" loading="lazy" width="390" height="844"></div></article><article class="who"><div class="who-top"><span class="ficon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"></path><path d="M6 12v5c3 2 9 2 12 0v-5"></path></svg></span><div><h3 class="h3">Students</h3><span class="tag">For job seekers and fresh grads</span></div></div><p>Your course, school and links in one place. Perfect for job fairs and interviews.</p><div class="phone phone-sm"><img src="images/student-notebook.webp" alt="Sample student card" loading="lazy" width="390" height="844"></div></article><article class="who"><div class="who-top"><span class="ficon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"></path></svg></span><div><h3 class="h3">Creators</h3><span class="tag">Follow-first</span></div></div><p>Your socials at the top, so new friends follow you in one tap.</p><div class="phone phone-sm"><img src="images/social-bento.webp" alt="Sample creator card" loading="lazy" width="390" height="844"></div></article>
+      </div>
+    </section>
+
+    <section class="sec" id="designs" aria-labelledby="des-h">
+      <div class="wrap">
+        <span class="kicker">Sample designs</span>
+        <h2 class="h2" id="des-h">Pick a look. Make it yours.</h2>
+        <p class="sub">More designs available. Every design works for everyone.</p>
+      </div>
+      <div class="shelf" role="list">
+        <figure class="des" role="listitem"><div class="phone"><img src="images/pro-classic.webp" alt="Pro Classic sample design with a fictional person" loading="lazy" width="390" height="844"></div><figcaption>Pro Classic</figcaption></figure><figure class="des" role="listitem"><div class="phone"><img src="images/pro-magazine.webp" alt="Pro Magazine sample design with a fictional person" loading="lazy" width="390" height="844"></div><figcaption>Pro Magazine</figcaption></figure><figure class="des" role="listitem"><div class="phone"><img src="images/student-notebook.webp" alt="Student Notebook sample design with a fictional person" loading="lazy" width="390" height="844"></div><figcaption>Student Notebook</figcaption></figure><figure class="des" role="listitem"><div class="phone"><img src="images/social-bento.webp" alt="Social Bento sample design with a fictional person" loading="lazy" width="390" height="844"></div><figcaption>Social Bento</figcaption></figure><figure class="des" role="listitem"><div class="phone"><img src="images/social-scrapbook.webp" alt="Social Scrapbook sample design with a fictional person" loading="lazy" width="390" height="844"></div><figcaption>Social Scrapbook</figcaption></figure><figure class="des" role="listitem"><div class="phone"><img src="images/social-minimalist.webp" alt="Social Minimalist sample design with a fictional person" loading="lazy" width="390" height="844"></div><figcaption>Social Minimalist</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="sec wrap" id="plans" aria-labelledby="plans-h">
+      <span class="kicker">Starter and Standard</span>
+      <h2 class="h2" id="plans-h">Two ways to start.</h2>
+      <div class="plans">
+        <article class="plan"><h3 class="plan-n">Starter</h3><p class="plan-b">Everything you need to start tapping.</p><ul class="plan-l"><li><span class="pl">Choose from the launch designs</span><span class="yes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg><span>Yes</span></span></li><li><span class="pl">Light or dark theme</span><span class="yes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg><span>Yes</span></span></li><li><span class="pl">Colour</span><span class="val">Preset palette and school colours</span></li><li><span class="pl">Fonts</span><span class="val">Design default</span></li><li><span class="pl">Extra sections</span><span class="val">Add-ons only</span></li><li><span class="pl">Reorder sections</span><span class="no"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 12h12"></path></svg><span>No</span></span></li><li><span class="pl">Revisions included</span><span class="val">1</span></li><li><span class="pl">Small edits in the first year</span><span class="val">2</span></li></ul><a class="btn btn-line" href="{{contact-link}}">Ask about Starter</a></article><article class="plan plan-hi"><span class='ribbon'>More freedom</span><h3 class="plan-n">Standard</h3><p class="plan-b">Your colours, your fonts, your layout.</p><ul class="plan-l"><li><span class="pl">Choose from the launch designs</span><span class="yes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg><span>Yes</span></span></li><li><span class="pl">Light or dark theme</span><span class="yes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg><span>Yes</span></span></li><li><span class="pl">Colour</span><span class="val">Any colour you like</span></li><li><span class="pl">Fonts</span><span class="val">Choose from 4 font pairs</span></li><li><span class="pl">Extra sections</span><span class="val">Pick 2 included</span></li><li><span class="pl">Reorder sections</span><span class="yes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg><span>Yes</span></span></li><li><span class="pl">Revisions included</span><span class="val">2</span></li><li><span class="pl">Small edits in the first year</span><span class="val">4</span></li></ul><p class="plan-x">Extra sections: skills, services, stats, portfolio, experience, interests, orgs or song.</p><a class="btn btn-accent" href="{{contact-link}}">Ask about Standard</a></article>
+      </div>
+      <div class="price-cta">
+        <p class="h3">Prices? Just message us.</p>
+        <a class="btn btn-ink" href="{{contact-link}}">Ask for prices <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+      </div>
+      <div class="addons">
+        <p class="addons-t">Add-ons</p>
+        <ul class="chips"><li>Photo gallery</li><li>Video</li><li>PDF / résumé download</li><li>Booking button</li><li>Tap and visit stats</li><li>Custom domain</li><li>Remove "Digital card by Jibun"</li><li>One extra revision</li></ul>
+        <p class="note">Need something special? Ask for a custom quote. Both plans come with a plain card; a customized printed card is made only on request.</p>
+      </div>
+    </section>
+
+    <section class="sec wrap">
+      <div class="years">
+        <div class="years-badge"><span class="years-n">4</span><span class="years-l">years</span></div>
+        <div>
+          <h2 class="h2">Your card, your 4 years.</h2>
+          <p class="lead">One-time payment covers your card and page for 4 years, with no monthly or yearly fees. After 4 years, you can keep it active with a small renewal, or upgrade to a new card and design at a discount. We'll remind you before your term ends.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec wrap" id="faq" aria-labelledby="faq-h">
+      <span class="kicker">FAQ</span>
+      <h2 class="h2" id="faq-h">Questions, answered.</h2>
+      <div class="faq">
+        <details class="q"><summary><span>Do I need an app?</span><span class="plus" aria-hidden="true"></span></summary><p>No. It opens in the phone's browser.</p></details><details class="q"><summary><span>Does it work on iPhone and Android?</span><span class="plus" aria-hidden="true"></span></summary><p>Yes, on modern phones. The QR code is the backup.</p></details><details class="q"><summary><span>What if the other phone has no NFC?</span><span class="plus" aria-hidden="true"></span></summary><p>They scan the QR code.</p></details><details class="q"><summary><span>Can I change my details later?</span><span class="plus" aria-hidden="true"></span></summary><p>Yes. You get revisions and small edits; more later are paid per request.</p></details><details class="q"><summary><span>What happens after 4 years?</span><span class="plus" aria-hidden="true"></span></summary><p>Renew for a small fee, or upgrade. After a 30-day grace period a lapsed page shows a "please contact us" screen.</p></details><details class="q"><summary><span>Can I upgrade Starter to Standard later?</span><span class="plus" aria-hidden="true"></span></summary><p>Yes. You keep your link and card and only pay the difference.</p></details><details class="q"><summary><span>What if I lose my card?</span><span class="plus" aria-hidden="true"></span></summary><p>We can disable it and give you a new one.</p></details><details class="q"><summary><span>Is my info safe?</span><span class="plus" aria-hidden="true"></span></summary><p>You choose what appears on your page. Taps are counted without storing anyone's IP address.</p></details><details class="q"><summary><span>How do I pay?</span><span class="plus" aria-hidden="true"></span></summary><p>Orders are taken by message: {{payment-methods}}.</p></details>
+      </div>
+    </section>
+
+    <section class="sec wrap" id="contact" aria-labelledby="cta-h">
+      <div class="final">
+        <h2 class="h1 final-h" id="cta-h">Yourself, <span class="hl">One tap</span> away.</h2>
+        <p class="lead final-l">Tell us what you need and we'll help you pick a design.</p>
+        <a class="btn btn-accent btn-lg" href="{{contact-link}}">Message us to get yours <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <ul class="channels">
+          <li><a href="{{messenger}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><span>Messenger</span><small>{{messenger}}</small></a></li>
+          <li><a href="{{instagram}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg><span>Instagram</span><small>{{instagram}}</small></a></li>
+          <li><a href="mailto:{{email}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-10 6L2 7"></path></svg><span>Email</span><small>{{email}}</small></a></li>
+          <li><a href="tel:{{phone}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg><span>Phone</span><small>{{phone}}</small></a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ftr">
+    <div class="wrap ftr-in">
+      <div><a href="#top" class="logo logo-sm">jibun<span class="dot">.</span></a><p class="ftr-line">Digital card by Jibun</p></div>
+      <div class="ftr-links"><a href="{{messenger}}">Messenger</a><a href="{{instagram}}">Instagram</a><a href="mailto:{{email}}">Email</a><a href="tel:{{phone}}">Phone</a></div>
+      <div class="ftr-links"><a href="{{privacy-link}}">Privacy</a><a href="{{terms-link}}">Terms</a></div>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

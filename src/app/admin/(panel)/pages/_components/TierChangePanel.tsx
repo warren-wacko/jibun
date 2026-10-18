@@ -6,7 +6,7 @@ import { CONTROL, FOCUS, FieldShell } from "./ui";
 
 /**
  * Shown when an existing page's tier is changed in the form. The change is only saved together with what was paid
- * for it and whether a reprint is included; username, cards and content stay as they are.
+ * for it and whether a customized printed card is included; username, cards and content stay as they are.
  */
 export function TierChangePanel({
   from,
@@ -74,8 +74,8 @@ export function TierChangePanel({
           className={`mt-0.5 size-4 rounded border-neutral-400 ${FOCUS}`}
         />
         <span>
-          <span className="font-medium">A new printed card is included</span>
-          <span className="block text-xs text-neutral-700">Standard includes a printed card. Leave this off to keep the card the client already has.</span>
+          <span className="font-medium">A customized printed card was requested</span>
+          <span className="block text-xs text-neutral-700">Cards are plain by default in both tiers. Tick this only if the client asked for a customized printed card; otherwise they keep the card they have.</span>
         </span>
       </label>
     </div>

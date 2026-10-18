@@ -55,9 +55,9 @@ export function validateTierChange(form: TierChangeForm): { ok: true; value: Tie
 const peso = new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP", maximumFractionDigits: 0 });
 export const formatPesos = (amount: number) => peso.format(amount);
 
-/** "Starter → Standard · ₱800 · new card included" */
+/** "Starter → Standard · ₱800 · customized printed card included" */
 export function describeTierChange(c: { fromTier: Tier; toTier: Tier; amountPaid: number; reprint: boolean }): string {
   const parts = [`${TIER_LABEL[c.fromTier]} → ${TIER_LABEL[c.toTier]}`, formatPesos(c.amountPaid)];
-  parts.push(c.reprint ? "new card included" : "keeps the current card");
+  parts.push(c.reprint ? "customized printed card included" : "keeps the current card");
   return parts.join(" · ");
 }

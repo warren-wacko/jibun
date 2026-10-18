@@ -63,7 +63,7 @@ describe("tierChangeSchema (server side)", () => {
 describe("describing a change", () => {
   it("formats pesos and the card choice", () => {
     expect(formatPesos(1500)).toMatch(/1,500/);
-    expect(describeTierChange({ fromTier: "STARTER", toTier: "STANDARD", amountPaid: 800, reprint: true })).toMatch(/Starter → Standard · .*800 · new card included/);
+    expect(describeTierChange({ fromTier: "STARTER", toTier: "STANDARD", amountPaid: 800, reprint: true })).toMatch(/Starter → Standard · .*800 · customized printed card included/);
     expect(describeTierChange({ fromTier: "STANDARD", toTier: "CUSTOM", amountPaid: 0, reprint: false })).toMatch(/keeps the current card/);
   });
 });

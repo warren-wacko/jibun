@@ -1,8 +1,13 @@
+import type { Metadata, Viewport } from "next";
+import { MarketingHome } from "@/components/marketing/Home";
+
+export const metadata: Metadata = {
+  title: "Jibun — Yourself, One tap away.",
+  description: "Jibun NFC digital cards. Tap the card on any phone and your profile opens. No app needed.",
+};
+
+export const viewport: Viewport = { themeColor: "#FBF8F3" };
+
 export default function Home() {
-  return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center gap-2 px-4 text-center">
-      <h1 className="text-3xl font-bold">Jibun</h1>
-      <p className="text-neutral-600">NFC digital cards. Coming soon.</p>
-    </main>
-  );
+  return <MarketingHome />;
 }

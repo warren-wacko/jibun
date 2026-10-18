@@ -84,7 +84,7 @@ Rule for Standard ("pick 2"): a section unlocked by an add-on does not use a fre
 
 **Every template is available in every tier.** Tiers differ by features (sections, customization, card type, revisions), never by design, so a student on Starter can pick any template.
 
-**Upgrade later by paying the difference.** Changing a page's tier keeps its username, cards and content and only unlocks entitlements. Standard includes a printed card, so an upgrade either adds a reprint charge or keeps the existing plain card; record which on the page.
+**Upgrade later by paying the difference.** Changing a page's tier keeps its username, cards and content and only unlocks entitlements. Both tiers get a plain card; a customized printed card is made only when the client asks for one (and is charged on top). An upgrade keeps the existing card unless a customized printed card was requested; record which on the page.
 
 **Info strip vs stats.** Company, location and work mode are profile fields (Starter). Years of experience, specialty and similar numbers belong to the Standard stats section.
 
@@ -391,7 +391,7 @@ The admin panel is where all client work happens; a typical Starter client shoul
 
 **Renewals screen** lists pages whose term ends within 30 days, lets you mark the reminder as sent, renew (extend `paidUntil` by 4 years), and export a page as static HTML plus `.vcf` for clients who do not renew (export is Phase 2).
 
-**Tier upgrades** happen on the edit page: change the tier, record the amount paid (the price difference) and whether a reprint is included. Username, cards and content stay the same.
+**Tier upgrades** happen on the edit page: change the tier, record the amount paid (the price difference) and whether a customized printed card was requested and is included. Username, cards and content stay the same.
 
 Auth for MVP: a single admin account via Auth.js credentials with a bcrypt-hashed password, session cookie, and middleware protecting `/admin/*`. Add login rate limiting.
 
@@ -568,6 +568,6 @@ The template reference files are in `design-reference/`. Hosting is the last ste
 - [ ] Renewal fee after the 4-year term (draft: ₱300–500)
 - [ ] Final prices (draft: Starter ₱1,200 professional, ₱1,000 student with school ID)
 - [ ] Image storage provider: Cloudinary or Cloudflare R2
-- [ ] Reprint policy when upgrading Starter to Standard
-- [ ] Grace period length before a lapsed page goes inactive (draft: 30 days)
+- [x] Reprint policy: both tiers get a plain card; a customized printed card only on request (decided)
+- [x] Grace period before a lapsed page goes inactive: 30 days (decided)
 - [ ] Order of the five drop templates after launch
