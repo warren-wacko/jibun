@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { emptyFormValues } from "@/lib/admin/page-form";
-import { PageEditor } from "../_components/PageEditor";
+import { NewPageFlow } from "../_components/NewPageFlow";
 
 export const metadata: Metadata = { title: "New page" };
 
@@ -14,7 +13,7 @@ export default function NewPage() {
           Back to clients
         </Link>
       </div>
-      <PageEditor mode="create" initial={emptyFormValues()} />
+      <NewPageFlow />
     </>
   );
 }

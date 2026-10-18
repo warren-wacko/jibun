@@ -24,6 +24,7 @@ export function privacyDoc(email: string): LegalDoc {
         p: ["It depends on who you are."],
         ul: [
           "If you order a card: your name, how to reach you (for example a phone number or email) and what you want on your page: title, company, bio, links, photo and the contact details you choose to show. We also keep a note of what you paid and when.",
+          "If you use our order form: what you type stays on your own phone or computer. The form does not send it to our website or save it anywhere. At the end it makes one message for you to send us yourself, in a chat, and only then do we receive it.",
           "If you tap or scan a card: nothing is asked of you and you have no account. When a card is tapped we record the time, whether it was a tap or a QR scan, a rough device type (iPhone, Android, computer) and the country when the hosting service provides it. We do not store IP addresses. To prevent abuse we look at the IP address for a moment in memory to limit repeated requests; it is not saved.",
           "If you save someone's contact from their page: the file comes from the page and goes to your phone. We do not keep a copy or a record of who saved it.",
         ],

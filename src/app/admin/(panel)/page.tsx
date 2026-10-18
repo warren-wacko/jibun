@@ -6,6 +6,7 @@ import { getDashboard } from "@/lib/admin/dashboard";
 import { describeDays, renewalInfo } from "@/lib/admin/renewals";
 import type { UsageStatus } from "@/lib/usage";
 import { UsageBadge, formatDate } from "../_components/badges";
+import { OrderLinkBuilder } from "./pages/_components/OrderLinkBuilder";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
@@ -21,6 +22,9 @@ export default function AdminHome() {
       <Suspense fallback={<p className="text-sm text-neutral-500">Loading…</p>}>
         <Dashboard />
       </Suspense>
+      <div className="pt-8">
+        <OrderLinkBuilder />
+      </div>
     </>
   );
 }

@@ -1,0 +1,335 @@
+/* The order form (/order). Uses the marketing page tokens (.jb), so it needs to sit inside SiteFrame. */
+.jb .ord {
+  max-width: 760px;
+  padding-top: 44px;
+  padding-bottom: 8px;
+}
+.jb .ord-h {
+  font-size: 40px;
+  letter-spacing: -1.4px;
+  margin-top: 10px;
+}
+.jb .ord-privacy {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: var(--band);
+  font-size: 14px;
+  color: var(--muted);
+}
+.jb .ord-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+.jb .ord-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px;
+  border-radius: 28px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.jb .ord-card h2 {
+  font-family: var(--font-jb-display), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.6px;
+}
+.jb .ord-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.jb .ord-field label,
+.jb .ord-label {
+  font-size: 14px;
+  font-weight: 700;
+}
+.jb .ord-hint {
+  font-size: 13px;
+  color: var(--muted);
+}
+.jb .ord-error {
+  font-size: 14px;
+  font-weight: 600;
+  color: #b3261e;
+}
+.jb .ord-two {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.jb .ord-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 20px;
+  background: var(--bg);
+}
+.jb .ord-form :is(input[type="text"], input[type="tel"], input[type="email"], input[type="url"], input:not([type]), select, textarea) {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1.5px #d6ccbc;
+  font: inherit;
+  font-size: 16px;
+  color: var(--ink);
+}
+.jb .ord-form textarea {
+  resize: vertical;
+  line-height: 1.45;
+}
+.jb .ord-form :is(input, select, textarea):focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+}
+.jb .ord-form :is(input, textarea)::placeholder {
+  color: #8a8174;
+}
+.jb .ord-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 44px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.jb .ord-check input {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  accent-color: var(--ink);
+}
+.jb .ord-link {
+  display: grid;
+  grid-template-columns: 1fr 44px;
+  gap: 8px;
+}
+.jb .ord-link select {
+  grid-column: 1 / -1;
+}
+.jb .ord-x {
+  min-height: 48px;
+  border-radius: 14px;
+  background: var(--band);
+  font-size: 22px;
+  line-height: 1;
+}
+.jb .ord-add {
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 4px;
+  font-weight: 700;
+  border-bottom: 2px solid var(--accent);
+}
+
+/* design picker */
+.jb .ord-shots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.jb .ord-shot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 20px;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1.5px var(--line);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.jb .ord-shot input,
+.jb .ord-sw > input[type="radio"],
+.jb .ord-seg input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.jb .ord-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 390 / 560;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 12px;
+}
+.jb .ord-shot-text {
+  justify-content: center;
+  min-height: 120px;
+  text-align: center;
+}
+.jb .ord-shot.is-on,
+.jb .ord-sw.is-on {
+  box-shadow: inset 0 0 0 3px var(--ink);
+}
+.jb .ord-shot:focus-within,
+.jb .ord-sw:focus-within,
+.jb .ord-seg label:focus-within {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+.jb .ord-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.jb .ord-seg {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  align-self: flex-start;
+  padding: 4px;
+  border-radius: 999px;
+  background: #ece5da;
+}
+.jb .ord-seg label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  min-height: 44px;
+  border-radius: 999px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.jb .ord-seg label.is-on {
+  background: var(--ink);
+  color: #fff;
+}
+.jb .ord-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.jb .ord-sw {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1.5px var(--line);
+}
+.jb .ord-sw i {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(23, 22, 27, 0.15);
+}
+.jb .ord-sw-none,
+.jb .ord-sw-custom {
+  width: auto;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  gap: 8px;
+}
+.jb .ord-sw-custom input[type="color"] {
+  position: relative;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+/* extras */
+.jb .ord-picks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.jb .ord-pick {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 6px 14px;
+  border-radius: 18px;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1.5px var(--line);
+}
+.jb .ord-pick.is-on {
+  padding-bottom: 14px;
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+/* send */
+.jb .ord-send {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 4px;
+}
+.jb .ord-done {
+  margin-top: 20px;
+  background: #eaf6ee;
+  box-shadow: inset 0 0 0 1px #bfe0c9;
+}
+.jb .ord-done textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1.5px #bfe0c9;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.jb .ord-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (min-width: 640px) {
+  .jb .ord-two {
+    grid-template-columns: 1fr 1fr;
+  }
+  .jb .ord-link {
+    grid-template-columns: 180px 1fr 44px;
+  }
+  .jb .ord-link select {
+    grid-column: auto;
+  }
+  .jb .ord-shots {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .jb .ord-card {
+    padding: 28px;
+  }
+}
+@media (min-width: 1024px) {
+  .jb .ord-h {
+    font-size: 56px;
+    letter-spacing: -2px;
+  }
+  .jb .ord {
+    padding-top: 72px;
+  }
+}

@@ -36,6 +36,7 @@ Set these as environment variables on Hostinger. They are read at build time, so
 - [ ] Homepage wording and the FAQ answers still say what you want.
 - [ ] The six sample screenshots on the homepage (`public/marketing/`) still match the templates.
 - [ ] Backup plan decided: how often, and where the copies are kept.
+- [ ] Try the order form once from your phone: make a link on the dashboard, answer it, send it to yourself in Messenger, and paste it into New page.
 
 ## 5. Go-live steps (together)
 
