@@ -55,7 +55,7 @@ Set these as environment variables on Hostinger. They are read at build time, so
 
 ## 7. Optional polish
 
-- [ ] A share image for links pasted in Messenger, and a real favicon
+- [ ] A share image for links pasted in Messenger (the logo master is in `public/brand/jibun-logo.png`; the favicon is done)
 - [ ] Wider network dropdown in the editor at very narrow widths
 - [ ] Smaller shared CSS bundle (Lighthouse is already about 90)
 - [ ] A health-check route, if you want a dedicated uptime endpoint
