@@ -23,7 +23,7 @@ export default function RenewalsPage({ searchParams }: PageProps<"/admin/renewal
   return (
     <>
       <div className="pb-1">
-        <h1 className="text-xl font-semibold">Renewals</h1>
+        <h1>Renewals</h1>
         <p className="mt-1 text-sm text-neutral-600">
           Pages whose 4-year term ends within 30 days, or has already ended. Send the reminder, then renew when the client pays.
         </p>

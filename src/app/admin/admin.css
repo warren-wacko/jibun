@@ -1,0 +1,314 @@
+/*
+ * Admin look: the marketing homepage palette, fonts and shapes, with compact data screens.
+ * Everything is scoped to .adm. The admin components use Tailwind neutral palette and radii, so those are
+ * re-pointed here to warm tones and rounder corners; this restyles every screen at once without touching logic.
+ */
+.adm {
+  --bg: #fbf8f3;
+  --surface: #ffffff;
+  --ink: #17161b;
+  --muted: #6a6358;
+  --line: #e8e0d3;
+  --accent: #ff5a2e;
+  --accent-ink: #b83a12;
+  --accent-soft: #ffe8de;
+  --band: #f3eee6;
+
+  /* Tailwind neutral palette -> warm */
+  --color-neutral-50: #faf7f2;
+  --color-neutral-100: #f3eee6;
+  --color-neutral-200: #e8e0d3;
+  --color-neutral-300: #d6ccbc;
+  --color-neutral-400: #a39a8b;
+  --color-neutral-500: #756d61;
+  --color-neutral-600: #6a6358;
+  --color-neutral-700: #4d473f;
+  --color-neutral-800: #2e2a26;
+  --color-neutral-900: #17161b;
+  --color-neutral-950: #17161b;
+  /* rounder corners */
+  --radius-md: 12px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-jb-body), system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.adm h1,
+.adm h2 {
+  font-family: var(--font-jb-display), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.adm h1 {
+  font-size: 28px;
+  line-height: 1.1;
+}
+.adm h2 {
+  font-size: 18px;
+  line-height: 1.2;
+}
+.adm h3 {
+  font-family: var(--font-jb-display), system-ui, sans-serif;
+  font-weight: 700;
+}
+
+/* dark and outlined buttons are pills, like the homepage */
+.adm button[class*="bg-neutral-900"],
+.adm a[class*="bg-neutral-900"],
+.adm button[class*="border-neutral-300"],
+.adm a[class*="border-neutral-300"] {
+  border-radius: 999px;
+  font-weight: 700;
+}
+.adm button[class*="bg-neutral-900"],
+.adm a[class*="bg-neutral-900"] {
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.adm button[class*="bg-neutral-900"]:disabled {
+  box-shadow: none;
+}
+
+.adm :is(input, select, textarea):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.adm a:focus-visible,
+.adm button:focus-visible,
+.adm summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- header ---------- */
+.adm-head {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(251, 248, 243, 0.9);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.adm-head-in {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 16px;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 6px 16px;
+}
+.adm-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-family: var(--font-jb-display), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.adm-brand .dot {
+  color: var(--accent);
+}
+.adm-brand small {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-jb-body), system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+.adm-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.adm-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.adm-nav a:hover {
+  background: var(--band);
+  color: var(--ink);
+}
+.adm-nav a[aria-current="page"] {
+  background: var(--ink);
+  color: #fff;
+}
+.adm-main {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 20px 16px 72px;
+}
+
+/* ---------- dashboard numbers ---------- */
+.adm-num {
+  font-family: var(--font-jb-display), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: -1.2px;
+}
+.adm-stat {
+  border-radius: 24px;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+a.adm-stat:hover {
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+/* ---------- shared buttons (for the new components) ---------- */
+.adm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.adm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.adm-btn-line {
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1.5px var(--line);
+}
+.adm-btn-danger {
+  background: #b3261e;
+  color: #fff;
+}
+.adm-btn-danger-line {
+  background: var(--surface);
+  color: #b3261e;
+  box-shadow: inset 0 0 0 1.5px #e5b4b0;
+}
+.adm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.adm-danger {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px;
+  border-radius: 24px;
+  background: #fff6f4;
+  box-shadow: inset 0 0 0 1px #f0cbc6;
+}
+.adm-danger h2 {
+  font-size: 17px;
+  color: #8c1d18;
+}
+.adm-danger p {
+  max-width: 62ch;
+  font-size: 14px;
+  color: #5b4b49;
+}
+.adm-danger-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* ---------- notices ---------- */
+.adm-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: #eaf6ee;
+  box-shadow: inset 0 0 0 1px #bfe0c9;
+  font-size: 14px;
+  color: #14532d;
+}
+
+/* ---------- sign in ---------- */
+.adm-login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 22px;
+  min-height: 100dvh;
+  padding: 24px 16px;
+}
+.adm-login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 28px 24px;
+  border-radius: 28px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line), 0 24px 50px rgba(23, 22, 27, 0.08);
+}
+.adm-login-card h1 {
+  font-size: 26px;
+}
+.adm-login-card p.sub {
+  margin-top: 6px;
+  font-size: 15px;
+  color: var(--muted);
+}
+.adm-wordmark {
+  font-family: var(--font-jb-display), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 44px;
+  letter-spacing: -2px;
+  line-height: 1;
+}
+.adm-wordmark .dot {
+  color: var(--accent);
+}
+.adm-login-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* phone: brand and Sign out on the first row, the links on their own row */
+@media (max-width: 767px) {
+  .adm-nav {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+}
+
+@media (min-width: 640px) {
+  .adm-head-in,
+  .adm-main {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}

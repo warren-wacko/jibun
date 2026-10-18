@@ -36,9 +36,12 @@ const USAGE_LABEL: Record<(typeof USAGE_FILTERS)[number], string> = {
 export default function ClientsPage({ searchParams }: PageProps<"/admin/clients">) {
   return (
     <>
+      <Suspense>
+        <DeletedNote searchParams={searchParams} />
+      </Suspense>
       <div className="flex items-center justify-between gap-4 pb-4">
-        <h1 className="text-xl font-semibold">Clients</h1>
-        <Link href="/admin/pages/new" className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-semibold text-white">
+        <h1>Clients</h1>
+        <Link href="/admin/pages/new" className="inline-flex min-h-11 items-center rounded-lg bg-neutral-900 px-5 py-2 text-sm font-semibold text-white">
           + New page
         </Link>
       </div>
@@ -215,5 +218,17 @@ function Filters({ filter }: { filter: ClientFilter }) {
         Apply
       </button>
     </form>
+  );
+}
+
+/** Confirms a page that was just deleted (the delete button sends you here with ?deleted=username). */
+async function DeletedNote({ searchParams }: Pick<PageProps<"/admin/clients">, "searchParams">) {
+  const { deleted } = await searchParams;
+  const name = Array.isArray(deleted) ? deleted[0] : deleted;
+  if (!name) return null;
+  return (
+    <p role="status" className="adm-note">
+      Deleted <span className="font-mono font-semibold">/{name.slice(0, 40)}</span> and everything that belonged to it.
+    </p>
   );
 }

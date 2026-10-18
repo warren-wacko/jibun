@@ -12,6 +12,7 @@ import { pageUrl } from "@/lib/site";
 import { validateUsername } from "@/lib/usernames";
 import { getUsageStatus } from "@/lib/usage";
 import { CardsPanel, type CardInfo } from "../_components/CardsPanel";
+import { DangerZone } from "../_components/DangerZone";
 import { PageEditor } from "../_components/PageEditor";
 
 export const metadata: Metadata = { title: "Edit page" };
@@ -31,14 +32,14 @@ async function Editor({ params, searchParams }: Pick<PageProps<"/admin/pages/[us
 
   const row = await db.page.findUnique({
     where: { username },
-    include: { client: true, cards: { orderBy: { createdAt: "asc" }, include: { _count: { select: { taps: true } } } }, _count: { select: { taps: true } }, tierChanges: { orderBy: { createdAt: "desc" } } },
+    include: { client: { include: { user: { select: { id: true } }, _count: { select: { pages: true } } } }, cards: { orderBy: { createdAt: "asc" }, include: { _count: { select: { taps: true } } } }, _count: { select: { taps: true } }, tierChanges: { orderBy: { createdAt: "desc" } } },
   });
   if (!row) notFound();
 
   const parsed = safeParsePageData(row.data);
   const header = (
     <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 pb-4">
-      <h1 className="text-xl font-semibold">
+      <h1>
         {row.client.name} <span className="font-mono text-base font-normal text-neutral-600">/{row.username}</span>
       </h1>
       <nav className="flex gap-4 text-sm">
@@ -126,6 +127,12 @@ async function Editor({ params, searchParams }: Pick<PageProps<"/admin/pages/[us
             lastTapAt: row.lastTapAt?.toISOString() ?? null,
             usage: getUsageStatus(row.lastTapAt, row.createdAt, new Date()),
           }}
+        />
+      </div>
+      <div className="pt-6">
+        <DangerZone
+          username={row.username}
+          summary={{ cards: row.cards.length, taps: row._count.taps, clientName: row.client.name, clientRemoved: row.client._count.pages <= 1 && !row.client.user }}
         />
       </div>
     </>
