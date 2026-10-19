@@ -1329,3 +1329,176 @@
     animation: none;
   }
 }
+
+/* Video and booking: a taped frame round a film strip, and a ruled paper ticket. */
+.pk-vb {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pk-ell {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pk-video {
+  position: relative;
+  display: block;
+  margin: 6px 4px 0;
+  padding: 10px 10px 4px;
+  color: var(--ink);
+  background: var(--note-paper);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.16);
+  transform: rotate(-1.2deg);
+}
+
+.pk-video-tape {
+  position: absolute;
+  width: 78px;
+  height: 22px;
+  background: var(--tape);
+  opacity: 0.9;
+}
+
+.pk-video-tape-l {
+  top: -8px;
+  left: -14px;
+  transform: rotate(-24deg);
+}
+
+.pk-video-tape-r {
+  top: -6px;
+  right: -12px;
+  transform: rotate(20deg);
+}
+
+.pk-film {
+  position: relative;
+  display: block;
+  padding: 16px 10px;
+  background: #1b1a18;
+}
+
+.pk-perf {
+  position: absolute;
+  right: 4px;
+  left: 4px;
+  height: 7px;
+  background: repeating-linear-gradient(90deg, transparent 0 5px, #ede6d8 5px 13px, transparent 13px 18px);
+}
+
+.pk-perf-t {
+  top: 4px;
+}
+
+.pk-perf-b {
+  bottom: 4px;
+}
+
+.pk-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 9;
+  background-color: #2e2a25;
+  background-image: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 4px);
+}
+
+.pk-video-play {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  color: var(--on-accent);
+  background: var(--accent);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3);
+}
+
+.pk-video-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 2px;
+}
+
+.pk-video-hand {
+  flex-shrink: 0;
+  font-family: var(--font-scrap-hand), cursive;
+  font-size: 23px;
+  font-weight: 700;
+}
+
+.pk-video-foot .pk-ell {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.pk-book-fx {
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.14));
+  transform: rotate(1deg);
+}
+
+.pk-book {
+  display: flex;
+  min-height: 104px;
+  color: var(--ink);
+  background-color: var(--note-paper);
+  background-image: repeating-linear-gradient(180deg, transparent 0 19px, var(--rule-blue) 19px 20px);
+  -webkit-mask:
+    radial-gradient(circle at 0 50%, transparent 13px, #000 13.5px) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 50%, transparent 13px, #000 13.5px) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle at 0 50%, transparent 13px, #000 13.5px) left / 51% 100% no-repeat,
+    radial-gradient(circle at 100% 50%, transparent 13px, #000 13.5px) right / 51% 100% no-repeat;
+}
+
+.pk-book-main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  padding: 12px 12px 12px 28px;
+}
+
+.pk-book-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #5a5246;
+}
+
+.pk-book-title {
+  font-family: var(--font-archivo-black), sans-serif;
+  font-size: 23px;
+  letter-spacing: -0.4px;
+  line-height: 1.05;
+}
+
+.pk-book-host {
+  flex: 0 1 auto;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pk-book-stub {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 84px;
+  padding-right: 10px;
+  border-left: 2px dashed rgba(42, 38, 32, 0.45);
+  color: var(--on-accent);
+  background: var(--accent);
+}

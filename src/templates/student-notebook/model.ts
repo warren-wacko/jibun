@@ -53,6 +53,17 @@ export function buildNotebookModel(data: PageData) {
 
 export type OnlineTile = { key: string; type: SocialType; label: string; url: string };
 
+/** The optional sections the Standard design draws as blocks, in its own order. */
+export const STANDARD_KINDS = ["portfolio", "video", "skills", "orgs", "booking"] as const;
+export type StandardKind = (typeof STANDARD_KINDS)[number];
+
+/** The video and booking a Starter page has (the add-ons), drawn as small rows in the Starter layout. */
+export function starterBlocks(data: PageData) {
+  const kinds = drawnKinds("student-notebook", data.sections.map((s) => s.kind), "starter");
+  const pick = <K extends "video" | "booking">(kind: K) => (kinds.includes(kind) ? (data.sections.find((s): s is Extract<Section, { kind: K }> => s.kind === kind) ?? null) : null);
+  return { video: pick("video"), booking: pick("booking") };
+}
+
 /** The résumé button for a Starter page that bought the PDF add-on (the Standard design builds its own, below). */
 export function starterResume(data: PageData): { url: string; label: string } | null {
   const kinds = drawnKinds("student-notebook", data.sections.map((s) => s.kind), "starter");
@@ -72,11 +83,11 @@ export function buildStandardModel(data: PageData) {
   const drawn = data.sections.filter((s) => ok.includes(s.kind));
 
   const resume = drawn.find((s): s is Extract<Section, { kind: "resume" }> => s.kind === "resume") ?? null;
-  const blocks: Partial<Record<"portfolio" | "skills" | "orgs", Section>> = {};
-  for (const s of drawn) if (s.kind === "portfolio" || s.kind === "skills" || s.kind === "orgs") blocks[s.kind] ??= s;
-  // Without a saved order the design's own order is used: projects, skills, wins and orgs.
-  const canonical = (["portfolio", "skills", "orgs"] as const).filter((k) => k in blocks);
-  const order = resolveOrder("student-notebook", canonical, data.style.sectionOrder).filter((k) => k in blocks);
+  const blocks: Partial<Record<StandardKind, Section>> = {};
+  for (const s of drawn) if ((STANDARD_KINDS as readonly string[]).includes(s.kind)) blocks[s.kind as StandardKind] ??= s;
+  // Without a saved order the design's own order is used: projects, video, skills, wins and orgs, booking.
+  const canonical = STANDARD_KINDS.filter((k) => k in blocks);
+  const order = resolveOrder("student-notebook", canonical, data.style.sectionOrder).filter((k): k is StandardKind => k in blocks);
 
   const info = [
     { label: "Studying", value: student.program },

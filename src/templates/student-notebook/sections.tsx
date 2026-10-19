@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { ArrowUpRightIcon, AwardIcon } from "@/components/icons";
 import { SocialIcon } from "@/components/SocialIcon";
 import type { Section } from "@/lib/page-schema";
+import { displayUrl } from "../shared/model";
 import type { OnlineTile } from "./model";
 
 type Of<K extends Section["kind"]> = Extract<Section, { kind: K }>;
@@ -75,6 +76,117 @@ function Wins({ section }: { section: Of<"orgs"> }) {
   );
 }
 
+const PLAY = "M8 5.5v13l11-6.5z";
+const CALENDAR_CHECK = (
+  <>
+    <rect x="3" y="4.5" width="18" height="16.5" rx="2" />
+    <path d="M16 2.5v4M8 2.5v4M3 10h18M8.5 15l2.5 2.5 4.5-4.5" />
+  </>
+);
+
+/** Video (Standard design): a paper card taped on, with a grid "screen", a play button and the host of the link. */
+function Video({ section }: { section: Of<"video"> }) {
+  const host = displayUrl(section.url);
+  return (
+    <div className="pn-addon pn-video" data-block="video">
+      <div className="pn-sec-row pn-sec-row-flush">
+        <span className="pn-h2">Video</span>
+        <span className="pn-swipe" aria-hidden="true">
+          tap to watch
+        </span>
+      </div>
+      <div className="pn-taped">
+        <a href={section.url} className="pn-video-card" target="_blank" rel="noopener noreferrer" aria-label={`Watch the video on ${host} (opens in a new tab)`}>
+          <span className="pn-video-screen">
+            <span className="pn-video-play" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round">
+                <path d={PLAY} />
+              </svg>
+            </span>
+          </span>
+          <span className="pn-video-foot">
+            <span className="pn-addon-text">
+              <span className="pn-video-kicker">VIDEO</span>
+              <span className="pn-video-title">Watch on {host}</span>
+            </span>
+            <ArrowUpRightIcon size={18} strokeWidth={1.9} />
+          </span>
+        </a>
+        <span className="pn-tape" aria-hidden="true" />
+      </div>
+    </div>
+  );
+}
+
+/** Booking (Standard design): a heading with a handwritten note, and a card row that opens the booking page. */
+function Booking({ section }: { section: Of<"booking"> }) {
+  return (
+    <div className="pn-addon pn-booking" data-block="booking">
+      <div className="pn-sec-row pn-sec-row-flush">
+        <span className="pn-h2">Book a chat</span>
+        <span className="pn-swipe" aria-hidden="true">
+          opens my calendar
+        </span>
+      </div>
+      <a href={section.url} className="pn-addon-row pn-addon-row-lg pn-addon-row-square" target="_blank" rel="noopener noreferrer">
+        <span className="pn-addon-chip pn-addon-chip-lg" aria-hidden="true">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+            {CALENDAR_CHECK}
+          </svg>
+        </span>
+        <span className="pn-addon-text">
+          <span className="pn-addon-title">Book a time with me</span>
+          <span className="pn-addon-host">{displayUrl(section.url)}</span>
+        </span>
+        <ArrowUpRightIcon size={18} strokeWidth={1.9} />
+      </a>
+    </div>
+  );
+}
+
+/** The Starter layout's video: a small row under a heading (the Starter has no taped card). */
+export function StarterVideo({ section }: { section: Of<"video"> }) {
+  const host = displayUrl(section.url);
+  return (
+    <section className="pn-section" data-block="video">
+      <span className="pn-h2">Video</span>
+      <a href={section.url} className="pn-addon-row" target="_blank" rel="noopener noreferrer" aria-label={`Watch the video on ${host} (opens in a new tab)`}>
+        <span className="pn-addon-chip pn-addon-chip-round" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round">
+            <path d={PLAY} />
+          </svg>
+        </span>
+        <span className="pn-addon-text">
+          <span className="pn-addon-title">Watch my video</span>
+          <span className="pn-addon-host">{host}</span>
+        </span>
+        <ArrowUpRightIcon size={18} strokeWidth={1.9} />
+      </a>
+    </section>
+  );
+}
+
+/** The Starter layout's booking: a small row under a heading. */
+export function StarterBooking({ section }: { section: Of<"booking"> }) {
+  return (
+    <section className="pn-section" data-block="booking">
+      <span className="pn-h2">Book a chat</span>
+      <a href={section.url} className="pn-addon-row" target="_blank" rel="noopener noreferrer">
+        <span className="pn-addon-chip pn-addon-chip-square" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+            {CALENDAR_CHECK}
+          </svg>
+        </span>
+        <span className="pn-addon-text">
+          <span className="pn-addon-title">Book a time with me</span>
+          <span className="pn-addon-host">{displayUrl(section.url)}</span>
+        </span>
+        <ArrowUpRightIcon size={18} strokeWidth={1.9} />
+      </a>
+    </section>
+  );
+}
+
 /** The drawing for one optional section, or null for a kind this template has no design for. */
 export function SectionBlock({ section }: { section: Section }) {
   switch (section.kind) {
@@ -84,6 +196,10 @@ export function SectionBlock({ section }: { section: Section }) {
       return <Skills section={section} />;
     case "orgs":
       return <Wins section={section} />;
+    case "video":
+      return <Video section={section} />;
+    case "booking":
+      return <Booking section={section} />;
     default:
       return null;
   }

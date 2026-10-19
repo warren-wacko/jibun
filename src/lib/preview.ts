@@ -51,6 +51,7 @@ export const STANDARD_PREVIEW_SECTIONS: Section[] = [
   },
   { kind: "resume", fileUrl: "https://example.com/maria-santos-resume.pdf", label: "Résumé / CV" },
   { kind: "video", url: "https://example.com/intro-video" },
+  { kind: "booking", url: "https://cal.com/maria-santos/intro-call" },
   { kind: "interests", items: ["coffee", "film photography", "board games"] },
   {
     kind: "orgs",

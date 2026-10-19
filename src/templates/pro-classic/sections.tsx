@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { ArrowUpRightIcon, LinkIcon } from "@/components/icons";
 import type { Section } from "@/lib/page-schema";
+import { displayUrl } from "../shared/model";
 
 type Of<K extends Section["kind"]> = Extract<Section, { kind: K }>;
 
@@ -120,6 +121,52 @@ export function Stats({ section }: { section: Of<"stats"> }) {
 }
 
 /** The drawing for one optional section, or null for a kind this template has no design for. */
+/** Video: a card that opens the video. We only have its link, so the "screen" is a pattern and the host is shown. */
+export function Video({ section }: { section: Of<"video"> }) {
+  const host = displayUrl(section.url);
+  return (
+    <a href={section.url} className="pc-video" target="_blank" rel="noopener noreferrer" aria-label={`Watch video on ${host}`}>
+      <span className="pc-video-screen">
+        <span className="pc-video-play">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" style={{ marginLeft: 3 }} aria-hidden="true">
+            <path d="M7 4.5v15l12-7.5z" />
+          </svg>
+        </span>
+      </span>
+      <span className="pc-video-foot">
+        <span className="pc-video-text">
+          <span className="pc-video-title">Watch the video</span>
+          <span className="pc-video-host">{host}</span>
+        </span>
+        <ArrowUpRightIcon size={18} />
+      </span>
+    </a>
+  );
+}
+
+/** Booking: a card with a Book button that opens the booking page. We only have its link. */
+export function Booking({ section }: { section: Of<"booking"> }) {
+  return (
+    <a href={section.url} className="pc-booking" target="_blank" rel="noopener noreferrer">
+      <span className="pc-booking-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="4.5" width="18" height="16.5" rx="2" />
+          <path d="M16 2.5v4M8 2.5v4M3 10h18" />
+          <path d="m9 15.5 2 2 4-4" />
+        </svg>
+      </span>
+      <span className="pc-video-text">
+        <span className="pc-booking-title">Book a meeting</span>
+        <span className="pc-video-host">{displayUrl(section.url)}</span>
+      </span>
+      <span className="pc-booking-go">
+        Book
+        <ArrowUpRightIcon size={16} strokeWidth={2} />
+      </span>
+    </a>
+  );
+}
+
 export function SectionBody({ section }: { section: Section }) {
   switch (section.kind) {
     case "gallery":
@@ -136,6 +183,10 @@ export function SectionBody({ section }: { section: Section }) {
       return <Skills section={section} />;
     case "stats":
       return <Stats section={section} />;
+    case "video":
+      return <Video section={section} />;
+    case "booking":
+      return <Booking section={section} />;
     default:
       return null;
   }

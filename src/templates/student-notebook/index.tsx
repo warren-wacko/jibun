@@ -11,8 +11,8 @@ import { ThemeScope } from "../ThemeScope";
 import type { TemplateProps } from "../types";
 import { handwriting, notebookMono, schibsted } from "./fonts";
 import { CopyEmail, HeaderShare, HeaderThemeToggle, PolaroidFlip, SaveButton, ToastProvider } from "./interactive";
-import { buildNotebookModel, buildStandardModel, type QuickAction, starterResume } from "./model";
-import { OnlineTiles, SectionBlock } from "./sections";
+import { buildNotebookModel, buildStandardModel, type QuickAction, starterBlocks, starterResume } from "./model";
+import { OnlineTiles, SectionBlock, StarterBooking, StarterVideo } from "./sections";
 import "./student-notebook.css";
 
 function QuickIcon({ action }: { action: QuickAction }) {
@@ -50,6 +50,7 @@ export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
   const design = meta.design ?? "starter";
   const std = design === "standard" ? buildStandardModel(data) : null;
   const resume = std ? std.resume : starterResume(data);
+  const starter = std ? { video: null, booking: null } : starterBlocks(data);
 
   return (
     <ThemeScope
@@ -171,6 +172,8 @@ export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
             </div>
           )}
 
+          {starter.video && <StarterVideo section={starter.video} />}
+
           {std && std.info.length > 0 && (
             <div className="pn-info" style={{ "--cols": std.info.length } as CSSProperties}>
               {std.info.map((i) => (
@@ -183,7 +186,7 @@ export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
           )}
 
           {std?.order.map((kind) => {
-            const section = std.blocks[kind as "portfolio" | "skills" | "orgs"];
+            const section = std.blocks[kind];
             return section ? (
               <Fragment key={kind}>
                 <SectionBlock section={section} />
@@ -227,6 +230,8 @@ export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
               )}
             </section>
           )}
+
+          {starter.booking && <StarterBooking section={starter.booking} />}
 
           {!std && m.profiles.length > 0 && (
             <section className="pn-section">

@@ -59,6 +59,19 @@
   --chip-ink: var(--bg);
 }
 
+/* The accent chip on a solid text-coloured panel (video play button, booking calendar). An accent that matches the panel
+   falls back to a page-coloured chip with a text-coloured icon. */
+[data-template="pro-magazine"] {
+  --panel-chip-fill: var(--accent);
+  --panel-chip-ink: var(--on-accent);
+}
+
+[data-template="pro-magazine"][data-theme="light"][data-weak-on-dark="true"],
+[data-template="pro-magazine"][data-theme="dark"][data-weak-on-light="true"] {
+  --panel-chip-fill: var(--bg);
+  --panel-chip-ink: var(--text);
+}
+
 /* Fonts. The Starter design uses Archivo (condensed for the headline) for everything; a Standard page can choose a pair.
    The --head-* values are the headline face's weight, width and tracking, and --name-max the biggest the name may be. */
 [data-template="pro-magazine"] {
@@ -1201,4 +1214,143 @@
   padding-bottom: 8px;
   font-size: 10px;
   letter-spacing: 1.4px;
+}
+
+/* Video: a solid panel with the headline, the host of the link and a play button. */
+.pm-trunc {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pm-chip {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--panel-chip-fill);
+  color: var(--panel-chip-ink);
+}
+
+.pm-video {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--text);
+  color: var(--bg);
+}
+
+.pm-video-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.pm-video-kicker {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: 1.6px;
+  opacity: 0.7;
+}
+
+.pm-video-title {
+  font-family: var(--ff-head);
+  font-size: 30px;
+  line-height: 0.95;
+  font-weight: var(--head-weight);
+  font-stretch: var(--head-stretch);
+  text-transform: uppercase;
+}
+
+.pm-video-host {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  opacity: 0.8;
+}
+
+.pm-video-host svg {
+  flex-shrink: 0;
+}
+
+.pm-video-chip {
+  width: 64px;
+  height: 64px;
+}
+
+/* Booking: a headline, one line of help and a solid bar. */
+.pm-booking {
+  display: flex;
+  flex-direction: column;
+}
+
+.pm-booking-lead {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 16px;
+}
+
+.pm-booking-head {
+  font-family: var(--ff-head);
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.pm-booking-sub {
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+
+.pm-booking-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  min-height: 84px;
+  padding: 14px 16px;
+  background: var(--text);
+  color: var(--bg);
+}
+
+.pm-booking-link > svg {
+  flex-shrink: 0;
+}
+
+.pm-booking-chip {
+  width: 54px;
+  height: 54px;
+}
+
+.pm-booking-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.pm-booking-title {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.pm-booking-host {
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  opacity: 0.85;
 }

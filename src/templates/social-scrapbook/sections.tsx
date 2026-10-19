@@ -96,6 +96,69 @@ function Orgs({ section }: { section: Of<"orgs"> }) {
   );
 }
 
+/** Video: a taped polaroid-style frame around a film strip, with a play button and the host of the link. */
+function Video({ section }: { section: Of<"video"> }) {
+  const host = displayUrl(section.url);
+  return (
+    <div className="pk-block pk-vb" data-block="video">
+      <span className="pk-heading">
+        <span>watch this</span>
+      </span>
+      <a href={section.url} className="pk-video" target="_blank" rel="noopener noreferrer" aria-label={`Watch video on ${host}`}>
+        <span className="pk-video-tape pk-video-tape-l" aria-hidden="true" />
+        <span className="pk-video-tape pk-video-tape-r" aria-hidden="true" />
+        <span className="pk-film">
+          <i className="pk-perf pk-perf-t" aria-hidden="true" />
+          <i className="pk-perf pk-perf-b" aria-hidden="true" />
+          <span className="pk-screen">
+            <span className="pk-video-play" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.9" strokeLinejoin="round" style={{ marginLeft: 4 }}>
+                <path d="M7 4.5v15l12-7.5z" />
+              </svg>
+            </span>
+          </span>
+        </span>
+        <span className="pk-video-foot">
+          <span className="pk-video-hand">watch on</span>
+          <span className="pk-ell">{host}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+            <path d="M7 17 17 7" />
+            <path d="M8 7h9v9" />
+          </svg>
+        </span>
+      </a>
+    </div>
+  );
+}
+
+/** Booking: a ruled paper ticket ("admit one") with a stub in the accent colour. */
+function Booking({ section }: { section: Of<"booking"> }) {
+  return (
+    <div className="pk-block pk-vb" data-block="booking">
+      <span className="pk-heading">
+        <span>book a slot</span>
+      </span>
+      <div className="pk-book-fx">
+        <a href={section.url} className="pk-book" target="_blank" rel="noopener noreferrer">
+          <span className="pk-book-main">
+            <span className="pk-book-kicker">ADMIT ONE · BOOKING</span>
+            <span className="pk-book-title">BOOK A SLOT</span>
+            <span className="pk-ell pk-book-host">{displayUrl(section.url)}</span>
+          </span>
+          <span className="pk-book-stub" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4.5" width="18" height="16.5" rx="1.5" />
+              <path d="M3 9.5h18M8 2.5v4M16 2.5v4" />
+              <path d="m9 15 2 2 4-4" />
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  );
+}
+
+
 /** The drawing for one optional section, or null for a kind this template has no design for. */
 export function SectionBlock({ section }: { section: Section }) {
   switch (section.kind) {
@@ -107,6 +170,10 @@ export function SectionBlock({ section }: { section: Section }) {
       return <PhotoDump section={section} />;
     case "orgs":
       return <Orgs section={section} />;
+    case "video":
+      return <Video section={section} />;
+    case "booking":
+      return <Booking section={section} />;
     default:
       return null;
   }

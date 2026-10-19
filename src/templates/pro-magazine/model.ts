@@ -112,6 +112,8 @@ export const BLOCK_TITLES: Record<string, string> = {
   experience: "Experience",
   skills: "Skills",
   stats: "By the numbers",
+  video: "Video",
+  booking: "Book a time",
 };
 
 /**

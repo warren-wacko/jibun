@@ -65,7 +65,7 @@ describe("the Standard design", () => {
     const html = render(withSections(STANDARD_PREVIEW_SECTIONS));
     const drawn = blocksIn(html);
     for (const kind of SUPPORTED_SECTIONS["pro-classic"]) expect(drawn.filter((b) => b === kind), kind).toHaveLength(1);
-    for (const kind of ["video", "interests", "song", "booking", "orgs"]) expect(drawn).not.toContain(kind);
+    for (const kind of ["interests", "song", "orgs"]) expect(drawn).not.toContain(kind);
     expect(html).toContain('data-design="standard"');
   });
 

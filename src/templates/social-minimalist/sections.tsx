@@ -93,6 +93,60 @@ function Orgs({ section }: { section: Of<"orgs"> }) {
   );
 }
 
+/** Video: a rounded tile with a big accent play button, a serif title and the host of the link. */
+function Video({ section }: { section: Of<"video"> }) {
+  const host = displayUrl(section.url);
+  return (
+    <div className="mn-block" data-block="video">
+      <div className="mn-dump-head mn-head-gap">
+        <span className="mn-label">Video</span>
+        <span className="mn-serif-note">press play</span>
+      </div>
+      <a href={section.url} className="mn-video" target="_blank" rel="noopener noreferrer" aria-label={`Watch the video on ${host}`}>
+        <span className="mn-video-play" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5.2v13.6l11-6.8z" />
+          </svg>
+        </span>
+        <span className="mn-video-text">
+          <span className="mn-video-title">
+            Watch the <em>video</em>
+          </span>
+          <span className="mn-one mn-video-host">{host}</span>
+        </span>
+        <svg className="mn-video-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M7 17 17 7M8 7h9v9" />
+        </svg>
+      </a>
+    </div>
+  );
+}
+
+/** Booking: a black pill with the title and host, and an accent circle with a calendar. */
+function Booking({ section }: { section: Of<"booking"> }) {
+  return (
+    <div className="mn-block" data-block="booking">
+      <div className="mn-dump-head mn-head-gap">
+        <span className="mn-label">Booking</span>
+        <span className="mn-serif-note">let&apos;s meet</span>
+      </div>
+      <a href={section.url} className="mn-book" target="_blank" rel="noopener noreferrer">
+        <span className="mn-book-text">
+          <span className="mn-book-title">Book a time with me</span>
+          <span className="mn-one mn-book-host">{displayUrl(section.url)}</span>
+        </span>
+        <span className="mn-book-chip" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3.5" y="5" width="17" height="15.5" rx="2.5" />
+            <path d="M16 3v4M8 3v4M3.5 10.5h17" />
+          </svg>
+        </span>
+      </a>
+    </div>
+  );
+}
+
+
 /** The drawing for one optional section, or null for a kind this template has no design for. */
 export function SectionBlock({ section }: { section: Section }) {
   switch (section.kind) {
@@ -104,6 +158,10 @@ export function SectionBlock({ section }: { section: Section }) {
       return <PhotoDump section={section} />;
     case "orgs":
       return <Orgs section={section} />;
+    case "video":
+      return <Video section={section} />;
+    case "booking":
+      return <Booking section={section} />;
     default:
       return null;
   }

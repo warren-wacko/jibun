@@ -1198,3 +1198,119 @@
     padding-right: 0;
   }
 }
+
+/* Video: a link-out card. There is only a link, so the screen is the template's scanline pattern in the accent. */
+.pc-video {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.pc-video-screen {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 9;
+  background-color: var(--bg);
+  background-image:
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--accent) 10%, transparent) 0 2px, transparent 2px 12px),
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 65%);
+}
+
+[data-theme="dark"] .pc-video-screen {
+  background-image:
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--accent) 10%, transparent) 0 2px, transparent 2px 12px),
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 65%);
+}
+
+.pc-video-play {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  color: var(--bg);
+  background: var(--text);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+}
+
+.pc-video-foot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  box-shadow: inset 0 1px 0 var(--border);
+  color: var(--text-dim);
+}
+
+.pc-video-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pc-video-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.pc-video-host {
+  overflow: hidden;
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Booking: an icon, a title, the host of the link and a Book button. */
+.pc-booking {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.pc-booking-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  color: var(--accent-text);
+  background: var(--accent-soft);
+}
+
+.pc-booking-title {
+  font-family: var(--ff-head);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.pc-booking-go {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bg);
+  background: var(--text);
+}

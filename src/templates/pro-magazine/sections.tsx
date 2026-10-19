@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { ArrowUpRightIcon, LinkIcon } from "@/components/icons";
 import type { Section } from "@/lib/page-schema";
+import { displayUrl } from "../shared/model";
 
 type Of<K extends Section["kind"]> = Extract<Section, { kind: K }>;
 
@@ -116,6 +117,53 @@ function Stats({ section }: { section: Of<"stats"> }) {
 }
 
 /** The drawing for one optional section, or null for a kind this template has no design for. */
+/** Video: a solid panel that opens the video. We only have its link, so it shows the host and a play button. */
+function Video({ section }: { section: Of<"video"> }) {
+  const host = displayUrl(section.url);
+  return (
+    <a href={section.url} className="pm-video" target="_blank" rel="noopener noreferrer" aria-label={`Watch the video on ${host} (opens in a new tab)`}>
+      <span className="pm-video-text">
+        <span className="pm-video-kicker">ON FILM</span>
+        <span className="pm-video-title">Watch the video</span>
+        <span className="pm-video-host">
+          <span className="pm-trunc">{host}</span>
+          <ArrowUpRightIcon size={14} />
+        </span>
+      </span>
+      <span className="pm-chip pm-video-chip" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" style={{ marginLeft: 3 }}>
+          <path d="M7 4.5v15l12.5-7.5z" />
+        </svg>
+      </span>
+    </a>
+  );
+}
+
+/** Booking: a headline, one line of help, and a solid bar that opens the booking page. */
+function Booking({ section }: { section: Of<"booking"> }) {
+  return (
+    <div className="pm-booking">
+      <div className="pm-booking-lead">
+        <span className="pm-booking-head">Book a time with me.</span>
+        <span className="pm-booking-sub">Pick a slot on my booking page.</span>
+      </div>
+      <a href={section.url} className="pm-booking-link" target="_blank" rel="noopener noreferrer">
+        <span className="pm-chip pm-booking-chip" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4.5" width="18" height="16.5" rx="2" />
+            <path d="M16 2.5v4M8 2.5v4M3 10h18M9 15.5l2 2 4-4" />
+          </svg>
+        </span>
+        <span className="pm-booking-text">
+          <span className="pm-booking-title">Book an appointment</span>
+          <span className="pm-trunc pm-booking-host">{displayUrl(section.url)}</span>
+        </span>
+        <ArrowUpRightIcon size={22} strokeWidth={2.2} />
+      </a>
+    </div>
+  );
+}
+
 export function SectionBody({ section }: { section: Section }) {
   switch (section.kind) {
     case "gallery":
@@ -132,6 +180,10 @@ export function SectionBody({ section }: { section: Section }) {
       return <Skills section={section} />;
     case "stats":
       return <Stats section={section} />;
+    case "video":
+      return <Video section={section} />;
+    case "booking":
+      return <Booking section={section} />;
     default:
       return null;
   }

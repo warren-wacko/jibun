@@ -92,6 +92,76 @@ function Orgs({ section }: { section: Of<"orgs"> }) {
   );
 }
 
+const PLAY_PATH = "M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z";
+
+function Arrow({ size, strokeWidth = 2 }: { size: number; strokeWidth?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M7 17 17 7M8 7h9v9" />
+    </svg>
+  );
+}
+
+const CalendarGlyph = ({ size, strokeWidth }: { size: number; strokeWidth: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <rect x="3" y="4.5" width="18" height="16.5" rx="3" />
+    <path d="M8 2.5v4M16 2.5v4M3 10h18" />
+    <path d="M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01" />
+  </svg>
+);
+
+/** Video: a dark tile that opens the video. We only have its link, so it shows the host, a play button and a line of handwriting. */
+function Video({ section }: { section: Of<"video"> }) {
+  const host = displayUrl(section.url);
+  return (
+    <a href={section.url} className="pb-video" data-block="video" target="_blank" rel="noopener noreferrer" aria-label={`Watch my video on ${host}`}>
+      <svg className="pb-video-ghost" width="170" height="170" viewBox="0 0 24 24" aria-hidden="true">
+        <path d={PLAY_PATH} fill="currentColor" />
+      </svg>
+      <span className="pb-video-top">
+        <span className="pb-video-host">{host}</span>
+        <Arrow size={18} />
+      </span>
+      <span className="pb-video-bottom">
+        <span className="pb-video-words">
+          <span className="pb-hand pb-video-hand">press play</span>
+          <span className="pb-video-title">watch my video</span>
+        </span>
+        <span className="pb-video-play" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24">
+            <path d={PLAY_PATH} fill="currentColor" />
+          </svg>
+        </span>
+      </span>
+    </a>
+  );
+}
+
+/** Booking: a big accent tile ("book a time" and the host) with two small tiles beside it. */
+function Booking({ section }: { section: Of<"booking"> }) {
+  return (
+    <a href={section.url} className="pb-book" data-block="booking" target="_blank" rel="noopener noreferrer">
+      <span className="pb-book-main">
+        <span className="pb-book-label">
+          <CalendarGlyph size={14} strokeWidth={1.9} />
+          BOOKING
+        </span>
+        <span className="pb-book-words">
+          <span className="pb-book-title">book a time</span>
+          <span className="pb-book-host">{displayUrl(section.url)}</span>
+        </span>
+      </span>
+      <span className="pb-book-icon pb-book-icon-hero">
+        <CalendarGlyph size={24} strokeWidth={1.9} />
+      </span>
+      <span className="pb-book-icon pb-book-icon-plain">
+        <Arrow size={22} />
+      </span>
+    </a>
+  );
+}
+
+
 /** The drawing for one optional section, or null for a kind this template has no design for. */
 export function SectionBlock({ section }: { section: Section }) {
   switch (section.kind) {
@@ -103,6 +173,10 @@ export function SectionBlock({ section }: { section: Section }) {
       return <PhotoDump section={section} />;
     case "orgs":
       return <Orgs section={section} />;
+    case "video":
+      return <Video section={section} />;
+    case "booking":
+      return <Booking section={section} />;
     default:
       return null;
   }

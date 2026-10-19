@@ -1556,3 +1556,186 @@
   min-height: 92px;
   padding: 28px 20px 20px;
 }
+
+/* Video: a deep brand-coloured card with a glow, a ghost icon, a play button and the host of the link. */
+.pco-video {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  box-sizing: border-box;
+  min-height: 200px;
+  padding: 16px 12px 14px 18px;
+  overflow: hidden;
+  border-radius: 18px;
+  color: #fff;
+  background: linear-gradient(140deg, color-mix(in srgb, black 55%, var(--brand)) 0%, var(--stage-end) 100%);
+  box-shadow:
+    0 12px 26px var(--brand-shadow),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.pco-video-glow {
+  position: absolute;
+  top: -120px;
+  right: -100px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  pointer-events: none;
+  /* a light brand colour glows less than a dark one */
+  background: radial-gradient(circle, color-mix(in srgb, var(--brand) calc(55% - var(--k-light) * 33%), transparent) 0%, transparent 70%);
+}
+
+.pco-video-ghost {
+  position: absolute;
+  right: -62px;
+  bottom: -76px;
+  opacity: 0.1;
+}
+
+.pco-video-kicker {
+  position: relative;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  opacity: 0.8;
+}
+
+.pco-video-play {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  color: var(--stage-end);
+  background: #fff;
+  box-shadow:
+    0 0 0 8px rgba(255, 255, 255, 0.12),
+    0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+.pco-video-foot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pco-video-text,
+.pco-booking-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pco-video-title {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.pco-video-host {
+  overflow: hidden;
+  font-size: 13px;
+  opacity: 0.85;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pco-video-go {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* Booking: a white card with a faint calendar, an icon chip, the host and a brand-coloured button. */
+.pco-booking {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.pco-booking-ghost {
+  position: absolute;
+  top: -30px;
+  right: -24px;
+  color: var(--brand-text);
+  opacity: 0.08;
+}
+
+.pco-booking-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pco-booking-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  color: var(--brand-text);
+  background: var(--brand-soft);
+}
+
+.pco-booking-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  color: var(--text-dim);
+}
+
+.pco-booking-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.pco-booking-host {
+  overflow: hidden;
+  font-size: 13px;
+  color: var(--text-dim);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pco-booking-go {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-sizing: border-box;
+  min-height: 52px;
+  padding: 0 16px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--brand-ink);
+  background: var(--brand);
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
+}
+
+[data-theme="dark"] .pco-booking-go {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}

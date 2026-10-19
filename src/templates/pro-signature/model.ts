@@ -60,6 +60,8 @@ export const BLOCK_TITLES: Record<string, string> = {
   experience: "Experience",
   skills: "Skills",
   stats: "At a glance",
+  video: "Video",
+  booking: "Book a meeting",
 };
 
 /**

@@ -101,7 +101,8 @@ export function buildBentoModel(data: PageData) {
 
 /* ---------- Standard design ---------- */
 
-type StandardKind = "interests" | "song" | "gallery" | "orgs";
+type StandardKind = "interests" | "song" | "video" | "booking" | "gallery" | "orgs";
+const STANDARD_KINDS: readonly StandardKind[] = ["interests","song","video","gallery","orgs","booking"];
 
 /**
  * The Standard design's extra blocks: the page's interests, song, photos and orgs, in the design's own order
@@ -111,9 +112,9 @@ export function buildStandardModel(data: PageData, design: "starter" | "standard
   const ok = drawnKinds("social-bento", data.sections.map((s) => s.kind), design);
   const blocks: Partial<Record<StandardKind, Section>> = {};
   for (const s of data.sections) {
-    if (ok.includes(s.kind) && (s.kind === "interests" || s.kind === "song" || s.kind === "gallery" || s.kind === "orgs")) blocks[s.kind] ??= s;
+    if (ok.includes(s.kind) && (STANDARD_KINDS as readonly string[]).includes(s.kind)) blocks[s.kind as StandardKind] ??= s;
   }
-  const canonical = (["interests", "song", "gallery", "orgs"] as const).filter((k) => k in blocks);
+  const canonical = STANDARD_KINDS.filter((k) => k in blocks);
   const order = resolveOrder("social-bento", canonical, design === "standard" ? data.style.sectionOrder : undefined).filter((k): k is StandardKind => k in blocks);
   return { blocks, order };
 }

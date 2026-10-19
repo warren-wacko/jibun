@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { ArrowUpRightIcon, FileDownloadIcon } from "@/components/icons";
 import type { Section } from "@/lib/page-schema";
+import { displayUrl } from "../shared/model";
 
 type Of<K extends Section["kind"]> = Extract<Section, { kind: K }>;
 
@@ -118,6 +119,72 @@ function Stats({ section }: { section: Of<"stats"> }) {
 }
 
 /** The drawing for one optional section, or null for a kind this template has no design for. */
+/** Video: a deep brand-coloured card that opens the video. We only have its link, so it shows a play button and the host. */
+function Video({ section }: { section: Of<"video"> }) {
+  const host = displayUrl(section.url);
+  return (
+    <a href={section.url} className="pco-video" target="_blank" rel="noopener noreferrer" aria-label={`Watch video on ${host}`}>
+      <span className="pco-video-glow" aria-hidden="true" />
+      <span className="pco-video-ghost" aria-hidden="true">
+        <svg width="170" height="170" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="3" />
+          <path d="m10 9 5 3-5 3z" />
+        </svg>
+      </span>
+      <span className="pco-video-kicker">VIDEO</span>
+      <span className="pco-video-play" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: 3 }}>
+          <path d="M7 4.5v15l12.5-7.5z" />
+        </svg>
+      </span>
+      <span className="pco-video-foot">
+        <span className="pco-video-text">
+          <span className="pco-video-title">Watch the video</span>
+          <span className="pco-video-host">{host}</span>
+        </span>
+        <span className="pco-video-go" aria-hidden="true">
+          <ArrowUpRightIcon size={16} strokeWidth={1.9} />
+        </span>
+      </span>
+    </a>
+  );
+}
+
+/** Booking: a card with an icon, a line of help, the host of the link and a brand-coloured button. */
+function Booking({ section }: { section: Of<"booking"> }) {
+  return (
+    <div className="pco-booking">
+      <span className="pco-booking-ghost" aria-hidden="true">
+        <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <path d="M16 2v4M8 2v4M3 10h18" />
+        </svg>
+      </span>
+      <div className="pco-booking-row">
+        <span className="pco-booking-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4" />
+          </svg>
+        </span>
+        <span className="pco-booking-text">
+          <span className="pco-booking-kicker">BOOKING</span>
+          <span className="pco-booking-title">Schedule a call or visit</span>
+          <span className="pco-booking-host">{displayUrl(section.url)}</span>
+        </span>
+      </div>
+      <a href={section.url} className="pco-booking-go" target="_blank" rel="noopener noreferrer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2" />
+          <path d="M16 2v4M8 2v4M3 10h18" />
+        </svg>
+        Open booking page
+        <ArrowUpRightIcon size={16} strokeWidth={1.9} />
+      </a>
+    </div>
+  );
+}
+
 export function SectionBody({ section }: { section: Section }) {
   switch (section.kind) {
     case "gallery":
@@ -134,10 +201,14 @@ export function SectionBody({ section }: { section: Section }) {
       return <Skills section={section} />;
     case "stats":
       return <Stats section={section} />;
+    case "video":
+      return <Video section={section} />;
+    case "booking":
+      return <Booking section={section} />;
     default:
       return null;
   }
 }
 
 /** The kinds drawn without a surrounding box (they are made of cards or tiles already). */
-export const BARE_KINDS: ReadonlySet<string> = new Set(["services"]);
+export const BARE_KINDS: ReadonlySet<string> = new Set(["services", "video", "booking"]);

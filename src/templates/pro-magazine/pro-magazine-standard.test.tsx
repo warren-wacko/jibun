@@ -59,7 +59,7 @@ describe("the Standard design", () => {
     const html = render(withSections(STANDARD_PREVIEW_SECTIONS));
     const drawn = blocksIn(html);
     for (const kind of SUPPORTED_SECTIONS["pro-magazine"]) expect(drawn.filter((b) => b === kind), kind).toHaveLength(1);
-    for (const kind of ["video", "interests", "song", "booking", "orgs"]) expect(drawn).not.toContain(kind);
+    for (const kind of ["interests", "song", "orgs"]) expect(drawn).not.toContain(kind);
     expect(pagesIn(html)).toEqual(drawn.map((_, i) => String(i + 1).padStart(2, "0")));
   });
 

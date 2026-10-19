@@ -1013,3 +1013,114 @@
     animation: none;
   }
 }
+
+/* Video and booking: a rounded tile with a big play button, and a black pill. */
+.mn-head-gap {
+  gap: 12px;
+  padding-right: 0;
+}
+
+.mn-head-gap .mn-serif-note {
+  padding-right: 8px;
+}
+
+.mn-one {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mn-video {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 24px;
+  background: var(--surface);
+}
+
+.mn-video-play {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  color: var(--on-accent);
+  background: var(--accent);
+}
+
+.mn-video-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.mn-video-title {
+  font-family: var(--serif);
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -0.3px;
+}
+
+.mn-video-title em {
+  font-style: italic;
+}
+
+.mn-video-host {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.mn-video-arrow {
+  flex-shrink: 0;
+  margin-right: 6px;
+  color: var(--faint);
+}
+
+.mn-book {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+  min-height: 64px;
+  padding: 8px 8px 8px 24px;
+  border-radius: 32px;
+  color: var(--bg);
+  background: var(--text);
+}
+
+.mn-book-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.mn-book-title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+
+.mn-book-host {
+  font-family: var(--mono);
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.mn-book-chip {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: var(--on-accent);
+  background: var(--accent);
+}

@@ -1110,3 +1110,171 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Video and booking. Standard design: a taped paper card and a card row. Starter design: a small row under a heading. */
+.pn-addon {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 34px 22px 0;
+}
+
+.pn-sec-row-flush {
+  padding: 0;
+}
+
+.pn-booking {
+  gap: 12px;
+}
+
+.pn-taped {
+  position: relative;
+  padding-top: 10px;
+}
+
+.pn-video-card {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 12px 0;
+  border-radius: 6px;
+  background: var(--paper);
+  box-shadow:
+    3px 3px 0 var(--shadow-ink),
+    inset 0 0 0 1.5px var(--text);
+  transform: rotate(-0.8deg);
+}
+
+.pn-video-screen {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 9;
+  border-radius: 3px;
+  background-color: color-mix(in srgb, var(--text) 6%, transparent);
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 18px 18px;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+[data-theme="dark"] .pn-video-screen {
+  background-color: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.pn-video-play {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  color: var(--on-accent);
+  background: var(--accent);
+  box-shadow:
+    3px 3px 0 var(--shadow-ink),
+    inset 0 0 0 1.5px var(--text);
+}
+
+.pn-video-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+}
+
+.pn-addon-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pn-video-kicker {
+  font-family: var(--font-notebook-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+}
+
+.pn-video-title {
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pn-tape {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 82px;
+  height: 24px;
+  margin-left: -41px;
+  background: var(--tape);
+  opacity: 0.85;
+  transform: rotate(-3deg);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+}
+
+.pn-addon-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+  min-height: 66px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow:
+    3px 3px 0 var(--shadow-ink),
+    inset 0 0 0 1.5px var(--text);
+}
+
+.pn-addon-row > svg {
+  flex-shrink: 0;
+}
+
+.pn-addon-row-lg {
+  min-height: 72px;
+}
+
+.pn-addon-chip {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  color: var(--on-accent);
+  background: var(--accent);
+  box-shadow: inset 0 0 0 1.5px var(--text);
+}
+
+.pn-addon-chip-round {
+  border-radius: 50%;
+}
+
+.pn-addon-chip-lg {
+  width: 42px;
+  height: 42px;
+}
+
+.pn-addon-title {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.pn-addon-host {
+  overflow: hidden;
+  font-family: var(--font-notebook-mono), ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

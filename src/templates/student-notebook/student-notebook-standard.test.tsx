@@ -115,11 +115,11 @@ describe("the Standard design", () => {
     expect(without).not.toContain("pn-resume");
   });
 
-  it("leaves the Starter design alone, whatever the page holds", () => {
+  it("keeps the Starter layout, adding only the video and booking add-ons", () => {
     const html = render(withSections(STANDARD_PREVIEW_SECTIONS), { ...META, design: "starter" });
     expect(html).toContain("pn-connect");
     expect(html).toContain("Profiles to view");
-    expect(blocksIn(html)).toEqual([]);
+    expect(blocksIn(html)).toEqual(["video", "booking"]);
     expect(html).not.toContain("pn-info");
     expect(html).not.toContain("Find me online");
   });
