@@ -1,5 +1,6 @@
 "use client";
 
+import { useSaveContact } from "@/lib/save-contact";
 import Image from "next/image";
 import { useRef, useState, type ReactNode } from "react";
 import { CopyIcon, MoonIcon, QrIcon, ShareIcon, SunIcon, UserPlusIcon, CheckIcon } from "@/components/icons";
@@ -61,17 +62,19 @@ export function CopyEmail({ email }: { email: string }) {
 
 export function BottomBar({
   vcardHref,
+  vcard,
   qrHref,
   name,
   displayUrl,
 }: {
   vcardHref: string;
+  vcard: string;
   qrHref: string;
   name: string;
   displayUrl: string;
 }) {
   const [saved, setSaved] = useState(false);
-  const toast = useToast();
+  const save = useSaveContact(vcardHref, vcard);
   const dialog = useRef<HTMLDialogElement>(null);
 
   return (
@@ -79,12 +82,13 @@ export function BottomBar({
       {/* A plain link to the vCard (no `download` attribute): iPhone Safari opens the contact preview straight away; Android downloads it. The state change is only feedback. */}
       <a
         href={vcardHref}
+        onPointerDown={save.prime}
+        onTouchStart={save.prime}
+        onMouseEnter={save.prime}
         className={`pm-save${saved ? " is-saved" : ""}`}
-        onClick={() => {
-          if (!saved) {
-            setSaved(true);
-            toast("Opening your contact…");
-          }
+        onClick={(e) => {
+          save.onClick(e);
+          setSaved(true);
         }}
       >
         <span className="pm-save-text">

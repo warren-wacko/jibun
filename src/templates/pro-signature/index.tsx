@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { buildVCard } from "@/lib/vcard";
 import { Fragment, type CSSProperties, type ReactNode } from "react";
 import {
   ArrowUpRightIcon,
@@ -72,6 +73,7 @@ function LinkList({
 export function ProSignatureTemplate({ data, theme, meta }: TemplateProps) {
   const { profile, contact, style } = data;
   const m = buildSignatureModel(data);
+  const vcard = buildVCard(data, { pageUrl: meta.pageUrl });
   const design = meta.design ?? "starter";
   const { order, sections } = buildBlocks(data, design);
   const fontPair = design === "standard" && style.fontPair && findFontPair("pro-signature", style.fontPair) ? style.fontPair : undefined;
@@ -226,7 +228,7 @@ export function ProSignatureTemplate({ data, theme, meta }: TemplateProps) {
           )}
 
           <div className="ps-actions">
-            <SaveButton href={meta.vcardHref} />
+            <SaveButton href={meta.vcardHref} vcard={vcard} />
             {m.actions.length > 0 && (
               <nav className="ps-quick" aria-label="Contact actions" style={{ "--cols": Math.min(m.actions.length, 4) } as CSSProperties}>
                 {m.actions.map((a, i) => {

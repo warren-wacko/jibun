@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { buildVCard } from "@/lib/vcard";
 import type { CSSProperties } from "react";
 import { ArrowUpRightIcon, NfcIcon } from "@/components/icons";
 import { Footer } from "@/components/Footer";
@@ -81,6 +82,7 @@ function Tile({ tile, index, showPhoneNumbers }: { tile: BentoTile; index: numbe
 export function SocialBentoTemplate({ data, theme, meta }: TemplateProps) {
   const { profile, contact, style } = data;
   const m = buildBentoModel(data);
+  const vcard = buildVCard(data, { pageUrl: meta.pageUrl });
   const standard = buildStandardModel(data, meta.design ?? "starter");
 
   return (
@@ -186,7 +188,7 @@ export function SocialBentoTemplate({ data, theme, meta }: TemplateProps) {
               <p>{m.contactLine}</p>
             </div>
             <div className="pb-contact-row">
-              <SaveButton href={meta.vcardHref} />
+              <SaveButton href={meta.vcardHref} vcard={vcard} />
               <QrSheet qrHref={meta.qrHref} name={m.name || profile.fullName} url={displayUrl(meta.pageUrl)} />
             </div>
             {m.callText && (

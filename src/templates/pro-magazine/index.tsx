@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { buildVCard } from "@/lib/vcard";
 import { Fragment, type CSSProperties, type ReactNode } from "react";
 import {
   ArrowUpRightIcon,
@@ -77,6 +78,7 @@ export function ProMagazineTemplate({ data, theme, meta }: TemplateProps) {
   const standard = design === "standard";
   const fontPair = standard && style.fontPair && findFontPair("pro-magazine", style.fontPair) ? style.fontPair : undefined;
   const m = buildMagazineModel(data, fontPair);
+  const vcard = buildVCard(data, { pageUrl: meta.pageUrl });
   const listCount = Number(m.profiles.length > 0) + Number(m.messaging.length > 0);
   const { order, sections } = buildBlocks(data, design);
 
@@ -244,6 +246,7 @@ export function ProMagazineTemplate({ data, theme, meta }: TemplateProps) {
 
           <BottomBar
             vcardHref={meta.vcardHref}
+            vcard={vcard}
             qrHref={meta.qrHref}
             name={profile.fullName}
             displayUrl={displayUrl(meta.pageUrl)}

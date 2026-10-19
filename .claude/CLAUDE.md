@@ -35,7 +35,7 @@
   - Verify visually: run a production build, drive Chrome with `puppeteer-core` at 390/375/320 px (headless `--window-size` cannot go below ~500 px), and compare element positions to the reference file in both themes. Test sparse data and a 30-character name.
   - Tailwind's reset also zeroes `margin` (a native `<dialog>` then opens in the top-left: set `margin: auto`) and sets `button`/`a` styles; check modals and any element that relied on browser defaults.
   - Shared logic lives in `src/templates/shared/model.ts` (featured link, `displayUrl`), `src/components/Toast.tsx`, `src/lib/phone.ts`. Size big display text from real glyph widths (see `headlineEm` in `pro-magazine/model.ts`), not character counts. Use `data-weak-on-light` / `data-weak-on-dark` (set by `ThemeScope`) when an accent must be used as text.
-  - No gear/settings controls, no per-template colour pickers, and no client-side QR or vCard code: use the app's `/qr` and `/vcard` routes.
+  - No gear/settings controls, no per-template colour pickers, and no client-side QR or vCard generation: build the vCard on the server (`buildVCard` in `lib/vcard.ts`) and use the app's `/qr` and `/vcard` routes. Save Contact passes the server-built vCard text to `useSaveContact` (`lib/save-contact.ts`), which opens it as a file made inside the tap (as the reference designs do), so iPhone shows the contact sheet at once.
 - Convert a reference file only following the PRD "Conversion rules". Never edit the reference HTML. Hosting (Hostinger) is the last step of the plan; do not start it before then.
 
 # Admin

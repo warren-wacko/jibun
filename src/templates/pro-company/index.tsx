@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { buildVCard } from "@/lib/vcard";
 import { Fragment, type CSSProperties, type ReactNode } from "react";
 import {
   ArrowUpRightIcon,
@@ -73,6 +74,7 @@ export function ProCompanyTemplate({ data, theme, meta }: TemplateProps) {
   const { profile, contact, style } = data;
   const design = meta.design ?? "starter";
   const m = buildCompanyModel(data, design);
+  const vcard = buildVCard(data, { pageUrl: meta.pageUrl });
   const fontPair = design === "standard" && style.fontPair && findFontPair("pro-company", style.fontPair) ? style.fontPair : undefined;
   const sectionTitle = (key: string) => m.sections.find((s) => s.key === key);
 
@@ -239,7 +241,7 @@ export function ProCompanyTemplate({ data, theme, meta }: TemplateProps) {
             )}
 
             <div className="pco-cta">
-              <SaveButton href={meta.vcardHref} />
+              <SaveButton href={meta.vcardHref} vcard={vcard} />
               <QrSheet qrHref={meta.qrHref} name={profile.fullName} url={displayUrl(meta.pageUrl)} />
             </div>
           </header>

@@ -83,6 +83,15 @@ test("Save Contact downloads a valid vCard with the person's details", async ({ 
   expect(res.headers()["content-disposition"]).toMatch(/^inline;/);
   expect(res.headers()["content-disposition"]).toContain(`${ACTIVE.username}.vcf`);
   await expect(save).not.toHaveAttribute("download", /.*/);
+
+  // a tap opens the contact file at once, made in the browser from what is on the page (no waiting for a request)
+  const [download] = await Promise.all([page.waitForEvent("download"), save.click()]);
+  expect(download.suggestedFilename()).toBe(`${ACTIVE.username}.vcf`);
+  const fromTap = await (await import("node:fs/promises")).readFile((await download.path()) as string, "utf8");
+  expect(fromTap).toMatch(/^BEGIN:VCARD/);
+  expect(fromTap).toContain("FN:Eva E2E");
+  expect(fromTap).toContain("+639171234567");
+  expect(fromTap).toContain("item1.X-ABLabel:");
   const vcf = await res.text();
   expect(vcf).toMatch(/^BEGIN:VCARD/);
   expect(vcf).toContain("FN:Eva E2E");

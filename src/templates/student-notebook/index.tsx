@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { buildVCard } from "@/lib/vcard";
 import { Fragment, type CSSProperties } from "react";
 import { ArrowUpRightIcon, DownloadIcon, MailIcon, MessageIcon, PhoneIcon } from "@/components/icons";
 import { Footer } from "@/components/Footer";
@@ -44,6 +45,7 @@ function TileGrid({ links }: { links: SocialLink[] }) {
 export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
   const { profile, style } = data;
   const m = buildNotebookModel(data);
+  const vcard = buildVCard(data, { pageUrl: meta.pageUrl });
   // The Standard design is a longer page with its own layout (see buildStandardModel); the Starter design is unchanged.
   const design = meta.design ?? "starter";
   const std = design === "standard" ? buildStandardModel(data) : null;
@@ -138,14 +140,14 @@ export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
           <div className="pn-actions">
             {resume ? (
               <div className="pn-pair">
-                <SaveButton href={meta.vcardHref} compact />
+                <SaveButton href={meta.vcardHref} vcard={vcard} compact />
                 <a href={resume.url} className="pn-resume" target="_blank" rel="noopener noreferrer" download>
                   <DownloadIcon size={19} strokeWidth={2} />
                   {resume.label}
                 </a>
               </div>
             ) : (
-              <SaveButton href={meta.vcardHref} />
+              <SaveButton href={meta.vcardHref} vcard={vcard} />
             )}
             {m.quick.length > 0 && (
               <nav className="pn-quick" aria-label="Contact actions" style={{ "--cols": Math.min(m.quick.length, 4) } as CSSProperties}>

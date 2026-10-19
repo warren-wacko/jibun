@@ -1,5 +1,6 @@
 "use client";
 
+import { useSaveContact } from "@/lib/save-contact";
 import { useState, type ReactNode } from "react";
 import { CheckIcon, MoonIcon, ShareIcon, SunIcon, UserPlusIcon } from "@/components/icons";
 import { ShareButton } from "@/components/ShareButton";
@@ -61,18 +62,19 @@ export function PolaroidFlip({ front, back, tape }: { front: ReactNode; back: Re
 /* ---------- Save Contact ---------- */
 
 /** A plain link to the vCard (no `download` attribute): iPhone Safari opens the contact preview straight away; Android downloads it. The state change is only feedback. */
-export function SaveButton({ href, compact }: { href: string; compact?: boolean }) {
+export function SaveButton({ href, compact, vcard }: { href: string; compact?: boolean; vcard: string }) {
   const [saved, setSaved] = useState(false);
-  const toast = useToast();
+  const save = useSaveContact(href, vcard);
   return (
     <a
       href={href}
+      onPointerDown={save.prime}
+      onTouchStart={save.prime}
+      onMouseEnter={save.prime}
       className={`pn-save${saved ? " is-saved" : ""}${compact ? " pn-save-compact" : ""}`}
-      onClick={() => {
-        if (!saved) {
-          setSaved(true);
-          toast("Opening your contact…");
-        }
+      onClick={(e) => {
+        save.onClick(e);
+        setSaved(true);
       }}
     >
       {compact ? (

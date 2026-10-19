@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { buildVCard } from "@/lib/vcard";
 import type { CSSProperties } from "react";
 import { Footer } from "@/components/Footer";
 import { ArrowUpRightIcon } from "@/components/icons";
@@ -19,6 +20,7 @@ import "./social-minimalist.css";
 export function SocialMinimalistTemplate({ data, theme, meta }: TemplateProps) {
   const { profile, contact, style } = data;
   const m = buildMinimalModel(data);
+  const vcard = buildVCard(data, { pageUrl: meta.pageUrl });
   const standard = buildStandardModel(data, meta.design ?? "starter");
 
   return (
@@ -169,7 +171,7 @@ export function SocialMinimalistTemplate({ data, theme, meta }: TemplateProps) {
                 <p className="mn-contact-line">{m.contactLine}</p>
               </div>
               <div className="mn-contact-row">
-                <SaveButton href={meta.vcardHref} />
+                <SaveButton href={meta.vcardHref} vcard={vcard} />
                 <QrSheet qrHref={meta.qrHref} name={m.name || profile.fullName} url={displayUrl(meta.pageUrl)} />
               </div>
               {m.callText && (
