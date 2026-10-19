@@ -79,7 +79,10 @@ test("Save Contact downloads a valid vCard with the person's details", async ({ 
   const res = await page.request.get(`/${ACTIVE.username}/vcard`);
   expect(res.status()).toBe(200);
   expect(res.headers()["content-type"]).toContain("text/vcard");
+  // inline, so iPhone Safari opens the contact preview instead of asking to download a file
+  expect(res.headers()["content-disposition"]).toMatch(/^inline;/);
   expect(res.headers()["content-disposition"]).toContain(`${ACTIVE.username}.vcf`);
+  await expect(save).not.toHaveAttribute("download", /.*/);
   const vcf = await res.text();
   expect(vcf).toMatch(/^BEGIN:VCARD/);
   expect(vcf).toContain("FN:Eva E2E");

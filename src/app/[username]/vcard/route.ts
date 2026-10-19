@@ -20,7 +20,8 @@ export async function GET(request: Request, ctx: RouteContext<"/[username]/vcard
   return new Response(body, {
     headers: {
       "Content-Type": "text/vcard; charset=utf-8",
-      "Content-Disposition": `attachment; filename="${page.username}.vcf"`,
+      // inline, not attachment: iPhone Safari then opens the contact preview ("Add to Contacts") instead of asking to download a file
+      "Content-Disposition": `inline; filename="${page.username}.vcf"`,
       "Cache-Control": "private, no-cache",
     },
   });

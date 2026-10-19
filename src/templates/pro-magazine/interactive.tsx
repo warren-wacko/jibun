@@ -76,15 +76,14 @@ export function BottomBar({
 
   return (
     <div className="pm-bar">
-      {/* A plain download link (works on iOS and Android); the state change is only feedback. */}
+      {/* A plain link to the vCard (no `download` attribute): iPhone Safari opens the contact preview straight away; Android downloads it. The state change is only feedback. */}
       <a
         href={vcardHref}
-        download
         className={`pm-save${saved ? " is-saved" : ""}`}
         onClick={() => {
           if (!saved) {
             setSaved(true);
-            toast("Contact card downloaded");
+            toast("Opening your contact…");
           }
         }}
       >

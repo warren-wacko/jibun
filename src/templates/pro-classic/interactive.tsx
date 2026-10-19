@@ -98,19 +98,18 @@ export function CardFlip({ front, back }: { front: ReactNode; back: ReactNode })
 
 /* ---------- Save Contact ---------- */
 
-/** A plain download link (works on iOS and Android); the state change is only feedback. */
+/** A plain link to the vCard (no `download` attribute): iPhone Safari opens the contact preview straight away; Android downloads it. The state change is only feedback. */
 export function SaveButton({ href }: { href: string }) {
   const [saved, setSaved] = useState(false);
   const toast = useToast();
   return (
     <a
       href={href}
-      download
       className={`pc-save${saved ? " is-saved" : ""}`}
       onClick={() => {
         if (!saved) {
           setSaved(true);
-          toast("Contact card downloaded");
+          toast("Opening your contact…");
         }
       }}
     >

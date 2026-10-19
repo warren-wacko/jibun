@@ -1,4 +1,5 @@
 import type { PageData } from "./page-schema";
+import { PHONE_BASED_TYPES, SOCIAL_LABELS } from "./socials";
 
 export type VCardPhoto = { type: "JPEG" | "PNG"; base64: string };
 
@@ -63,6 +64,22 @@ export function buildVCard(data: PageData, opts: { pageUrl: string; photo?: VCar
   if (contact.email) lines.push(`EMAIL;TYPE=INTERNET:${contact.email}`);
   if (contact.officeAddress) lines.push(`ADR;TYPE=WORK:;;${escapeText(contact.officeAddress)};;;;`);
   lines.push(`URL:${opts.pageUrl}`);
+
+  // Every link on the page goes into the contact too, each with a label (Apple's itemN.X-ABLabel; other
+  // contact apps show them as websites). Phone-based chats (WhatsApp, Viber) are left out when the number is hidden.
+  let item = 0;
+  const addLink = (label: string, url: string) => {
+    item += 1;
+    lines.push(`item${item}.URL:${url}`, `item${item}.X-ABLabel:${escapeText(label)}`);
+  };
+  if (data.featuredLink) addLink(data.featuredLink.label, data.featuredLink.url);
+  for (const s of data.socials) {
+    if (PHONE_BASED_TYPES.has(s.type) && !contact.showPhoneNumbers) continue;
+    addLink(SOCIAL_LABELS[s.type], s.url);
+  }
+
+  const about = [profile.bio, profile.location ? `Based in ${profile.location}` : ""].filter(Boolean).join("\n");
+  if (about) lines.push(`NOTE:${escapeText(about.slice(0, 600))}`);
   if (opts.photo) lines.push(`PHOTO;ENCODING=b;TYPE=${opts.photo.type}:${opts.photo.base64}`);
   lines.push("END:VCARD");
   return lines.map(foldLine).join(CRLF) + CRLF;

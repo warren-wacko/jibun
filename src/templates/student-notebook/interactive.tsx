@@ -60,19 +60,18 @@ export function PolaroidFlip({ front, back, tape }: { front: ReactNode; back: Re
 
 /* ---------- Save Contact ---------- */
 
-/** A plain download link (works on iOS and Android); the state change is only feedback. */
+/** A plain link to the vCard (no `download` attribute): iPhone Safari opens the contact preview straight away; Android downloads it. The state change is only feedback. */
 export function SaveButton({ href, compact }: { href: string; compact?: boolean }) {
   const [saved, setSaved] = useState(false);
   const toast = useToast();
   return (
     <a
       href={href}
-      download
       className={`pn-save${saved ? " is-saved" : ""}${compact ? " pn-save-compact" : ""}`}
       onClick={() => {
         if (!saved) {
           setSaved(true);
-          toast("Contact card downloaded");
+          toast("Opening your contact…");
         }
       }}
     >

@@ -33,6 +33,25 @@ describe("buildVCard", () => {
     expect(v).not.toContain("639171234567");
   });
 
+  it("puts every link on the page into the contact, each with a label, plus the bio and location", () => {
+    const v = build({ ...SAMPLE_PAGE_DATA, profile: { ...SAMPLE_PAGE_DATA.profile, bio: "I design simple, useful products.", location: "Cavite, PH" } });
+    expect(v).toContain("item1.URL:https://example.com/maria");
+    expect(v).toContain("item1.X-ABLabel:View my portfolio");
+    expect(v).toContain("item2.URL:https://www.linkedin.com/in/mariasantos");
+    expect(v).toContain("item2.X-ABLabel:LinkedIn");
+    expect(v).toContain("item3.X-ABLabel:Instagram");
+    expect(v).toContain("item4.X-ABLabel:Messenger");
+    expect(v).toContain("item5.X-ABLabel:WhatsApp");
+    expect(v).toContain("NOTE:I design simple\\, useful products.\\nBased in Cavite\\, PH");
+  });
+
+  it("leaves out chats that are made of a phone number when the number is hidden", () => {
+    const hidden: PageData = { ...SAMPLE_PAGE_DATA, contact: { ...SAMPLE_PAGE_DATA.contact, showPhoneNumbers: false } };
+    const v = build(hidden);
+    expect(v).not.toContain("WhatsApp");
+    expect(v).toContain("X-ABLabel:Instagram");
+  });
+
   it("omits fields that are not set", () => {
     const min: PageData = {
       profile: { fullName: "Cher" },
@@ -42,7 +61,7 @@ describe("buildVCard", () => {
       style: { theme: "light", accent: "blue" },
     };
     const v = build(min);
-    for (const key of ["TITLE", "ORG", "TEL", "EMAIL", "ADR", "PHOTO", "NICKNAME"]) expect(v).not.toContain(key);
+    for (const key of ["TITLE", "ORG", "TEL", "EMAIL", "ADR", "PHOTO", "NICKNAME", "NOTE", "item1"]) expect(v).not.toContain(key);
     expect(v).toContain("N:;Cher;;;");
   });
 
