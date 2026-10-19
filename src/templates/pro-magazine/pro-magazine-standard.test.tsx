@@ -68,10 +68,15 @@ describe("the Standard design", () => {
     expect(blocksIn(render(SAMPLE_PAGE_DATA))).toEqual(starter);
   });
 
-  it("does not number pages on the Starter design, and ignores sections, order and pair there", () => {
+  it("does not number pages on the Starter design, and draws only add-on sections, order and pair there", () => {
     const html = render(withSections(STANDARD_PREVIEW_SECTIONS, { fontPair: "vogue", sectionOrder: ["socials"] }), { ...META, design: "starter" });
     expect(pagesIn(html)).toEqual([]);
-    expect(blocksIn(html)).toEqual(["about", "contents", "connect", "socials"]);
+    // Starter draws only what a paid add-on unlocks (gallery, PDF), in the template's default order, never the free picks
+    const kinds = blocksIn(html);
+    expect(kinds).toContain("gallery");
+    expect(kinds).toContain("resume");
+    for (const k of ["services", "experience", "skills", "stats", "portfolio"]) expect(kinds).not.toContain(k);
+    expect(kinds[0]).toBe("about");
     expect(html).not.toContain("data-font-pair");
   });
 

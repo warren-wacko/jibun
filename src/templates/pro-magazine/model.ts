@@ -4,7 +4,7 @@ import { formatPhone } from "@/lib/phone";
 import { groupSocials } from "@/lib/socials";
 import { displayUrl, pickFeatured } from "../shared/model";
 import { resolveOrder } from "../section-order";
-import { supportedSections } from "../supported-sections";
+import { drawnKinds } from "../supported-sections";
 import { PAIR_FACES } from "./headline-faces";
 
 /** Cover headline lines: first word on top, the rest below ("Juan / Dela Cruz"). Nothing is dropped. */
@@ -120,9 +120,10 @@ export const BLOCK_TITLES: Record<string, string> = {
  * design for (the rest stay saved but hidden).
  */
 export function buildBlocks(data: PageData, design: "starter" | "standard"): { order: string[]; sections: Partial<Record<SectionKind, Section>> } {
-  if (design !== "standard") return { order: resolveOrder("pro-magazine", []), sections: {} };
-  const drawn = data.sections.filter((s) => supportedSections("pro-magazine").includes(s.kind));
+  const kinds = drawnKinds("pro-magazine", data.sections.map((s) => s.kind), design);
+  const drawn = data.sections.filter((s) => kinds.includes(s.kind));
   const sections: Partial<Record<SectionKind, Section>> = {};
   for (const s of drawn) sections[s.kind] ??= s;
-  return { order: resolveOrder("pro-magazine", Object.keys(sections), data.style.sectionOrder), sections };
+  // Only the Standard design lets the page reorder its blocks.
+  return { order: resolveOrder("pro-magazine", Object.keys(sections), design === "standard" ? data.style.sectionOrder : undefined), sections };
 }

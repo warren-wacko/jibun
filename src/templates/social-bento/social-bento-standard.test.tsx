@@ -105,6 +105,12 @@ describe("SocialBentoTemplate (Standard)", () => {
     expect(html).not.toContain("photo dump");
   });
 
+  it("a Starter page shows the photo dump when it has the gallery add-on, and nothing else", () => {
+    const html = render(withSections([GALLERY, INTERESTS, SONG, ORGS]), { ...META, design: "starter" });
+    expect(blocksIn(html)).toEqual(["gallery"]);
+    expect(html).not.toContain('data-design="standard"');
+  });
+
   it("renders the full preview set in both themes", () => {
     for (const theme of ["light", "dark"] as const) {
       const html = render(withSections(STANDARD_PREVIEW_SECTIONS), META, theme);

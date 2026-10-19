@@ -10,7 +10,7 @@ import { ThemeScope } from "../ThemeScope";
 import type { TemplateProps } from "../types";
 import { handwriting, notebookMono, schibsted } from "./fonts";
 import { CopyEmail, HeaderShare, HeaderThemeToggle, PolaroidFlip, SaveButton, ToastProvider } from "./interactive";
-import { buildNotebookModel, buildStandardModel, type QuickAction } from "./model";
+import { buildNotebookModel, buildStandardModel, type QuickAction, starterResume } from "./model";
 import { OnlineTiles, SectionBlock } from "./sections";
 import "./student-notebook.css";
 
@@ -47,6 +47,7 @@ export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
   // The Standard design is a longer page with its own layout (see buildStandardModel); the Starter design is unchanged.
   const design = meta.design ?? "starter";
   const std = design === "standard" ? buildStandardModel(data) : null;
+  const resume = std ? std.resume : starterResume(data);
 
   return (
     <ThemeScope
@@ -135,12 +136,12 @@ export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
           </div>
 
           <div className="pn-actions">
-            {std?.resume ? (
+            {resume ? (
               <div className="pn-pair">
                 <SaveButton href={meta.vcardHref} compact />
-                <a href={std.resume.url} className="pn-resume" target="_blank" rel="noopener noreferrer" download>
+                <a href={resume.url} className="pn-resume" target="_blank" rel="noopener noreferrer" download>
                   <DownloadIcon size={19} strokeWidth={2} />
-                  {std.resume.label}
+                  {resume.label}
                 </a>
               </div>
             ) : (

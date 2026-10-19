@@ -3,7 +3,7 @@ import { formatPhone } from "@/lib/phone";
 import { groupSocials } from "@/lib/socials";
 import { initials, pickFeatured } from "../shared/model";
 import { resolveOrder } from "../section-order";
-import { supportedSections } from "../supported-sections";
+import { drawnKinds } from "../supported-sections";
 
 export const WORK_MODE_LABEL = { remote: "Remote", onsite: "On-site", hybrid: "Hybrid" } as const;
 
@@ -34,11 +34,12 @@ export const BLOCK_TITLES: Record<string, string> = {
  * design for (the rest stay saved but hidden).
  */
 export function buildBlocks(data: PageData, design: "starter" | "standard"): { order: string[]; sections: Partial<Record<SectionKind, Section>> } {
-  if (design !== "standard") return { order: resolveOrder("pro-company", []), sections: {} };
-  const drawn = data.sections.filter((s) => supportedSections("pro-company").includes(s.kind));
+  const kinds = drawnKinds("pro-company", data.sections.map((s) => s.kind), design);
+  const drawn = data.sections.filter((s) => kinds.includes(s.kind));
   const sections: Partial<Record<SectionKind, Section>> = {};
   for (const s of drawn) sections[s.kind] ??= s;
-  return { order: resolveOrder("pro-company", Object.keys(sections), data.style.sectionOrder), sections };
+  // Only the Standard design lets the page reorder its blocks.
+  return { order: resolveOrder("pro-company", Object.keys(sections), design === "standard" ? data.style.sectionOrder : undefined), sections };
 }
 
 /**

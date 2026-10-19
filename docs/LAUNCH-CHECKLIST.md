@@ -48,6 +48,8 @@ Set these as environment variables on Hostinger. They are read at build time, so
 - [ ] Run a Lighthouse check on the live homepage and one card page.
 - [ ] First week: look at the Hostinger resource usage; check Renewals weekly.
 
+- [ ] Section designs: send `docs/SECTION-DESIGN-BRIEF.md` (with the template files it names) to Claude Design, put the designs in `design-reference/`, then convert them template by template. Until then a page only shows the sections its template has a design for; the editor warns when a section will not be drawn.
+
 ## 6. Decisions that do not block launch
 
 - [ ] Renewal fee (draft ₱300 to 500)

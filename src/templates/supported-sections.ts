@@ -1,3 +1,4 @@
+import { SECTION_ADD_ON } from "@/lib/entitlements";
 import type { SectionKind } from "@/lib/page-schema";
 
 /**
@@ -21,6 +22,16 @@ export const SUPPORTED_SECTIONS: Record<string, readonly SectionKind[]> = {
 };
 
 export const supportedSections = (templateKey: string): readonly SectionKind[] => SUPPORTED_SECTIONS[templateKey] ?? [];
+
+/**
+ * The kinds a page draws, in the page's design. The Standard design draws every kind the template supports. The
+ * Starter design draws only the ones a paid add-on unlocks (gallery, video, PDF, booking), so a Starter client who
+ * buys an add-on sees it; the free "pick 2" sections stay a Standard feature.
+ */
+export const drawnKinds = (templateKey: string, kinds: readonly SectionKind[], design: "starter" | "standard"): SectionKind[] => {
+  const ok = supportedSections(templateKey);
+  return kinds.filter((k) => ok.includes(k) && (design === "standard" || SECTION_ADD_ON[k] !== undefined));
+};
 
 /** The kinds in `kinds` that this template has no design for (they are saved but not shown). */
 export const unsupportedSections = (templateKey: string, kinds: readonly SectionKind[]): SectionKind[] => {

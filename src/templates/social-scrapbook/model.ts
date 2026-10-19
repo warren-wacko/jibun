@@ -1,7 +1,7 @@
 import type { PageData, Section, SocialLink } from "@/lib/page-schema";
 import { initials } from "../shared/model";
 import { resolveOrder } from "../section-order";
-import { supportedSections } from "../supported-sections";
+import { drawnKinds } from "../supported-sections";
 import { ICON_TYPES, contactLine, greetingName, pickHero } from "../shared/social";
 
 export type Letter = { ch: string; style: number } | { space: true };
@@ -142,14 +142,14 @@ export function buildScrapbookModel(data: PageData) {
 type StandardKind = "interests" | "song" | "gallery" | "orgs";
 
 /** The Standard design's extra blocks, in the design's own order or the page's saved order. */
-export function buildStandardModel(data: PageData) {
-  const ok = supportedSections("social-scrapbook");
+export function buildStandardModel(data: PageData, design: "starter" | "standard" = "standard") {
+  const ok = drawnKinds("social-scrapbook", data.sections.map((s) => s.kind), design);
   const blocks: Partial<Record<StandardKind, Section>> = {};
   for (const s of data.sections) {
     if (ok.includes(s.kind) && (s.kind === "interests" || s.kind === "song" || s.kind === "gallery" || s.kind === "orgs")) blocks[s.kind] ??= s;
   }
   const canonical = (["interests", "song", "gallery", "orgs"] as const).filter((k) => k in blocks);
-  const order = resolveOrder("social-scrapbook", canonical, data.style.sectionOrder).filter((k): k is StandardKind => k in blocks);
+  const order = resolveOrder("social-scrapbook", canonical, design === "standard" ? data.style.sectionOrder : undefined).filter((k): k is StandardKind => k in blocks);
   return { blocks, order };
 }
 

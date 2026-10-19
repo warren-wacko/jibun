@@ -19,14 +19,14 @@ import "./social-minimalist.css";
 export function SocialMinimalistTemplate({ data, theme, meta }: TemplateProps) {
   const { profile, contact, style } = data;
   const m = buildMinimalModel(data);
-  const standard = meta.design === "standard" ? buildStandardModel(data) : null;
+  const standard = buildStandardModel(data, meta.design ?? "starter");
 
   return (
     <ThemeScope
       theme={theme}
       accent={style.accent}
       template="social-minimalist"
-      attrs={standard ? { "data-design": "standard" } : undefined}
+      attrs={meta.design === "standard" ? { "data-design": "standard" } : undefined}
       className={`${interTight.variable} ${instrumentSerif.variable} ${minimalMono.variable}`}
     >
       <ToastProvider>

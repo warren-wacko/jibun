@@ -75,10 +75,15 @@ describe("the Standard design", () => {
     expect(standard).toEqual(starter);
   });
 
-  it("ignores sections and a font pair on the Starter design", () => {
+  it("draws only add-on sections and a font pair on the Starter design", () => {
     const data = withSections(STANDARD_PREVIEW_SECTIONS, { fontPair: "bold", sectionOrder: ["messages", "about"] });
     const html = render(data, { ...META, design: "starter" });
-    expect(blocksIn(html)).toEqual(["about", "connect", "profiles", "messages"]);
+    // Starter draws only what a paid add-on unlocks (gallery, PDF), in the template's default order, never the free picks
+    const kinds = blocksIn(html);
+    expect(kinds).toContain("gallery");
+    expect(kinds).toContain("resume");
+    for (const k of ["services", "experience", "skills", "stats", "portfolio"]) expect(kinds).not.toContain(k);
+    expect(kinds[0]).toBe("about");
     expect(html).not.toContain("data-font-pair");
     expect(html).toContain('data-design="starter"');
   });

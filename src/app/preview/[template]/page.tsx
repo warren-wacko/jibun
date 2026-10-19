@@ -43,6 +43,7 @@ async function Preview({
     design: pick("design"),
     font: pick("font"),
     order: pick("order"),
+    addons: pick("addons"),
   });
 
   // Save Contact and the QR point at the seeded sample card, so those parts work for real.

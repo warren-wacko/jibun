@@ -3,7 +3,7 @@ import type { PageData, Section, SectionKind } from "@/lib/page-schema";
 import { groupSocials } from "@/lib/socials";
 import { pickFeatured } from "../shared/model";
 import { resolveOrder } from "../section-order";
-import { supportedSections } from "../supported-sections";
+import { drawnKinds } from "../supported-sections";
 
 export { displayUrl } from "../shared/model";
 export type { Featured } from "../shared/model";
@@ -57,9 +57,10 @@ export const BLOCK_TITLES: Record<string, string> = {
  * design for (the rest stay saved but hidden).
  */
 export function buildBlocks(data: PageData, design: "starter" | "standard"): { order: string[]; sections: Partial<Record<SectionKind, Section>> } {
-  if (design !== "standard") return { order: resolveOrder("pro-classic", []), sections: {} };
-  const drawn = data.sections.filter((s) => supportedSections("pro-classic").includes(s.kind));
+  const kinds = drawnKinds("pro-classic", data.sections.map((s) => s.kind), design);
+  const drawn = data.sections.filter((s) => kinds.includes(s.kind));
   const sections: Partial<Record<SectionKind, Section>> = {};
   for (const s of drawn) sections[s.kind] ??= s;
-  return { order: resolveOrder("pro-classic", Object.keys(sections), data.style.sectionOrder), sections };
+  // Only the Standard design lets the page reorder its blocks.
+  return { order: resolveOrder("pro-classic", Object.keys(sections), design === "standard" ? data.style.sectionOrder : undefined), sections };
 }

@@ -8,10 +8,14 @@ import { displayUrl } from "@/templates/shared/model";
  * see docs/PRODUCTION.md. The Privacy and Terms links go to the built-in pages (/privacy, /terms) unless a URL is set.
  */
 export function marketingContact() {
-  const messenger = process.env.NEXT_PUBLIC_CONTACT_MESSENGER || "https://m.me/jibun.ph";
-  const instagram = process.env.NEXT_PUBLIC_CONTACT_INSTAGRAM || "https://instagram.com/jibun.ph";
+  // Defaults are the real Jibun Facebook page and number. For now every message button opens the Facebook page (the chat link
+  // is https://m.me/61595658624677). Until there is an Instagram account (or another email),
+  // those slots point at the Facebook page (the email is still a dummy). Environment variables override all of them.
+  const FACEBOOK_PAGE = "https://www.facebook.com/profile.php?id=61595658624677";
+  const messenger = process.env.NEXT_PUBLIC_CONTACT_MESSENGER || FACEBOOK_PAGE;
+  const instagram = process.env.NEXT_PUBLIC_CONTACT_INSTAGRAM || FACEBOOK_PAGE;
   const email = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "hello@jibun.example";
-  const phone = process.env.NEXT_PUBLIC_CONTACT_PHONE || "+63 900 000 0000";
+  const phone = process.env.NEXT_PUBLIC_CONTACT_PHONE || "+63 915 428 5226";
   return {
     messenger,
     instagram,

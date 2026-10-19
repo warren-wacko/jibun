@@ -1,3 +1,4 @@
+import { SECTION_ADD_ON } from "./entitlements";
 import type { PageData, Section } from "./page-schema";
 
 /**
@@ -143,14 +144,17 @@ const ACCENT = /^(#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})|[a-z0-9-]{2,40})$/;
 
 export function buildPreviewData(
   templateKey: string,
-  opts: { variant?: string; theme?: string; accent?: string; design?: string; font?: string; order?: string },
+  opts: { variant?: string; theme?: string; accent?: string; design?: string; font?: string; order?: string; addons?: string },
 ): PageData {
   const base = opts.variant === "sparse" ? SPARSE_PREVIEW_DATA : FULL_PREVIEW_DATA;
   const accent =
     opts.accent && ACCENT.test(opts.accent) ? opts.accent : (PREVIEW_DEFAULT_ACCENT[templateKey] ?? base.style.accent);
   const theme: "light" | "dark" = opts.theme === "dark" ? "dark" : "light";
   const style = { ...base.style, theme, accent };
-  if (opts.design !== "standard") return { ...base, style };
+  // ?addons=1 on the Starter design: a page that bought add-ons (only the sections an add-on unlocks)
+  if (opts.design !== "standard") {
+    return opts.addons === "1" ? { ...base, sections: STANDARD_PREVIEW_SECTIONS.filter((x) => SECTION_ADD_ON[x.kind]), style } : { ...base, style };
+  }
 
   // The Standard design: optional sections, and optionally a font pair and an order (?font=bold&order=about,stats,connect).
   const order = opts.order?.split(",").map((t) => t.trim()).filter((t) => ORDER_TOKEN.test(t)).slice(0, 40);

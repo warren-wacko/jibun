@@ -43,6 +43,15 @@ const SKILLS: Section = { kind: "skills", items: ["Python", "React", "SQL", "Fig
 const ORGS: Section = { kind: "orgs", items: [{ name: "Dean's lister", role: "CvSU" }, { name: "Design Society" }] };
 const RESUME: Section = { kind: "resume", fileUrl: "https://example.com/cv.pdf" };
 
+describe("Starter design with the PDF add-on", () => {
+  it("gets the résumé button next to Save contact, and no other optional section", () => {
+    const html = render(withSections([RESUME, SKILLS, PROJECTS]), { ...META, design: "starter" });
+    expect(html).toContain("pn-resume");
+    expect(html).toContain("https://example.com/cv.pdf");
+    expect(blocksIn(html)).toEqual([]);
+  });
+});
+
 describe("buildStandardModel", () => {
   it("lists projects, skills, then wins and orgs by default, whatever order they were added in", () => {
     expect(buildStandardModel(withSections([ORGS, SKILLS, PROJECTS])).order).toEqual(["portfolio", "skills", "orgs"]);

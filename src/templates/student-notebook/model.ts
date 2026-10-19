@@ -2,7 +2,7 @@ import type { PageData, Section, SocialType } from "@/lib/page-schema";
 import { SOCIAL_LABELS, groupSocials } from "@/lib/socials";
 import { initials, pickFeatured } from "../shared/model";
 import { resolveOrder } from "../section-order";
-import { supportedSections } from "../supported-sections";
+import { drawnKinds, supportedSections } from "../supported-sections";
 
 export type QuickAction = { key: "call" | "email" | "text" | "linkedin"; label: string; href: string; external?: boolean };
 
@@ -52,6 +52,13 @@ export function buildNotebookModel(data: PageData) {
 }
 
 export type OnlineTile = { key: string; type: SocialType; label: string; url: string };
+
+/** The résumé button for a Starter page that bought the PDF add-on (the Standard design builds its own, below). */
+export function starterResume(data: PageData): { url: string; label: string } | null {
+  const kinds = drawnKinds("student-notebook", data.sections.map((s) => s.kind), "starter");
+  const s = data.sections.find((x): x is Extract<Section, { kind: "resume" }> => x.kind === "resume" && kinds.includes("resume"));
+  return s ? { url: s.fileUrl, label: s.label ?? "My résumé" } : null;
+}
 
 /**
  * The Standard design: a résumé button, three small facts, the optional sections (projects, skills, wins and orgs)

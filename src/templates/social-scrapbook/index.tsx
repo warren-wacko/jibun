@@ -19,14 +19,14 @@ import "./social-scrapbook.css";
 export function SocialScrapbookTemplate({ data, theme, meta }: TemplateProps) {
   const { profile, contact, style } = data;
   const m = buildScrapbookModel(data);
-  const standard = meta.design === "standard" ? buildStandardModel(data) : null;
+  const standard = buildStandardModel(data, meta.design ?? "starter");
 
   return (
     <ThemeScope
       theme={theme}
       accent={style.accent}
       template="social-scrapbook"
-      attrs={standard ? { "data-design": "standard" } : undefined}
+      attrs={meta.design === "standard" ? { "data-design": "standard" } : undefined}
       className={`${archivoBlack.variable} ${gloock.variable} ${courierPrime.variable} ${scrapHand.variable}`}
     >
       <ToastProvider>
