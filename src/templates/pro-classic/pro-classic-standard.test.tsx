@@ -54,9 +54,9 @@ describe("buildBlocks", () => {
   });
 
   it("leaves out kinds the template has no design for", () => {
-    const b = buildBlocks(withSections([{ kind: "song", spotifyUrl: "https://open.spotify.com/track/1" }, ...sections]), "standard");
+    const b = buildBlocks(withSections([{ kind: "contactForm" }, ...sections]), "standard");
     expect(Object.keys(b.sections).sort()).toEqual(["experience", "skills", "stats"]);
-    expect(b.order).not.toContain("song");
+    expect(b.order).not.toContain("contactForm");
   });
 });
 
@@ -65,7 +65,6 @@ describe("the Standard design", () => {
     const html = render(withSections(STANDARD_PREVIEW_SECTIONS));
     const drawn = blocksIn(html);
     for (const kind of SUPPORTED_SECTIONS["pro-classic"]) expect(drawn.filter((b) => b === kind), kind).toHaveLength(1);
-    for (const kind of ["interests", "song", "orgs"]) expect(drawn).not.toContain(kind);
     expect(html).toContain('data-design="standard"');
   });
 

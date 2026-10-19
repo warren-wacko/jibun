@@ -1,5 +1,6 @@
 import Image from "next/image";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { ArrowUpRightIcon, LinkIcon } from "@/components/icons";
 import { displayUrl } from "../shared/model";
 import type { Section } from "@/lib/page-schema";
 import { dumpLayout, marqueeItems, orgChip } from "./model";
@@ -162,6 +163,170 @@ function Booking({ section }: { section: Of<"booking"> }) {
 }
 
 
+/** Résumé: a tile with the title, a handwritten note and a button that downloads the file. */
+function Resume({ section }: { section: Of<"resume"> }) {
+  return (
+    <div className="pb-resume" data-block="resume">
+      <div className="pb-resume-head">
+        <span className="pb-orgs-title">my résumé</span>
+        <span className="pb-hand pb-resume-note">grab a copy</span>
+      </div>
+      <a href={section.fileUrl} className="pb-resume-btn" download target="_blank" rel="noopener noreferrer">
+        <span className="pb-resume-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M12 3v12" />
+            <path d="m7 10 5 5 5-5" />
+            <path d="M5 21h14" />
+          </svg>
+        </span>
+        <span className="pb-resume-label">{section.label ?? "Résumé / CV"}</span>
+      </a>
+    </div>
+  );
+}
+
+/** The 4-column tile grid the stats and portfolio sections use: a dark title tile, then tiles two columns wide (the last one full width when it would stand alone). */
+function GridTitle({ label, title, note }: { label: string; title: string; note: string }) {
+  return (
+    <div className="pb-grid-title">
+      <div className="pb-grid-title-top">
+        <span className="pb-grid-label">{label}</span>
+        <span className="pb-grid-dot" aria-hidden="true" />
+      </div>
+      <div className="pb-grid-title-words">
+        <span className="pb-grid-h">{title}</span>
+        <span className="pb-hand pb-grid-note">{note}</span>
+      </div>
+    </div>
+  );
+}
+
+/** Stats: a title tile and one tile per stat, the value big and the label in mono underneath. */
+function Stats({ section }: { section: Of<"stats"> }) {
+  const items = section.items;
+  const lonely = items.length % 2 === 0;
+  return (
+    <div className="pb-grid" data-block="stats">
+      <GridTitle label="STATS" title="quick stats" note="the short version" />
+      {items.map((s, i) => (
+        <div key={`${s.label}-${i}`} className={`pb-stat${lonely && i === items.length - 1 ? " is-wide" : ""}`} data-i={i % 3}>
+          <span className={`pb-stat-value${s.value.length > 12 ? " is-long" : ""}`}>{s.value}</span>
+          <span className="pb-stat-label">{s.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Portfolio: a title tile and one tile per project, with the thumbnail on top when there is one. */
+function Portfolio({ section }: { section: Of<"portfolio"> }) {
+  const items = section.items;
+  const lonely = items.length % 2 === 0;
+  return (
+    <div className="pb-grid" data-block="portfolio">
+      <GridTitle label="PORTFOLIO" title="things I made" note="tap to open" />
+      {items.map((p, i) => {
+        const wide = lonely && i === items.length - 1;
+        return (
+          <a key={`${p.url}-${i}`} href={p.url} className={`pb-work${wide ? " is-wide" : ""}`} target="_blank" rel="noopener noreferrer">
+            {p.thumbUrl ? (
+              <span className="pb-work-thumb">
+                <Image src={p.thumbUrl} alt="" fill sizes="(max-width: 430px) 50vw, 215px" unoptimized />
+                <span className="pb-work-go" aria-hidden="true">
+                  <ArrowUpRightIcon size={15} strokeWidth={2} />
+                </span>
+              </span>
+            ) : null}
+            <span className="pb-work-body">
+              {!p.thumbUrl && (
+                <span className="pb-work-top" aria-hidden="true">
+                  <span className="pb-work-chip">
+                    <LinkIcon size={18} strokeWidth={1.9} />
+                  </span>
+                  <ArrowUpRightIcon size={18} strokeWidth={2} />
+                </span>
+              )}
+              <span className="pb-work-title">{p.title}</span>
+              {p.desc && <span className="pb-work-desc">{p.desc}</span>}
+            </span>
+          </a>
+        );
+      })}
+    </div>
+  );
+}
+
+/** A tile with a title, a handwritten note on the right and the section's content below. */
+function TileCard({ block, title, note, gap, children }: { block: string; title: string; note: string; gap: number; children: ReactNode }) {
+  return (
+    <div className="pb-card" data-block={block} style={{ "--gap": `${gap}px` } as CSSProperties}>
+      <div className="pb-card-head">
+        <span className="pb-orgs-title">{title}</span>
+        <span className="pb-hand pb-card-note">{note}</span>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+/** Services: a list inside one tile, the price in a soft accent pill on the right where there is one. */
+function Services({ section }: { section: Of<"services"> }) {
+  return (
+    <TileCard block="services" title="services" note="just ask" gap={8}>
+      <ul className="pb-services">
+        {section.items.map((s, i) => (
+          <li key={`${s.name}-${i}`}>
+            <span className="pb-service-name">{s.name}</span>
+            {s.price && <span className="pb-service-price">{s.price}</span>}
+          </li>
+        ))}
+      </ul>
+    </TileCard>
+  );
+}
+
+/** Experience: a timeline inside one tile, the years in a small chip. The latest entry has the filled dot. */
+function Experience({ section }: { section: Of<"experience"> }) {
+  const items = section.items;
+  return (
+    <TileCard block="experience" title="experience" note="so far" gap={16}>
+      <ol className="pb-exp">
+        {items.map((x, i) => (
+          <li key={`${x.role}-${i}`} className={i === 0 ? "is-current" : undefined}>
+            <span className="pb-exp-rail" aria-hidden="true">
+              <span className="pb-exp-dot" />
+              {i < items.length - 1 && <span className="pb-exp-line" />}
+            </span>
+            <span className="pb-exp-body">
+              <span className="pb-exp-years">{x.years}</span>
+              <span className="pb-exp-role">{x.role}</span>
+              <span className="pb-exp-org">{x.org}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+    </TileCard>
+  );
+}
+
+/** Skills: round tags in one tile, every fourth one in the accent, each with a small spark. */
+function Skills({ section }: { section: Of<"skills"> }) {
+  return (
+    <TileCard block="skills" title="skills" note="always learning" gap={14}>
+      <ul className="pb-skills">
+        {section.items.map((k, i) => (
+          <li key={`${k}-${i}`} className={i % 4 === 0 ? "is-on" : undefined}>
+            <svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 1.5c.6 4.9 2.6 7 9 10.5-6.4 3.5-8.4 5.6-9 10.5-.6-4.9-2.6-7-9-10.5 6.4-3.5 8.4-5.6 9-10.5z" fill="currentColor" />
+            </svg>
+            <span>{k}</span>
+          </li>
+        ))}
+      </ul>
+    </TileCard>
+  );
+}
+
 /** The drawing for one optional section, or null for a kind this template has no design for. */
 export function SectionBlock({ section }: { section: Section }) {
   switch (section.kind) {
@@ -173,6 +338,18 @@ export function SectionBlock({ section }: { section: Section }) {
       return <PhotoDump section={section} />;
     case "orgs":
       return <Orgs section={section} />;
+    case "resume":
+      return <Resume section={section} />;
+    case "stats":
+      return <Stats section={section} />;
+    case "portfolio":
+      return <Portfolio section={section} />;
+    case "services":
+      return <Services section={section} />;
+    case "experience":
+      return <Experience section={section} />;
+    case "skills":
+      return <Skills section={section} />;
     case "video":
       return <Video section={section} />;
     case "booking":

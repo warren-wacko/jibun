@@ -44,3 +44,28 @@ export function pickFeatured(data: PageData): { featured: Featured | null; used:
     used: linkedin,
   };
 }
+
+const ORG_SMALL_WORDS = new Set(["of", "the", "and", "for", "&", "a", "an", "de", "ng", "sa"]);
+
+/** The badge text for an org: the first letters of its first two significant words ("Junior Marketing Society" -> "JM"). */
+export function orgInitials(name: string): string {
+  const words = name
+    .replace(/[[\]().,]/g, " ")
+    .split(/\s+/)
+    .filter((w) => w && !ORG_SMALL_WORDS.has(w.toLowerCase()));
+  const out = words
+    .slice(0, 2)
+    .map((w) => (Array.from(w)[0] ?? "").toUpperCase())
+    .join("");
+  return out || "·";
+}
+
+/** What a song block shows: the title (or a fallback), the artist when there is one, the host of the link and a screen-reader label. */
+export function songView(song: { spotifyUrl: string; title?: string; artist?: string }, fallback = "Listen on Spotify") {
+  return {
+    heading: song.title ?? fallback,
+    artist: song.artist ?? null,
+    host: displayUrl(song.spotifyUrl).split("/")[0],
+    aria: `${song.title ? `${song.title}${song.artist ? ` by ${song.artist}` : ""}` : "Song"}, opens Spotify`,
+  };
+}

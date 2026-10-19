@@ -2,7 +2,8 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { ArrowUpRightIcon, LinkIcon } from "@/components/icons";
 import type { Section } from "@/lib/page-schema";
-import { displayUrl } from "../shared/model";
+import { SpotifyMark } from "../shared/SpotifyMark";
+import { displayUrl, orgInitials, songView } from "../shared/model";
 
 type Of<K extends Section["kind"]> = Extract<Section, { kind: K }>;
 
@@ -167,6 +168,56 @@ export function Booking({ section }: { section: Of<"booking"> }) {
   );
 }
 
+/** Interests: one card with the interests wrapping inside it, each after a small accent dot. */
+export function Interests({ section }: { section: Of<"interests"> }) {
+  return (
+    <ul className="pc-interests">
+      {section.items.map((x, i) => (
+        <li key={`${x}-${i}`}>
+          <span className="pc-interest-dot" aria-hidden="true" />
+          <span>{x}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Organizations: one card, a row per org with an initials badge, the name and the role when there is one. */
+export function Orgs({ section }: { section: Of<"orgs"> }) {
+  return (
+    <ul className="pc-orgs">
+      {section.items.map((o, i) => (
+        <li key={`${o.name}-${i}`}>
+          <span className="pc-org-badge" aria-hidden="true">
+            {orgInitials(o.name)}
+          </span>
+          <span className="pc-work-text">
+            <span className="pc-item-title">{o.name}</span>
+            {o.role && <span className="pc-org-role">{o.role}</span>}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Favorite song: a card that opens the song on Spotify, with the title and artist (or the host when there is no artist). */
+export function Song({ section }: { section: Of<"song"> }) {
+  const v = songView(section);
+  return (
+    <a href={section.spotifyUrl} className="pc-song" aria-label={v.aria} target="_blank" rel="noopener noreferrer">
+      <span className="pc-song-mark">
+        <SpotifyMark />
+      </span>
+      <span className="pc-work-text">
+        <span className="pc-item-title">{v.heading}</span>
+        {v.artist ? <span className="pc-org-role">{v.artist}</span> : <span className="pc-video-host">{v.host}</span>}
+      </span>
+      <ArrowUpRightIcon size={18} className="pc-row-arrow" />
+    </a>
+  );
+}
+
 export function SectionBody({ section }: { section: Section }) {
   switch (section.kind) {
     case "gallery":
@@ -187,6 +238,12 @@ export function SectionBody({ section }: { section: Section }) {
       return <Video section={section} />;
     case "booking":
       return <Booking section={section} />;
+    case "interests":
+      return <Interests section={section} />;
+    case "orgs":
+      return <Orgs section={section} />;
+    case "song":
+      return <Song section={section} />;
     default:
       return null;
   }

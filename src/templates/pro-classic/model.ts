@@ -51,6 +51,9 @@ export const BLOCK_TITLES: Record<string, string> = {
   stats: "At a glance",
   video: "Video",
   booking: "Book a time",
+  interests: "Interests",
+  orgs: "Organizations",
+  song: "Favorite song",
 };
 
 /**

@@ -40,7 +40,7 @@ describe("buildStandardModel", () => {
   });
 
   it("ignores kinds the design has no block for", () => {
-    const m = buildStandardModel(withSections([{ kind: "skills", items: ["a"] }, SONG]));
+    const m = buildStandardModel(withSections([{ kind: "contactForm" }, SONG]));
     expect(m.order).toEqual(["song"]);
   });
 });

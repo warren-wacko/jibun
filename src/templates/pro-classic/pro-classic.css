@@ -1314,3 +1314,106 @@
   color: var(--bg);
   background: var(--text);
 }
+
+/* Interests, organizations and favorite song. */
+.pc-interests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 16px 18px;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.pc-interests li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--text-soft);
+  overflow-wrap: anywhere;
+}
+
+.pc-interest-dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--accent-text);
+  transform: translateY(-2px);
+}
+
+.pc-orgs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.pc-orgs li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+}
+
+.pc-orgs li + li {
+  box-shadow: inset 0 1px 0 var(--border);
+}
+
+.pc-org-badge {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  color: var(--text);
+  background: var(--accent-soft);
+}
+
+.pc-org-role {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+.pc-song {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  min-height: 68px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.pc-song-mark {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  color: #1ed760;
+  background: #000;
+  box-shadow: inset 0 0 0 1px #33373d;
+}

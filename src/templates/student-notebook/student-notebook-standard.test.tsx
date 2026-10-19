@@ -91,7 +91,7 @@ describe("buildStandardModel", () => {
   });
 
   it("skips kinds without a design", () => {
-    const m = buildStandardModel(withSections([{ kind: "song", spotifyUrl: "https://open.spotify.com/track/1" }, { kind: "stats", items: [{ label: "a", value: "1" }] }, SKILLS]));
+    const m = buildStandardModel(withSections([{ kind: "contactForm" }, SKILLS]));
     expect(m.order).toEqual(["skills"]);
   });
 });
@@ -115,11 +115,11 @@ describe("the Standard design", () => {
     expect(without).not.toContain("pn-resume");
   });
 
-  it("keeps the Starter layout, adding only the video and booking add-ons", () => {
+  it("keeps the Starter layout, adding only the gallery, video and booking add-ons", () => {
     const html = render(withSections(STANDARD_PREVIEW_SECTIONS), { ...META, design: "starter" });
     expect(html).toContain("pn-connect");
     expect(html).toContain("Profiles to view");
-    expect(blocksIn(html)).toEqual(["video", "booking"]);
+    expect(blocksIn(html)).toEqual(["gallery", "video", "booking"]);
     expect(html).not.toContain("pn-info");
     expect(html).not.toContain("Find me online");
   });

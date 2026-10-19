@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { ArrowUpRightIcon, FileDownloadIcon } from "@/components/icons";
 import type { Section } from "@/lib/page-schema";
-import { displayUrl } from "../shared/model";
+import { displayUrl, orgInitials, songView } from "../shared/model";
 
 type Of<K extends Section["kind"]> = Extract<Section, { kind: K }>;
 
@@ -185,6 +185,71 @@ function Booking({ section }: { section: Of<"booking"> }) {
   );
 }
 
+/** Interests: small tiles with a brand dot, wrapping inside one card. */
+function Interests({ section }: { section: Of<"interests"> }) {
+  return (
+    <ul className="pco-interests">
+      {section.items.map((x, i) => (
+        <li key={`${x}-${i}`}>
+          <span className="pco-interest-dot" aria-hidden="true" />
+          {x}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Organizations: one card, a row per org with a rounded square of initials, the name and the role when there is one. */
+function Orgs({ section }: { section: Of<"orgs"> }) {
+  return (
+    <ul className="pco-orgs">
+      {section.items.map((o, i) => (
+        <li key={`${o.name}-${i}`}>
+          <span className="pco-org-badge" aria-hidden="true">
+            {orgInitials(o.name)}
+          </span>
+          <span className="pco-org-text">
+            <span className="pco-org-name">{o.name}</span>
+            {o.role && <span className="pco-org-role">{o.role}</span>}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Favourite song: a card with a brand tile and a ghost mark behind it, opening the song on Spotify. */
+function Song({ section }: { section: Of<"song"> }) {
+  const v = songView(section);
+  return (
+    <a href={section.spotifyUrl} className="pco-song" aria-label={v.aria} target="_blank" rel="noopener noreferrer">
+      <span className="pco-song-ghost" aria-hidden="true">
+        <SpotifyRings size={120} strokeWidth={1.4} />
+      </span>
+      <span className="pco-song-tile" aria-hidden="true">
+        <SpotifyRings size={24} strokeWidth={1.9} />
+      </span>
+      <span className="pco-song-text">
+        <span className="pco-song-kicker">SPOTIFY</span>
+        <span className="pco-song-title">{v.heading}</span>
+        {v.artist && <span className="pco-song-artist">{v.artist}</span>}
+      </span>
+      <span className="pco-song-go" aria-hidden="true">
+        <ArrowUpRightIcon size={16} strokeWidth={1.9} />
+      </span>
+    </a>
+  );
+}
+
+function SpotifyRings({ size, strokeWidth }: { size: number; strokeWidth: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M7 9.4c3.6-1.1 7.6-.7 10.6 1.1M7.6 12.8c2.9-.8 6.1-.5 8.6 1M8.2 16c2.2-.6 4.6-.4 6.5.7" />
+    </svg>
+  );
+}
+
 export function SectionBody({ section }: { section: Section }) {
   switch (section.kind) {
     case "gallery":
@@ -205,10 +270,16 @@ export function SectionBody({ section }: { section: Section }) {
       return <Video section={section} />;
     case "booking":
       return <Booking section={section} />;
+    case "interests":
+      return <Interests section={section} />;
+    case "orgs":
+      return <Orgs section={section} />;
+    case "song":
+      return <Song section={section} />;
     default:
       return null;
   }
 }
 
 /** The kinds drawn without a surrounding box (they are made of cards or tiles already). */
-export const BARE_KINDS: ReadonlySet<string> = new Set(["services", "video", "booking"]);
+export const BARE_KINDS: ReadonlySet<string> = new Set(["services", "video", "booking", "interests", "orgs", "song"]);

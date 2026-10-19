@@ -2,7 +2,8 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { ArrowUpRightIcon, LinkIcon } from "@/components/icons";
 import type { Section } from "@/lib/page-schema";
-import { displayUrl } from "../shared/model";
+import { SpotifyMark } from "../shared/SpotifyMark";
+import { displayUrl, orgInitials, songView } from "../shared/model";
 
 type Of<K extends Section["kind"]> = Extract<Section, { kind: K }>;
 
@@ -177,6 +178,56 @@ function Booking({ section }: { section: Of<"booking"> }) {
   );
 }
 
+/** Interests: small caps words between two hairlines running edge to edge, a dot after each. */
+function Interests({ section }: { section: Of<"interests"> }) {
+  return (
+    <ul className="ps-interests">
+      {section.items.map((x, i) => (
+        <li key={`${x}-${i}`}>
+          <span>{x}</span>
+          <span className="ps-interest-dot" aria-hidden="true" />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Organizations: one rounded list, a row per org with a round initials badge, the name and the role when there is one. */
+function Orgs({ section }: { section: Of<"orgs"> }) {
+  return (
+    <ul className="ps-orgs">
+      {section.items.map((o, i) => (
+        <li key={`${o.name}-${i}`}>
+          <span className="ps-org-badge" aria-hidden="true">
+            {orgInitials(o.name)}
+          </span>
+          <span className="ps-org-text">
+            <span className="ps-org-name">{o.name}</span>
+            {o.role && <span className="ps-org-role">{o.role}</span>}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** My song: an accent card that opens the song on Spotify. */
+function Song({ section }: { section: Of<"song"> }) {
+  const v = songView(section);
+  return (
+    <a href={section.spotifyUrl} className="ps-song" aria-label={v.aria} target="_blank" rel="noopener noreferrer">
+      <span className="ps-song-mark">
+        <SpotifyMark size={26} />
+      </span>
+      <span className="ps-song-text">
+        <span className="ps-song-title">{v.heading}</span>
+        <span className={v.artist ? "ps-song-artist" : "ps-song-host"}>{v.artist ?? v.host}</span>
+      </span>
+      <ArrowUpRightIcon size={20} />
+    </a>
+  );
+}
+
 export function SectionBody({ section }: { section: Section }) {
   switch (section.kind) {
     case "gallery":
@@ -197,6 +248,12 @@ export function SectionBody({ section }: { section: Section }) {
       return <Video section={section} />;
     case "booking":
       return <Booking section={section} />;
+    case "interests":
+      return <Interests section={section} />;
+    case "orgs":
+      return <Orgs section={section} />;
+    case "song":
+      return <Song section={section} />;
     default:
       return null;
   }

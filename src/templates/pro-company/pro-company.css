@@ -1739,3 +1739,179 @@
 [data-theme="dark"] .pco-booking-go {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
+
+/* Interests, organizations and favourite song. */
+.pco-interests {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 18px;
+  list-style: none;
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.pco-interests li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 32px;
+  padding: 6px 12px 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-soft);
+  background: var(--bg);
+  overflow-wrap: anywhere;
+}
+
+.pco-interest-dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--brand-text);
+}
+
+.pco-orgs {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 8px 18px;
+  list-style: none;
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.pco-orgs li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.pco-orgs li + li {
+  box-shadow: inset 0 1px 0 var(--border);
+}
+
+.pco-org-badge {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  font-family: var(--ff-head);
+  font-size: 15px;
+  font-weight: var(--head-weight);
+  letter-spacing: 0.4px;
+  color: var(--brand-text);
+  background: var(--brand-soft);
+}
+
+.pco-org-text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pco-org-name {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.pco-org-role {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text-dim);
+}
+
+.pco-song {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  min-height: 84px;
+  padding: 16px 12px 16px 16px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.pco-song-ghost {
+  position: absolute;
+  right: -30px;
+  bottom: -44px;
+  color: var(--brand-text);
+  opacity: 0.08;
+}
+
+.pco-song-tile {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  color: var(--brand-ink);
+  background: var(--brand);
+}
+
+.pco-song-text {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pco-song-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  color: var(--text-dim);
+}
+
+.pco-song-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.pco-song-artist {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text-dim);
+}
+
+.pco-song-go {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+  color: var(--brand-text);
+  background: var(--brand-soft);
+}

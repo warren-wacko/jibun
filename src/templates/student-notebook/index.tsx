@@ -12,7 +12,7 @@ import type { TemplateProps } from "../types";
 import { handwriting, notebookMono, schibsted } from "./fonts";
 import { CopyEmail, HeaderShare, HeaderThemeToggle, PolaroidFlip, SaveButton, ToastProvider } from "./interactive";
 import { buildNotebookModel, buildStandardModel, type QuickAction, starterBlocks, starterResume } from "./model";
-import { OnlineTiles, SectionBlock, StarterBooking, StarterVideo } from "./sections";
+import { Gallery, OnlineTiles, SectionBlock, StarterBooking, StarterVideo } from "./sections";
 import "./student-notebook.css";
 
 function QuickIcon({ action }: { action: QuickAction }) {
@@ -50,7 +50,7 @@ export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
   const design = meta.design ?? "starter";
   const std = design === "standard" ? buildStandardModel(data) : null;
   const resume = std ? std.resume : starterResume(data);
-  const starter = std ? { video: null, booking: null } : starterBlocks(data);
+  const starter = std ? { gallery: null, video: null, booking: null } : starterBlocks(data);
 
   return (
     <ThemeScope
@@ -172,6 +172,7 @@ export function StudentNotebookTemplate({ data, theme, meta }: TemplateProps) {
             </div>
           )}
 
+          {starter.gallery && <Gallery section={starter.gallery} grid />}
           {starter.video && <StarterVideo section={starter.video} />}
 
           {std && std.info.length > 0 && (

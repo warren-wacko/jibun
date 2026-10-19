@@ -49,8 +49,8 @@ describe("buildBlocks", () => {
   });
 
   it("leaves out kinds without a design", () => {
-    const b = buildBlocks(withSections([{ kind: "song", spotifyUrl: "https://open.spotify.com/track/1" }, ...sections]), "standard");
-    expect(b.order).not.toContain("song");
+    const b = buildBlocks(withSections([{ kind: "contactForm" }, ...sections]), "standard");
+    expect(b.order).not.toContain("contactForm");
   });
 });
 
@@ -78,7 +78,6 @@ describe("the Standard design", () => {
   it("draws every supported section once and skips the rest", () => {
     const drawn = blocksIn(render(withSections(STANDARD_PREVIEW_SECTIONS)));
     for (const kind of SUPPORTED_SECTIONS["pro-company"]) expect(drawn.filter((b) => b === kind), kind).toHaveLength(1);
-    for (const kind of ["interests", "song", "orgs"]) expect(drawn).not.toContain(kind);
   });
 
   it("has the same blocks as the Starter design when there are no sections", () => {

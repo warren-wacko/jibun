@@ -7,18 +7,18 @@ import type { SectionKind } from "@/lib/page-schema";
  * kinds are added here as their designs arrive. This file is safe for client code.
  */
 export const SUPPORTED_SECTIONS: Record<string, readonly SectionKind[]> = {
-  "pro-classic": ["gallery", "portfolio", "services", "resume", "experience", "skills", "stats", "video", "booking"],
-  "pro-magazine": ["gallery", "portfolio", "services", "resume", "experience", "skills", "stats", "video", "booking"],
-  "pro-signature": ["gallery", "portfolio", "services", "resume", "experience", "skills", "stats", "video", "booking"],
-  "pro-company": ["gallery", "portfolio", "services", "resume", "experience", "skills", "stats", "video", "booking"],
+  "pro-classic": ["gallery", "portfolio", "services", "resume", "experience", "skills", "stats", "video", "booking", "interests", "orgs", "song"],
+  "pro-magazine": ["gallery", "portfolio", "services", "resume", "experience", "skills", "stats", "video", "booking", "interests", "orgs", "song"],
+  "pro-signature": ["gallery", "portfolio", "services", "resume", "experience", "skills", "stats", "video", "booking", "interests", "orgs", "song"],
+  "pro-company": ["gallery", "portfolio", "services", "resume", "experience", "skills", "stats", "video", "booking", "interests", "orgs", "song"],
   // The notebook's Standard design has projects (portfolio), skills, wins and orgs (orgs) and a résumé button.
-  "student-notebook": ["portfolio", "skills", "orgs", "resume", "video", "booking"],
+  "student-notebook": ["gallery", "portfolio", "skills", "orgs", "resume", "video", "booking", "services", "experience", "stats", "interests", "song"],
   // The bento's Standard design: an interests band, a record player, a photo dump and org chips.
-  "social-bento": ["interests", "song", "gallery", "orgs", "video", "booking"],
+  "social-bento": ["interests", "song", "gallery", "orgs", "resume", "video", "booking", "stats", "skills", "portfolio", "services", "experience"],
   // The scrapbook's Standard design: a tape of interests, a record on kraft paper, a photo dump and org tickets.
-  "social-scrapbook": ["interests", "song", "gallery", "orgs", "video", "booking"],
+  "social-scrapbook": ["interests", "song", "gallery", "orgs", "resume", "video", "booking", "stats", "skills", "portfolio", "services", "experience"],
   // The minimalist's Standard design: serif interests, a record tile, a photo dump and org pills.
-  "social-minimalist": ["interests", "song", "gallery", "orgs", "video", "booking"],
+  "social-minimalist": ["interests", "song", "gallery", "orgs", "resume", "video", "booking", "stats", "skills", "portfolio", "services", "experience"],
 };
 
 export const supportedSections = (templateKey: string): readonly SectionKind[] => SUPPORTED_SECTIONS[templateKey] ?? [];

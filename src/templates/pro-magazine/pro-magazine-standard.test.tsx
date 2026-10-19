@@ -48,9 +48,9 @@ describe("buildBlocks", () => {
   });
 
   it("follows a saved order and leaves out kinds without a design", () => {
-    const b = buildBlocks(withSections([...sections, { kind: "song", spotifyUrl: "https://open.spotify.com/track/1" }], { sectionOrder: ["socials", "about"] }), "standard");
+    const b = buildBlocks(withSections([...sections, { kind: "contactForm" }], { sectionOrder: ["socials", "about"] }), "standard");
     expect(b.order.slice(0, 2)).toEqual(["socials", "about"]);
-    expect(b.order).not.toContain("song");
+    expect(b.order).not.toContain("contactForm");
   });
 });
 
@@ -59,7 +59,6 @@ describe("the Standard design", () => {
     const html = render(withSections(STANDARD_PREVIEW_SECTIONS));
     const drawn = blocksIn(html);
     for (const kind of SUPPORTED_SECTIONS["pro-magazine"]) expect(drawn.filter((b) => b === kind), kind).toHaveLength(1);
-    for (const kind of ["interests", "song", "orgs"]) expect(drawn).not.toContain(kind);
     expect(pagesIn(html)).toEqual(drawn.map((_, i) => String(i + 1).padStart(2, "0")));
   });
 

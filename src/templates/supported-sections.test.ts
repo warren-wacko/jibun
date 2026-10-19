@@ -11,13 +11,13 @@ describe("drawnKinds", () => {
 
   it("draws only what an add-on unlocks in the Starter design", () => {
     expect(drawnKinds("pro-classic", ALL, "starter")).toEqual(["gallery", "resume", "video", "booking"]);
-    expect(drawnKinds("student-notebook", ALL, "starter")).toEqual(["resume", "video", "booking"]);
-    expect(drawnKinds("social-minimalist", ALL, "starter")).toEqual(["gallery", "video", "booking"]);
+    expect(drawnKinds("student-notebook", ALL, "starter")).toEqual(["gallery", "resume", "video", "booking"]);
+    expect(drawnKinds("social-minimalist", ALL, "starter")).toEqual(["gallery", "resume", "video", "booking"]);
   });
 
   it("never draws a kind the template has no design for, in either design", () => {
     for (const design of ["starter", "standard"] as const) {
-      expect(drawnKinds("pro-classic", ["interests", "orgs", "song"], design)).toEqual([]);
+      expect(drawnKinds("pro-classic", ["contactForm"], design)).toEqual([]);
       expect(drawnKinds("not-a-template", ALL, design)).toEqual([]);
     }
   });

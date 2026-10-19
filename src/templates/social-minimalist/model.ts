@@ -53,8 +53,8 @@ export function buildMinimalModel(data: PageData) {
 
 /* ---------- Standard design ---------- */
 
-type StandardKind = "interests" | "song" | "video" | "booking" | "gallery" | "orgs";
-const STANDARD_KINDS: readonly StandardKind[] = ["interests","song","video","gallery","orgs","booking"];
+type StandardKind = "interests" | "song" | "video" | "booking" | "gallery" | "orgs" | "resume" | "stats" | "skills" | "portfolio" | "services" | "experience";
+const STANDARD_KINDS: readonly StandardKind[] = ["interests","stats","song","video","gallery","portfolio","services","orgs","experience","skills","resume","booking"];
 
 /** The Standard design's extra blocks, in the design's own order or the page's saved order. */
 export function buildStandardModel(data: PageData, design: "starter" | "standard" = "standard") {

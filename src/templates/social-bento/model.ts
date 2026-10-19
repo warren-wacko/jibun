@@ -101,8 +101,8 @@ export function buildBentoModel(data: PageData) {
 
 /* ---------- Standard design ---------- */
 
-type StandardKind = "interests" | "song" | "video" | "booking" | "gallery" | "orgs";
-const STANDARD_KINDS: readonly StandardKind[] = ["interests","song","video","gallery","orgs","booking"];
+type StandardKind = "interests" | "song" | "video" | "booking" | "gallery" | "orgs" | "resume" | "stats" | "skills" | "portfolio" | "services" | "experience";
+const STANDARD_KINDS: readonly StandardKind[] = ["stats","interests","skills","song","video","gallery","portfolio","services","orgs","experience","resume","booking"];
 
 /**
  * The Standard design's extra blocks: the page's interests, song, photos and orgs, in the design's own order

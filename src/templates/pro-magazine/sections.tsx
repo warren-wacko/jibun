@@ -1,8 +1,9 @@
 import Image from "next/image";
-import type { CSSProperties } from "react";
+import { Fragment, type CSSProperties } from "react";
 import { ArrowUpRightIcon, LinkIcon } from "@/components/icons";
 import type { Section } from "@/lib/page-schema";
-import { displayUrl } from "../shared/model";
+import { SpotifyMark } from "../shared/SpotifyMark";
+import { displayUrl, orgInitials, songView } from "../shared/model";
 
 type Of<K extends Section["kind"]> = Extract<Section, { kind: K }>;
 
@@ -117,6 +118,64 @@ function Stats({ section }: { section: Of<"stats"> }) {
 }
 
 /** The drawing for one optional section, or null for a kind this template has no design for. */
+/** Interests: one big line of words, each separated by an accent slash. Short ones stay in one piece, long ones may wrap. */
+function Interests({ section }: { section: Of<"interests"> }) {
+  const items = section.items;
+  return (
+    <p className="pm-interests">
+      {items.map((x, i) => (
+        <Fragment key={`${x}-${i}`}>
+          <span className={x.length <= 24 ? "pm-nowrap" : undefined}>{x}</span>
+          {i < items.length - 1 && (
+            <>
+              <span className="pm-slash" aria-hidden="true">
+                /
+              </span>{" "}
+            </>
+          )}
+        </Fragment>
+      ))}
+    </p>
+  );
+}
+
+/** Affiliations: ruled rows, each with a square outlined badge of initials. The first badge is in the accent. */
+function Orgs({ section }: { section: Of<"orgs"> }) {
+  return (
+    <ul className="pm-orgs">
+      {section.items.map((o, i) => (
+        <li key={`${o.name}-${i}`}>
+          <span className={`pm-org-badge${i === 0 ? " is-first" : ""}`} aria-hidden="true">
+            {orgInitials(o.name)}
+          </span>
+          <span className="pm-org-text">
+            <span className="pm-org-name">{o.name}</span>
+            {o.role && <span className="pm-org-role">{o.role}</span>}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Soundtrack: a bordered card that opens the song on Spotify. */
+function Song({ section }: { section: Of<"song"> }) {
+  const v = songView(section, "Hear my song");
+  return (
+    <a href={section.spotifyUrl} className="pm-song" aria-label={v.aria} target="_blank" rel="noopener noreferrer">
+      <span className="pm-song-mark">
+        <SpotifyMark size={26} />
+      </span>
+      <span className="pm-song-text">
+        <span className="pm-song-title">{v.heading}</span>
+        {v.artist && <span className="pm-song-artist">{v.artist}</span>}
+        <span className="pm-song-cta">LISTEN ON SPOTIFY</span>
+      </span>
+      <ArrowUpRightIcon size={20} />
+    </a>
+  );
+}
+
 /** Video: a solid panel that opens the video. We only have its link, so it shows the host and a play button. */
 function Video({ section }: { section: Of<"video"> }) {
   const host = displayUrl(section.url);
@@ -184,6 +243,12 @@ export function SectionBody({ section }: { section: Section }) {
       return <Video section={section} />;
     case "booking":
       return <Booking section={section} />;
+    case "interests":
+      return <Interests section={section} />;
+    case "orgs":
+      return <Orgs section={section} />;
+    case "song":
+      return <Song section={section} />;
     default:
       return null;
   }

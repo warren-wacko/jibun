@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ArrowUpRightIcon } from "@/components/icons";
 import type { CSSProperties } from "react";
 import { displayUrl } from "../shared/model";
 import type { Section } from "@/lib/page-schema";
@@ -147,6 +148,132 @@ function Booking({ section }: { section: Of<"booking"> }) {
 }
 
 
+/** Résumé: an outlined pill with the label and a round download button. */
+function Resume({ section }: { section: Of<"resume"> }) {
+  return (
+    <div className="mn-block" data-block="resume">
+      <div className="mn-dump-head mn-head-gap">
+        <span className="mn-label">Résumé</span>
+        <span className="mn-serif-note">the long version</span>
+      </div>
+      <a href={section.fileUrl} className="mn-resume" download target="_blank" rel="noopener noreferrer">
+        <span className="mn-resume-label">{section.label ?? "Résumé / CV"}</span>
+        <span className="mn-resume-chip" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 3.5v12M7 10.5l5 5 5-5M5 20.5h14" />
+          </svg>
+        </span>
+      </a>
+    </div>
+  );
+}
+
+/** The heading of a list section: a small label on the left and a serif italic note on the right. */
+function Head({ label, note }: { label: string; note: string }) {
+  return (
+    <div className="mn-dump-head mn-head-gap">
+      <span className="mn-label">{label}</span>
+      <span className="mn-serif-note">{note}</span>
+    </div>
+  );
+}
+
+/** Stats: a two-column grid with a hairline above each, a big number and a small label. */
+function Stats({ section }: { section: Of<"stats"> }) {
+  return (
+    <div className="mn-block" data-block="stats">
+      <Head label="Stats" note="so far" />
+      <div className="mn-stats">
+        {section.items.map((s, i) => (
+          <div key={`${s.label}-${i}`} className="mn-stat">
+            <span className="mn-stat-value">{s.value}</span>
+            <span className="mn-stat-label">{s.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Portfolio: a numbered list of ruled rows, each with a small thumbnail on the right when there is one. */
+function Portfolio({ section }: { section: Of<"portfolio"> }) {
+  return (
+    <div className="mn-block" data-block="portfolio">
+      <Head label="Portfolio" note="things I made" />
+      <div className="mn-rows">
+        {section.items.map((p, i) => (
+          <a key={`${p.url}-${i}`} href={p.url} className="mn-row mn-work" target="_blank" rel="noopener noreferrer">
+            <span className="mn-row-num" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <span className="mn-work-text">
+              <span className="mn-row-title">{p.title}</span>
+              {p.desc && <span className="mn-work-desc">{p.desc}</span>}
+            </span>
+            {p.thumbUrl && (
+              <span className="mn-work-thumb">
+                <Image src={p.thumbUrl} alt="" fill sizes="56px" unoptimized />
+              </span>
+            )}
+            <ArrowUpRightIcon size={16} strokeWidth={1.8} className="mn-row-go" />
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Services: ruled rows, the name on the left and the price in serif italic on the right where there is one. */
+function Services({ section }: { section: Of<"services"> }) {
+  return (
+    <div className="mn-block" data-block="services">
+      <Head label="Services" note="what I offer" />
+      <ul className="mn-rows mn-services">
+        {section.items.map((s, i) => (
+          <li key={`${s.name}-${i}`} className="mn-row">
+            <span className="mn-service-name">{s.name}</span>
+            {s.price && <span className="mn-service-price">{s.price}</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** Experience: ruled rows with the years in mono, the role, and the organization after a serif "at". */
+function Experience({ section }: { section: Of<"experience"> }) {
+  return (
+    <div className="mn-block" data-block="experience">
+      <Head label="Experience" note="where I've been" />
+      <ol className="mn-rows mn-exp">
+        {section.items.map((x, i) => (
+          <li key={`${x.role}-${i}`} className="mn-row">
+            <span className="mn-exp-years">{x.years}</span>
+            <span className="mn-row-title">{x.role}</span>
+            <span className="mn-exp-org">
+              <span className="mn-exp-at">at</span> {x.org}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+/** Skills: outlined pills that wrap. */
+function Skills({ section }: { section: Of<"skills"> }) {
+  return (
+    <div className="mn-block mn-skills-wrap" data-block="skills">
+      <Head label="Skills" note="good at" />
+      <ul className="mn-skills">
+        {section.items.map((k, i) => (
+          <li key={`${k}-${i}`}>{k}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 /** The drawing for one optional section, or null for a kind this template has no design for. */
 export function SectionBlock({ section }: { section: Section }) {
   switch (section.kind) {
@@ -158,6 +285,18 @@ export function SectionBlock({ section }: { section: Section }) {
       return <PhotoDump section={section} />;
     case "orgs":
       return <Orgs section={section} />;
+    case "resume":
+      return <Resume section={section} />;
+    case "stats":
+      return <Stats section={section} />;
+    case "skills":
+      return <Skills section={section} />;
+    case "portfolio":
+      return <Portfolio section={section} />;
+    case "services":
+      return <Services section={section} />;
+    case "experience":
+      return <Experience section={section} />;
     case "video":
       return <Video section={section} />;
     case "booking":

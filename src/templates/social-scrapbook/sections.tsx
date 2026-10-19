@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ArrowUpRightIcon } from "@/components/icons";
 import type { CSSProperties } from "react";
 import { displayUrl } from "../shared/model";
 import type { Section } from "@/lib/page-schema";
@@ -159,6 +160,156 @@ function Booking({ section }: { section: Of<"booking"> }) {
 }
 
 
+/** Résumé: a kraft-paper card with a taped sheet of lined paper and a black DOWNLOAD button. */
+function Resume({ section }: { section: Of<"resume"> }) {
+  return (
+    <div className="pk-block pk-vb" data-block="resume">
+      <span className="pk-heading">
+        <span>résumé</span>
+      </span>
+      <a href={section.fileUrl} className="pk-resume" download target="_blank" rel="noopener noreferrer">
+        <span className="pk-resume-sheet" aria-hidden="true">
+          <span className="pk-resume-tape" />
+        </span>
+        <span className="pk-resume-body">
+          <span className="pk-resume-label">{section.label ?? "Résumé / CV"}</span>
+          <span className="pk-resume-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M12 3v12" />
+            <path d="m7 10 5 5 5-5" />
+            <path d="M5 21h14" />
+          </svg>
+            DOWNLOAD
+          </span>
+        </span>
+      </a>
+    </div>
+  );
+}
+
+/** The section heading: handwriting on a highlighter stroke. */
+function Heading({ children }: { children: string }) {
+  return (
+    <span className="pk-heading">
+      <span>{children}</span>
+    </span>
+  );
+}
+
+/** Stats: notched raffle stubs with an accent edge on top, each turned a little. */
+function Stats({ section }: { section: Of<"stats"> }) {
+  return (
+    <div className="pk-block pk-stats-wrap" data-block="stats">
+      <Heading>by the numbers</Heading>
+      <div className="pk-stats">
+        {section.items.map((s, i) => (
+          <div key={`${s.label}-${i}`} className="pk-stat" data-i={i % 4}>
+            <div className="pk-stub">
+              <span className="pk-stat-value">{s.value}</span>
+              <span className="pk-stat-label">{s.label}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Skills: label-maker and cutout tags in four paper styles, each turned a little. */
+function Skills({ section }: { section: Of<"skills"> }) {
+  return (
+    <div className="pk-block pk-skills-wrap" data-block="skills">
+      <Heading>skills</Heading>
+      <ul className="pk-skills">
+        {section.items.map((k, i) => (
+          <li key={`${k}-${i}`} data-i={i % 4} data-r={i % 5}>
+            {k}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** Portfolio: index cards with tape. A project with a thumbnail shows it as a small instant photo, one without shows a cut-out letter. */
+function Portfolio({ section }: { section: Of<"portfolio"> }) {
+  return (
+    <div className="pk-block pk-portfolio-wrap" data-block="portfolio">
+      <Heading>things i made</Heading>
+      {section.items.map((p, i) => (
+        <a key={`${p.url}-${i}`} href={p.url} className="pk-work" data-i={i % 4} target="_blank" rel="noopener noreferrer">
+          <span className="pk-work-tape" aria-hidden="true" />
+          {p.thumbUrl ? (
+            <span className="pk-work-photo">
+              <Image src={p.thumbUrl} alt="" width={66} height={66} unoptimized />
+            </span>
+          ) : (
+            <span className="pk-work-letter" aria-hidden="true">
+              {(p.title.match(/[A-Za-z0-9]/)?.[0] ?? "·").toUpperCase()}
+            </span>
+          )}
+          <span className="pk-work-text">
+            <span className="pk-work-title">{p.title}</span>
+            {p.desc && <span className="pk-work-desc">{p.desc}</span>}
+          </span>
+          <ArrowUpRightIcon size={18} strokeWidth={1.9} className="pk-work-go" />
+        </a>
+      ))}
+    </div>
+  );
+}
+
+/** Services: a receipt with a zigzag edge, a dotted leader and the price on the right, and a barcode at the bottom. */
+function Services({ section }: { section: Of<"services"> }) {
+  return (
+    <div className="pk-block pk-services-wrap" data-block="services">
+      <Heading>services</Heading>
+      <div className="pk-price-wrap">
+        <div className="pk-price">
+          <div className="pk-price-title">WHAT I CAN DO</div>
+          <div className="pk-price-sub">price list</div>
+          <div className="pk-price-rule pk-price-rule-top" />
+          <ul className="pk-lines">
+            {section.items.map((s, i) => (
+              <li key={`${s.name}-${i}`}>
+                <span className="pk-line-name">{s.name}</span>
+                {s.price && (
+                  <>
+                    <span className="pk-line-dots" aria-hidden="true" />
+                    <span className="pk-line-price">{s.price}</span>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+          <div className="pk-price-rule" />
+          <div className="pk-price-bar" aria-hidden="true" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Experience: entries on a strip of tape, each a paper note with the years on a label-maker strip. */
+function Experience({ section }: { section: Of<"experience"> }) {
+  return (
+    <div className="pk-block pk-exp-wrap" data-block="experience">
+      <Heading>experience</Heading>
+      <ol className="pk-exp">
+        <li className="pk-exp-tape" aria-hidden="true" />
+        {section.items.map((x, i) => (
+          <li key={`${x.role}-${i}`} className="pk-exp-note" data-i={i % 4}>
+            <span className="pk-exp-dot" aria-hidden="true" />
+            <span className="pk-exp-years">{x.years}</span>
+            <span className="pk-exp-role">{x.role}</span>
+            <span className="pk-exp-org">{x.org}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 /** The drawing for one optional section, or null for a kind this template has no design for. */
 export function SectionBlock({ section }: { section: Section }) {
   switch (section.kind) {
@@ -170,6 +321,18 @@ export function SectionBlock({ section }: { section: Section }) {
       return <PhotoDump section={section} />;
     case "orgs":
       return <Orgs section={section} />;
+    case "resume":
+      return <Resume section={section} />;
+    case "stats":
+      return <Stats section={section} />;
+    case "skills":
+      return <Skills section={section} />;
+    case "portfolio":
+      return <Portfolio section={section} />;
+    case "services":
+      return <Services section={section} />;
+    case "experience":
+      return <Experience section={section} />;
     case "video":
       return <Video section={section} />;
     case "booking":

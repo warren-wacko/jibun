@@ -1124,3 +1124,232 @@
   color: var(--on-accent);
   background: var(--accent);
 }
+
+/* Résumé: an outlined pill and a round download button. */
+.mn-resume {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+  min-height: 64px;
+  padding: 8px 8px 8px 24px;
+  border-radius: 32px;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.mn-resume-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  line-height: 1.25;
+}
+
+.mn-resume-chip {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: var(--bg);
+  background: var(--text);
+}
+
+/* Stats, portfolio, services, experience and skills. */
+.mn-rows {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-shadow: inset 0 1px 0 var(--border);
+}
+
+.mn-row {
+  display: flex;
+  box-shadow: inset 0 -1px 0 var(--border);
+}
+
+.mn-row-title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.mn-work {
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 8px;
+}
+
+.mn-row-num {
+  flex-shrink: 0;
+  width: 24px;
+  font-family: var(--serif);
+  font-size: 20px;
+  font-style: italic;
+  line-height: 1.1;
+  color: var(--text-muted);
+}
+
+.mn-work-text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.mn-work-desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.mn-work-thumb {
+  position: relative;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.mn-work-thumb img {
+  object-fit: cover;
+}
+
+.mn-row-go {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--faint);
+}
+
+.mn-services .mn-row {
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  box-sizing: border-box;
+  min-height: 52px;
+  padding: 13px 8px;
+}
+
+.mn-service-name {
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.mn-service-price {
+  flex-shrink: 0;
+  max-width: 46%;
+  font-family: var(--serif);
+  font-size: 19px;
+  font-style: italic;
+  line-height: 1.15;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.mn-exp .mn-row {
+  flex-direction: column;
+  gap: 3px;
+  padding: 16px 8px;
+}
+
+.mn-exp-years {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.mn-exp-org {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.mn-exp-at {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-style: italic;
+}
+
+.mn-skills-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mn-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0 4px;
+  list-style: none;
+}
+
+.mn-skills li {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 40px;
+  padding: 9px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  box-shadow: inset 0 0 0 1px var(--border);
+  overflow-wrap: anywhere;
+}
+
+.mn-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 16px;
+}
+
+.mn-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 18px 8px 20px;
+  box-shadow: inset 0 1px 0 var(--border);
+}
+
+.mn-stat-value {
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -1.3px;
+  line-height: 1.02;
+  overflow-wrap: anywhere;
+}
+
+.mn-stat-label {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
