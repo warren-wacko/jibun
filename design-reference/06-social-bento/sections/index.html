@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Warren Jacob Abdon — Digital Card</title>
+<meta name="description" content="Software Engineer · Full-Stack Developer. Save my contact in one tap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Caveat:wght@600;700&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible{outline:2px solid #2F54EB;outline-offset:3px}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes tileIn{0%{opacity:0;transform:translateY(14px) scale(.97)}100%{opacity:1;transform:none}}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes sheetUp{0%{transform:translateY(100%)}100%{transform:none}}
+@keyframes toastIn{0%{opacity:0;transform:translate(-50%,12px)}100%{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion: reduce){.anim{animation:none !important}}
+</style>
+<style>
+html,body{margin:0;padding:0}
+body{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+#app>div{width:100% !important;max-width:430px;margin:0 auto;min-height:100vh !important;min-height:100dvh !important}
+</style>
+</head>
+<body>
+<!-- 06-social-bento — new sections — from BentoSections.dc.html -->
+<div id="app"></div>
+<template id="dc-template">
+<div style="position: relative; width: 390px; min-height: 8645px; box-sizing: border-box; background: {{bg}}; font-family: 'Space Grotesk', system-ui, sans-serif; color: {{ink}}; display: flex; flex-direction: column; overflow: hidden; padding: 0 12px; transition: background 400ms ease, color 400ms ease">
+
+  <div style="height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 0 0 4px">
+    <span style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1.4px; color: {{dim}}">[YOUR BRAND]</span>
+    <button type="button" onClick="{{toggleTheme}}" aria-label="{{themeAria}}" style="all: unset; cursor: pointer; width: 48px; height: 48px; border-radius: 18px; background: {{tile}}; color: {{ink}}; display: flex; align-items: center; justify-content: center">
+      <sc-if value="{{isDark}}" hint-placeholder-val="{{ false }}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+      </sc-if>
+      <sc-if value="{{isLight}}" hint-placeholder-val="{{ true }}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+      </sc-if>
+    </button>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 10px; padding-bottom: 28px">
+  <div style="padding: 4px 4px 0; display: flex; flex-direction: column; gap: 2px">
+    <span style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1.4px; color: {{dim}}">New sections — Social Bento</span>
+    <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; font-size: 24px; color: {{soft}}">same grid, same tiles</span>
+  </div>
+
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">VIDEO · FULL · sits after the song record</div>
+  <a href="{{videoMain.url}}" aria-label="Watch my video on {{videoMain.host}}" style="position: relative; height: 178px; border-radius: 26px; background: #111111; color: #FFFFFF; box-shadow: {{tkBorder}}; padding: 16px 16px 16px 18px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden">
+    <svg width="170" height="170" viewBox="0 0 24 24" style="position: absolute; right: -34px; bottom: -40px" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="rgba(255,255,255,0.07)"></path></svg>
+    <div style="position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+      <span style="font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.68); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{videoMain.host}}</span>
+      <span style="color: rgba(255,255,255,0.68); flex-shrink: 0; display: flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg></span>
+    </div>
+    <div style="position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+      <div style="display: flex; flex-direction: column; min-width: 0">
+        <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.68)">press play</span>
+        <span style="font-size: 26px; font-weight: 700; letter-spacing: -0.8px; line-height: 1">watch my video</span>
+      </div>
+      <span style="width: 64px; height: 64px; border-radius: 32px; background: {{accent}}; color: {{accentInk}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="currentColor"></path></svg></span>
+    </div>
+  </a>
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">VIDEO · LONG / UNKNOWN HOST</div>
+  <a href="{{videoLong.url}}" aria-label="Watch my video on {{videoLong.host}}" style="position: relative; height: 178px; border-radius: 26px; background: #111111; color: #FFFFFF; box-shadow: {{tkBorder}}; padding: 16px 16px 16px 18px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden">
+    <svg width="170" height="170" viewBox="0 0 24 24" style="position: absolute; right: -34px; bottom: -40px" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="rgba(255,255,255,0.07)"></path></svg>
+    <div style="position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+      <span style="font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.68); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{videoLong.host}}</span>
+      <span style="color: rgba(255,255,255,0.68); flex-shrink: 0; display: flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg></span>
+    </div>
+    <div style="position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+      <div style="display: flex; flex-direction: column; min-width: 0">
+        <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.68)">press play</span>
+        <span style="font-size: 26px; font-weight: 700; letter-spacing: -0.8px; line-height: 1">watch my video</span>
+      </div>
+      <span style="width: 64px; height: 64px; border-radius: 32px; background: {{accent}}; color: {{accentInk}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="currentColor"></path></svg></span>
+    </div>
+  </a>
+
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">BOOKING · FULL · sits just above “Want my contact?”</div>
+  <a href="{{bookingMain.url}}" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: 84px 84px; gap: 10px">
+    <div style="grid-column: 1 / 4; grid-row: 1 / 3; border-radius: 26px; background: {{accent}}; color: {{accentInk}}; padding: 16px 18px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; min-width: 0">
+      <span style="display: flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"></rect><path d="M8 2.5v4M16 2.5v4M3 10h18"></path><path d="M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01"></path></svg>BOOKING</span>
+      <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+        <span style="font-size: 30px; font-weight: 700; letter-spacing: -1px; line-height: 1">book a time</span>
+        <span style="font-family: 'DM Mono', monospace; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{bookingMain.host}}</span>
+      </div>
+    </div>
+    <div style="grid-column: 4; grid-row: 1; border-radius: 26px; background: {{heroBg}}; color: {{heroInk}}; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"></rect><path d="M8 2.5v4M16 2.5v4M3 10h18"></path><path d="M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01"></path></svg></div>
+    <div style="grid-column: 4; grid-row: 2; border-radius: 26px; background: {{tile}}; color: {{ink}}; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg></div>
+  </a>
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">BOOKING · LONG / UNKNOWN HOST</div>
+  <a href="{{bookingLong.url}}" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: 84px 84px; gap: 10px">
+    <div style="grid-column: 1 / 4; grid-row: 1 / 3; border-radius: 26px; background: {{accent}}; color: {{accentInk}}; padding: 16px 18px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; min-width: 0">
+      <span style="display: flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"></rect><path d="M8 2.5v4M16 2.5v4M3 10h18"></path><path d="M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01"></path></svg>BOOKING</span>
+      <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+        <span style="font-size: 30px; font-weight: 700; letter-spacing: -1px; line-height: 1">book a time</span>
+        <span style="font-family: 'DM Mono', monospace; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{bookingLong.host}}</span>
+      </div>
+    </div>
+    <div style="grid-column: 4; grid-row: 1; border-radius: 26px; background: {{heroBg}}; color: {{heroInk}}; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"></rect><path d="M8 2.5v4M16 2.5v4M3 10h18"></path><path d="M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01"></path></svg></div>
+    <div style="grid-column: 4; grid-row: 2; border-radius: 26px; background: {{tile}}; color: {{ink}}; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg></div>
+  </a>
+
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">RESUME · FULL · sits after orgs &amp; clubs, above booking</div>
+  <div style="border-radius: 26px; background: {{tile}}; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+      <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.1">my résumé</h2>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: {{dim}}; white-space: nowrap">grab a copy</span>
+    </div>
+    <a href="{{resumeFull.fileUrl}}" download style="box-sizing: border-box; min-height: 52px; padding: 10px 18px; border-radius: 18px; background: {{heroBg}}; color: {{heroInk}}; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 700; line-height: 1.25; text-align: center">
+      <span style="display: flex; flex-shrink: 0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg></span>
+      <span style="min-width: 0; overflow-wrap: anywhere">{{resumeFull.label}}</span>
+    </a>
+  </div>
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">RESUME · SPARSE · label missing, default “Résumé / CV”</div>
+  <div style="border-radius: 26px; background: {{tile}}; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+      <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.1">my résumé</h2>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: {{dim}}; white-space: nowrap">grab a copy</span>
+    </div>
+    <a href="{{resumeSparse.fileUrl}}" download style="box-sizing: border-box; min-height: 52px; padding: 10px 18px; border-radius: 18px; background: {{heroBg}}; color: {{heroInk}}; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 700; line-height: 1.25; text-align: center">
+      <span style="display: flex; flex-shrink: 0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg></span>
+      <span style="min-width: 0; overflow-wrap: anywhere">{{resumeSparse.label}}</span>
+    </a>
+  </div>
+
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">PORTFOLIO · FULL (12) · sits after the photo dump</div>
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+    <div style="grid-column: span 2; border-radius: 26px; background: {{heroBg}}; color: {{heroInk}}; padding: 16px; box-sizing: border-box; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; min-width: 0">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <span style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; opacity: 0.75">PORTFOLIO</span>
+        <span style="width: 10px; height: 10px; border-radius: 5px; background: {{accent}}"></span>
+      </div>
+      <div style="display: flex; flex-direction: column">
+        <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.1">things I made</h2>
+        <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; opacity: 0.75">tap to open</span>
+      </div>
+    </div>
+    <sc-for list="{{portfolioFull}}" as="p" hint-placeholder-count="3">
+      <a href="{{p.url}}" style="grid-column: {{p.span}}; border-radius: 26px; background: {{tile}}; color: {{ink}}; overflow: hidden; display: flex; flex-direction: column; min-width: 0">
+        <sc-if value="{{p.hasThumb}}" hint-placeholder-val="{{ false }}">
+          <div style="position: relative; aspect-ratio: {{p.ratio}}; background: {{chipBg}}">
+            <img src="{{p.thumbUrl}}" alt="" style="position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%">
+            <span style="position: absolute; right: 10px; top: 10px; width: 32px; height: 32px; border-radius: 16px; background: #FFFFFF; color: #111111; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg></span>
+          </div>
+        </sc-if>
+        <div style="padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+          <sc-if value="{{p.noThumb}}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px">
+              <span style="width: 40px; height: 40px; border-radius: 14px; background: {{accentSoft}}; color: {{accentText}}; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></span>
+              <span style="color: {{dim}}; display: flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg></span>
+            </div>
+          </sc-if>
+          <span style="font-size: 15px; font-weight: 700; line-height: 1.2; letter-spacing: -0.2px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; overflow-wrap: anywhere">{{p.title}}</span>
+          <sc-if value="{{p.hasDesc}}" hint-placeholder-val="{{ true }}">
+            <span style="font-size: 13px; line-height: 1.35; color: {{dim}}; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; overflow-wrap: anywhere">{{p.desc}}</span>
+          </sc-if>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">PORTFOLIO · SPARSE · one item, no thumb, no desc</div>
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+    <div style="grid-column: span 2; border-radius: 26px; background: {{heroBg}}; color: {{heroInk}}; padding: 16px; box-sizing: border-box; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; min-width: 0">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <span style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; opacity: 0.75">PORTFOLIO</span>
+        <span style="width: 10px; height: 10px; border-radius: 5px; background: {{accent}}"></span>
+      </div>
+      <div style="display: flex; flex-direction: column">
+        <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.1">things I made</h2>
+        <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; opacity: 0.75">tap to open</span>
+      </div>
+    </div>
+    <sc-for list="{{portfolioSparse}}" as="p" hint-placeholder-count="3">
+      <a href="{{p.url}}" style="grid-column: {{p.span}}; border-radius: 26px; background: {{tile}}; color: {{ink}}; overflow: hidden; display: flex; flex-direction: column; min-width: 0">
+        <sc-if value="{{p.hasThumb}}" hint-placeholder-val="{{ false }}">
+          <div style="position: relative; aspect-ratio: {{p.ratio}}; background: {{chipBg}}">
+            <img src="{{p.thumbUrl}}" alt="" style="position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%">
+            <span style="position: absolute; right: 10px; top: 10px; width: 32px; height: 32px; border-radius: 16px; background: #FFFFFF; color: #111111; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg></span>
+          </div>
+        </sc-if>
+        <div style="padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+          <sc-if value="{{p.noThumb}}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px">
+              <span style="width: 40px; height: 40px; border-radius: 14px; background: {{accentSoft}}; color: {{accentText}}; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></span>
+              <span style="color: {{dim}}; display: flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg></span>
+            </div>
+          </sc-if>
+          <span style="font-size: 15px; font-weight: 700; line-height: 1.2; letter-spacing: -0.2px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; overflow-wrap: anywhere">{{p.title}}</span>
+          <sc-if value="{{p.hasDesc}}" hint-placeholder-val="{{ true }}">
+            <span style="font-size: 13px; line-height: 1.35; color: {{dim}}; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; overflow-wrap: anywhere">{{p.desc}}</span>
+          </sc-if>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">SERVICES · FULL (20) · sits after portfolio</div>
+  <div style="border-radius: 26px; background: {{tile}}; padding: 18px; display: flex; flex-direction: column; gap: 8px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+      <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.1">services</h2>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: {{dim}}; white-space: nowrap">just ask</span>
+    </div>
+    <div style="display: flex; flex-direction: column">
+      <sc-for list="{{servicesFull}}" as="sv" hint-placeholder-count="3">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: {{sv.border}}">
+          <span style="flex: 1 1 0; min-width: 0; font-size: 15px; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere">{{sv.name}}</span>
+          <sc-if value="{{sv.hasPrice}}" hint-placeholder-val="{{ true }}">
+            <span style="flex: 0 0 auto; max-width: 46%; box-sizing: border-box; padding: 6px 10px; border-radius: 12px; background: {{accentSoft}}; color: {{accentText}}; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; line-height: 1.3; text-align: right; overflow-wrap: break-word">{{sv.price}}</span>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">SERVICES · SPARSE · one item, no price</div>
+  <div style="border-radius: 26px; background: {{tile}}; padding: 18px; display: flex; flex-direction: column; gap: 8px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+      <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.1">services</h2>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: {{dim}}; white-space: nowrap">just ask</span>
+    </div>
+    <div style="display: flex; flex-direction: column">
+      <sc-for list="{{servicesSparse}}" as="sv" hint-placeholder-count="3">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: {{sv.border}}">
+          <span style="flex: 1 1 0; min-width: 0; font-size: 15px; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere">{{sv.name}}</span>
+          <sc-if value="{{sv.hasPrice}}" hint-placeholder-val="{{ true }}">
+            <span style="flex: 0 0 auto; max-width: 46%; box-sizing: border-box; padding: 6px 10px; border-radius: 12px; background: {{accentSoft}}; color: {{accentText}}; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; line-height: 1.3; text-align: right; overflow-wrap: break-word">{{sv.price}}</span>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">EXPERIENCE · FULL (15) · sits after orgs &amp; clubs</div>
+  <div style="border-radius: 26px; background: {{tile}}; padding: 18px; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+      <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.1">experience</h2>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: {{dim}}; white-space: nowrap">so far</span>
+    </div>
+    <div style="display: flex; flex-direction: column">
+      <sc-for list="{{experienceFull}}" as="ex" hint-placeholder-count="3">
+        <div style="display: flex; gap: 14px">
+          <div style="width: 14px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding-top: 3px">
+            <span style="width: 14px; height: 14px; border-radius: 7px; box-sizing: border-box; background: {{ex.dot}}; box-shadow: inset 0 0 0 2px {{ink}}; flex-shrink: 0"></span>
+            <sc-if value="{{ex.notLast}}" hint-placeholder-val="{{ true }}">
+              <span style="width: 2px; flex-grow: 1; margin-top: 4px; border-radius: 1px; background: {{line}}"></span>
+            </sc-if>
+          </div>
+          <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding-bottom: {{ex.pb}}">
+            <span style="padding: 3px 8px; border-radius: 8px; background: {{chipBg}}; color: {{soft}}; font-family: 'DM Mono', monospace; font-size: 11px; line-height: 1.3; max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere">{{ex.years}}</span>
+            <span style="font-size: 16px; font-weight: 700; line-height: 1.25; letter-spacing: -0.2px; overflow-wrap: anywhere">{{ex.role}}</span>
+            <span style="font-size: 13px; line-height: 1.35; color: {{dim}}; overflow-wrap: anywhere">{{ex.org}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">EXPERIENCE · SPARSE · one item</div>
+  <div style="border-radius: 26px; background: {{tile}}; padding: 18px; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+      <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.1">experience</h2>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: {{dim}}; white-space: nowrap">so far</span>
+    </div>
+    <div style="display: flex; flex-direction: column">
+      <sc-for list="{{experienceSparse}}" as="ex" hint-placeholder-count="3">
+        <div style="display: flex; gap: 14px">
+          <div style="width: 14px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding-top: 3px">
+            <span style="width: 14px; height: 14px; border-radius: 7px; box-sizing: border-box; background: {{ex.dot}}; box-shadow: inset 0 0 0 2px {{ink}}; flex-shrink: 0"></span>
+            <sc-if value="{{ex.notLast}}" hint-placeholder-val="{{ true }}">
+              <span style="width: 2px; flex-grow: 1; margin-top: 4px; border-radius: 1px; background: {{line}}"></span>
+            </sc-if>
+          </div>
+          <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding-bottom: {{ex.pb}}">
+            <span style="padding: 3px 8px; border-radius: 8px; background: {{chipBg}}; color: {{soft}}; font-family: 'DM Mono', monospace; font-size: 11px; line-height: 1.3; max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere">{{ex.years}}</span>
+            <span style="font-size: 16px; font-weight: 700; line-height: 1.25; letter-spacing: -0.2px; overflow-wrap: anywhere">{{ex.role}}</span>
+            <span style="font-size: 13px; line-height: 1.35; color: {{dim}}; overflow-wrap: anywhere">{{ex.org}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">SKILLS · FULL (30) · sits right after the interests band</div>
+  <div style="border-radius: 26px; background: {{tile}}; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+      <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.1">skills</h2>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: {{dim}}; white-space: nowrap">always learning</span>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px">
+      <sc-for list="{{skillsFull}}" as="sk" hint-placeholder-count="6">
+        <span style="max-width: 100%; box-sizing: border-box; padding: 8px 14px; border-radius: 17px; background: {{sk.bg}}; color: {{sk.ink}}; display: flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 600; line-height: 1.25; overflow-wrap: anywhere"><svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5c.6 4.9 2.6 7 9 10.5-6.4 3.5-8.4 5.6-9 10.5-.6-4.9-2.6-7-9-10.5 6.4-3.5 8.4-5.6 9-10.5z" fill="currentColor"></path></svg><span style="min-width: 0">{{sk.label}}</span></span>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">SKILLS · SPARSE · one tag</div>
+  <div style="border-radius: 26px; background: {{tile}}; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+      <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.1">skills</h2>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: {{dim}}; white-space: nowrap">always learning</span>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px">
+      <sc-for list="{{skillsSparse}}" as="sk" hint-placeholder-count="6">
+        <span style="max-width: 100%; box-sizing: border-box; padding: 8px 14px; border-radius: 17px; background: {{sk.bg}}; color: {{sk.ink}}; display: flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 600; line-height: 1.25; overflow-wrap: anywhere"><svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5c.6 4.9 2.6 7 9 10.5-6.4 3.5-8.4 5.6-9 10.5-.6-4.9-2.6-7-9-10.5 6.4-3.5 8.4-5.6 9-10.5z" fill="currentColor"></path></svg><span style="min-width: 0">{{sk.label}}</span></span>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">STATS · FULL (6) · sits right after the hero grid, before interests</div>
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+    <div style="grid-column: span 2; border-radius: 26px; background: {{heroBg}}; color: {{heroInk}}; padding: 16px; box-sizing: border-box; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; min-width: 0">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <span style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; opacity: 0.75">STATS</span>
+        <span style="width: 10px; height: 10px; border-radius: 5px; background: {{accent}}"></span>
+      </div>
+      <div style="display: flex; flex-direction: column">
+        <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.1">quick stats</h2>
+        <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; opacity: 0.75">the short version</span>
+      </div>
+    </div>
+    <sc-for list="{{statsFull}}" as="st" hint-placeholder-count="3">
+      <div style="grid-column: {{st.span}}; border-radius: 26px; background: {{st.bg}}; color: {{st.ink}}; padding: 16px; box-sizing: border-box; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; min-width: 0">
+        <span style="font-size: {{st.size}}; font-weight: 700; line-height: 1.02; letter-spacing: -1px; overflow-wrap: anywhere">{{st.value}}</span>
+        <span style="font-family: 'DM Mono', monospace; font-size: 11px; line-height: 1.35; overflow-wrap: anywhere">{{st.label}}</span>
+      </div>
+    </sc-for>
+  </div>
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">STATS · SPARSE · one item</div>
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+    <div style="grid-column: span 2; border-radius: 26px; background: {{heroBg}}; color: {{heroInk}}; padding: 16px; box-sizing: border-box; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; min-width: 0">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <span style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; opacity: 0.75">STATS</span>
+        <span style="width: 10px; height: 10px; border-radius: 5px; background: {{accent}}"></span>
+      </div>
+      <div style="display: flex; flex-direction: column">
+        <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.1">quick stats</h2>
+        <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; opacity: 0.75">the short version</span>
+      </div>
+    </div>
+    <sc-for list="{{statsSparse}}" as="st" hint-placeholder-count="3">
+      <div style="grid-column: {{st.span}}; border-radius: 26px; background: {{st.bg}}; color: {{st.ink}}; padding: 16px; box-sizing: border-box; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; min-width: 0">
+        <span style="font-size: {{st.size}}; font-weight: 700; line-height: 1.02; letter-spacing: -1px; overflow-wrap: anywhere">{{st.value}}</span>
+        <span style="font-family: 'DM Mono', monospace; font-size: 11px; line-height: 1.35; overflow-wrap: anywhere">{{st.label}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="margin-top: 30px; padding: 0 4px; display: flex; flex-direction: column; gap: 2px">
+    <span style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 1.4px; color: {{dim}}">Inside the Starter layout</span>
+    <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; font-size: 24px; color: {{soft}}">add-ons drop in under the grid</span>
+  </div>
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">STARTER · last row of the bento grid (context)</div>
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; opacity: 0.45">
+    <a href="https://open.spotify.com/user/yourname" aria-label="Spotify" style="aspect-ratio: 1; border-radius: 26px; background: #1DB954; color: #0F1210; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" role="img" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"></path></svg></a>
+    <a href="https://x.com/yourname" aria-label="X" style="aspect-ratio: 1; border-radius: 26px; background: {{xBg}}; color: {{xInk}}; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" role="img" aria-hidden="true"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"></path></svg></a>
+    <a href="https://pinterest.com/yourname" aria-label="Pinterest" style="aspect-ratio: 1; border-radius: 26px; background: #E60023; color: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="-94.72 -30.72 573.44 573.44" fill="currentColor" role="img" aria-hidden="true"><path d="M204 6.5c-102.6 0-204 68.4-204 179.1 0 70.4 39.6 110.4 63.6 110.4 9.9 0 15.6-27.6 15.6-35.4 0-9.3-23.7-29.1-23.7-67.8 0-80.4 61.2-137.4 140.4-137.4 68.1 0 118.5 38.7 118.5 109.8 0 53.1-21.3 152.7-90.3 152.7-24.9 0-46.2-18-46.2-43.8 0-37.8 26.4-74.4 26.4-113.4 0-66.2-93.9-54.2-93.9 25.8 0 16.8 2.1 35.4 9.6 50.7-13.8 59.4-42 147.9-42 209.1 0 18.9 2.7 37.5 4.5 56.4 3.4 3.8 1.7 3.4 6.9 1.5 50.4-69 48.6-82.5 71.4-172.8 12.3 23.4 44.1 36 69.3 36 106.2 0 153.9-103.5 153.9-196.8 0-99.3-85.8-164.1-180-164.1z"></path></svg></a>
+    <a href="https://youtube.com/@yourname" aria-label="YouTube" style="aspect-ratio: 1; border-radius: 26px; background: {{tile}}; color: #FF0000; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="-1.44 -1.44 26.88 26.88" fill="currentColor" role="img" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg></a>
+  </div>
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">STARTER · RESUME · then VIDEO · then BOOKING, same 10 px gap</div>
+  <div style="border-radius: 26px; background: {{tile}}; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+      <h2 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.1">my résumé</h2>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: {{dim}}; white-space: nowrap">grab a copy</span>
+    </div>
+    <a href="{{resumeSparse.fileUrl}}" download style="box-sizing: border-box; min-height: 52px; padding: 10px 18px; border-radius: 18px; background: {{heroBg}}; color: {{heroInk}}; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 700; line-height: 1.25; text-align: center">
+      <span style="display: flex; flex-shrink: 0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg></span>
+      <span style="min-width: 0; overflow-wrap: anywhere">{{resumeSparse.label}}</span>
+    </a>
+  </div>
+  <a href="{{videoMain.url}}" aria-label="Watch my video on {{videoMain.host}}" style="position: relative; height: 178px; border-radius: 26px; background: #111111; color: #FFFFFF; box-shadow: {{tkBorder}}; padding: 16px 16px 16px 18px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden">
+    <svg width="170" height="170" viewBox="0 0 24 24" style="position: absolute; right: -34px; bottom: -40px" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="rgba(255,255,255,0.07)"></path></svg>
+    <div style="position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+      <span style="font-family: 'DM Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.68); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{videoMain.host}}</span>
+      <span style="color: rgba(255,255,255,0.68); flex-shrink: 0; display: flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg></span>
+    </div>
+    <div style="position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+      <div style="display: flex; flex-direction: column; min-width: 0">
+        <span style="font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.68)">press play</span>
+        <span style="font-size: 26px; font-weight: 700; letter-spacing: -0.8px; line-height: 1">watch my video</span>
+      </div>
+      <span style="width: 64px; height: 64px; border-radius: 32px; background: {{accent}}; color: {{accentInk}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="currentColor"></path></svg></span>
+    </div>
+  </a>
+  <a href="{{bookingMain.url}}" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: 84px 84px; gap: 10px">
+    <div style="grid-column: 1 / 4; grid-row: 1 / 3; border-radius: 26px; background: {{accent}}; color: {{accentInk}}; padding: 16px 18px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; min-width: 0">
+      <span style="display: flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"></rect><path d="M8 2.5v4M16 2.5v4M3 10h18"></path><path d="M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01"></path></svg>BOOKING</span>
+      <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+        <span style="font-size: 30px; font-weight: 700; letter-spacing: -1px; line-height: 1">book a time</span>
+        <span style="font-family: 'DM Mono', monospace; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{bookingMain.host}}</span>
+      </div>
+    </div>
+    <div style="grid-column: 4; grid-row: 1; border-radius: 26px; background: {{heroBg}}; color: {{heroInk}}; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="3"></rect><path d="M8 2.5v4M16 2.5v4M3 10h18"></path><path d="M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01"></path></svg></div>
+    <div style="grid-column: 4; grid-row: 2; border-radius: 26px; background: {{tile}}; color: {{ink}}; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg></div>
+  </a>
+  <div style="padding: 18px 4px 2px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: {{dim}}">STARTER · existing contact tile follows (context)</div>
+  <div style="opacity: 0.45; display: flex; flex-direction: column">
+  <div style="border-radius: 26px; background: {{tile}}; padding: 18px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 20px; font-weight: 700; letter-spacing: -0.4px">Want my contact?</span>
+      <span style="font-size: 14px; color: {{dim}}; line-height: 1.4">DM me on IG or Messenger, that's the fastest.</span>
+    </div>
+    <div style="display: flex; gap: 10px">
+      <button type="button" onClick="{{save}}" style="all: unset; cursor: pointer; flex-grow: 1; box-sizing: border-box; height: 52px; border-radius: 18px; background: {{saveBg}}; color: {{saveInk}}; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; font-weight: 700">
+        <sc-if value="{{saved}}" hint-placeholder-val="{{ false }}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+        </sc-if>
+        <sc-if value="{{notSaved}}" hint-placeholder-val="{{ true }}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6M22 11h-6"></path></svg>
+        </sc-if>
+        {{saveLabel}}
+      </button>
+      <button type="button" onClick="{{openQr}}" aria-label="Show QR code" style="all: unset; cursor: pointer; width: 52px; height: 52px; border-radius: 18px; background: {{accent}}; color: {{accentInk}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 17h4v4h-4"></path></svg>
+      </button>
+    </div>
+    <sc-if value="{{showPhone}}" hint-placeholder-val="{{ false }}">
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <a href="tel:+630000000000" style="height: 46px; border-radius: 16px; background: {{chipBg}}; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700">Call</a>
+        <a href="sms:+630000000000" style="height: 46px; border-radius: 16px; background: {{chipBg}}; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700">Text</a>
+      </div>
+    </sc-if>
+  </div>
+
+  </div>
+  </div>
+</div>
+</template>
+<!-- EDIT ME: the contact that "Save contact" adds to the visitor's phone -->
+<script type="application/json" id="dc-contact">{
+  "fullName": "Warren Jacob Abdon",
+  "firstName": "Warren Jacob",
+  "lastName": "Abdon",
+  "title": "BS Computer Science student",
+  "org": "[School name]",
+  "phone": "",
+  "email": "hello@warrenabdon.dev",
+  "website": "",
+  "city": "",
+  "country": "",
+  "note": "",
+  "photo": "assets/photo.jpg"
+}</script>
+<script type="application/json" id="dc-props">{"package": "Standard", "theme": "Light", "accent": "Butter", "showPhone": false}</script>
+<script type="text/plain" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { themeOverride: null, saved: false };
+  }
+  resolveTheme() {
+    if (this.state.themeOverride) { return this.state.themeOverride; }
+    var pref = this.props.theme ?? 'Light';
+    if (pref === 'Dark') { return 'dark'; }
+    if (pref === 'Match phone') {
+      try { if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { return 'dark'; } } catch (err) {}
+    }
+    return 'light';
+  }
+  rgb(hex) {
+    var n = String(hex || '#000000').replace('#', '');
+    return [parseInt(n.slice(0, 2), 16), parseInt(n.slice(2, 4), 16), parseInt(n.slice(4, 6), 16)];
+  }
+  mix(hex, toward, amt) {
+    var c = this.rgb(hex);
+    var m = function (v) { return Math.round(v + (toward - v) * amt); };
+    return 'rgb(' + m(c[0]) + ',' + m(c[1]) + ',' + m(c[2]) + ')';
+  }
+  rgba(hex, a) {
+    var c = this.rgb(hex);
+    return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+  }
+  host(url) {
+    var h = String(url || '').replace(/^[a-z]+:\/\//i, '').split(/[\/?#]/)[0].replace(/^www\./i, '');
+    return h || String(url || '');
+  }
+  renderVals() {
+    var self = this;
+    var s = this.state;
+    var dark = this.resolveTheme() === 'dark';
+    var accents = { Butter: ['#F6D55C', '#111111'], Cherry: ['#E5382B', '#FFFFFF'], Cobalt: ['#2F54EB', '#FFFFFF'], Matcha: ['#A3C585', '#111111'], Bubblegum: ['#F7A8C4', '#111111'], Tangerine: ['#FF8A3D', '#111111'] };
+    var name = this.props.accent ?? 'Butter';
+    if (!accents[name]) { name = 'Butter'; }
+    var A = accents[name][0], AInk = accents[name][1];
+    var t = dark
+      ? { bg: '#0E0E0E', tile: '#1C1C1C', ink: '#F2F0EA', soft: '#D6D3CC', dim: '#9C9890', line: '#2C2C2C', chipBg: '#262626' }
+      : { bg: '#ECEAE4', tile: '#FFFFFF', ink: '#111111', soft: '#3A3835', dim: '#77736C', line: '#E4E1DA', chipBg: '#F1EFEA' };
+    var accentText = dark ? this.mix(A, 255, 0.35) : this.mix(A, 0, 0.62);
+    var softBg = this.rgba(A, dark ? 0.2 : 0.38);
+    var photo = 'assets/photo.jpg';
+
+    // ---- sample data (shapes match the page data) ----
+    var video = function (url) { return { url: url, host: self.host(url) }; };
+    var resume = function (r) { return { fileUrl: r.fileUrl, label: r.label || 'Résumé / CV' }; };
+
+    var portfolio = function (items) {
+      var odd = (items.length + 1) % 2 === 1;
+      return items.map(function (p, i) {
+        var full = odd && i === items.length - 1;
+        return {
+          title: p.title, url: p.url, desc: p.desc || '', thumbUrl: p.thumbUrl || '',
+          hasDesc: !!p.desc, hasThumb: !!p.thumbUrl, noThumb: !p.thumbUrl,
+          span: full ? '1 / -1' : 'span 2', ratio: full ? '16 / 9' : '4 / 3'
+        };
+      });
+    };
+    var services = function (items) {
+      return items.map(function (sv, i) {
+        return { name: sv.name, price: sv.price || '', hasPrice: !!sv.price, border: i === 0 ? 'none' : '1px solid ' + t.line };
+      });
+    };
+    var experience = function (items) {
+      return items.map(function (e, i) {
+        var last = i === items.length - 1;
+        return { role: e.role, org: e.org, years: e.years, dot: i === 0 ? A : t.tile, notLast: !last, pb: last ? '0px' : '20px' };
+      });
+    };
+    var skills = function (items) {
+      return items.map(function (l, i) {
+        var on = i % 4 === 0;
+        return { label: l, bg: on ? A : t.chipBg, ink: on ? AInk : t.ink };
+      });
+    };
+    var stats = function (items) {
+      var odd = (items.length + 1) % 2 === 1;
+      var fills = [[A, AInk], [t.tile, t.ink], [softBg, accentText]];
+      return items.map(function (st, i) {
+        var f = fills[i % 3];
+        return {
+          label: st.label, value: st.value, bg: f[0], ink: f[1],
+          span: (odd && i === items.length - 1) ? '1 / -1' : 'span 2',
+          size: st.value.length > 12 ? '20px' : '30px'
+        };
+      });
+    };
+
+    var saveBg = s.saved ? '#BFE8CC' : (dark ? '#F2F0EA' : '#111111');
+    return {
+      bg: t.bg, tile: t.tile, ink: t.ink, soft: t.soft, dim: t.dim, line: t.line, chipBg: t.chipBg,
+      accent: A,
+      accentInk: AInk,
+      accentSoft: softBg,
+      accentText: accentText,
+      heroBg: dark ? '#F2F0EA' : '#111111',
+      heroInk: dark ? '#111111' : '#FFFFFF',
+      xBg: dark ? '#F2F0EA' : '#111111',
+      xInk: dark ? '#111111' : '#FFFFFF',
+      tkBorder: dark ? 'inset 0 0 0 1px #2C2C2C' : 'none',
+      isDark: dark,
+      isLight: !dark,
+      themeAria: dark ? 'Switch to light theme' : 'Switch to dark theme',
+      toggleTheme: function () { self.setState({ themeOverride: self.resolveTheme() === 'dark' ? 'light' : 'dark' }); },
+
+      videoMain: video('https://www.youtube.com/watch?v=yourvideo'),
+      videoLong: video('https://media.your-university-student-portfolio-library.edu.ph/watch/v/000123'),
+      bookingMain: video('https://calendly.com/yourname'),
+      bookingLong: video('https://appointments.yourname-creative-studio-services.example.com/book'),
+
+      resumeFull: resume({ fileUrl: 'https://yourbrand.com/files/resume.pdf', label: '[Curriculum vitae and portfolio, Software Engineering, 2026]' }),
+      resumeSparse: resume({ fileUrl: 'https://yourbrand.com/files/resume.pdf' }),
+
+      portfolioFull: portfolio([
+        { title: '[Project title]', url: 'https://example.com/p1', desc: '[One-line description of the project]', thumbUrl: photo },
+        { title: 'Capstone: a blood-demand forecasting dashboard for a provincial hospital network', url: 'https://example.com/p2', desc: 'A web app that turns class syllabi into a week-by-week study plan, with reminders, progress tracking and a shared calendar for group projects. Built in a team of four during one weekend hackathon.' },
+        { title: '[Project title]', url: 'https://example.com/p3' },
+        { title: '[Project title]', url: 'https://example.com/p4', desc: '[Short description]', thumbUrl: photo },
+        { title: '[Project title]', url: 'https://example.com/p5', desc: '[Short description]' },
+        { title: '[Project title]', url: 'https://example.com/p6' },
+        { title: '[Project title]', url: 'https://example.com/p7', desc: '[Short description]' },
+        { title: '[Project title]', url: 'https://example.com/p8', thumbUrl: photo },
+        { title: '[Project title]', url: 'https://example.com/p9', desc: '[Short description]' },
+        { title: '[Project title]', url: 'https://example.com/p10' },
+        { title: '[Project title]', url: 'https://example.com/p11', desc: '[Short description]' },
+        { title: '[Featured project title]', url: 'https://example.com/p12', desc: '[Short description of the project]', thumbUrl: photo }
+      ]),
+      portfolioSparse: portfolio([{ title: '[Project title]', url: 'https://example.com/p1' }]),
+
+      servicesFull: services([
+        { name: '[Service name]', price: 'from ₱500' },
+        { name: 'Social media content packaging', price: 'from ₱1,500 per hour, rush fee is extra' },
+        { name: 'Senior full-stack developer and part-time teaching assistant for web development', price: '₱2,000' },
+        { name: '[Service name]' },
+        { name: '[Service name]', price: '[Price]' },
+        { name: '[Service name]', price: '[Price]' },
+        { name: '[Service name]' },
+        { name: '[Service name]', price: '[Price]' },
+        { name: '[Service name]', price: '[Price]' },
+        { name: '[Service name]', price: '[Price]' },
+        { name: '[Service name]' },
+        { name: '[Service name]', price: '[Price]' },
+        { name: '[Service name]', price: '[Price]' },
+        { name: '[Service name]', price: '[Price]' },
+        { name: '[Service name]' },
+        { name: '[Service name]', price: '[Price]' },
+        { name: '[Service name]', price: '[Price]' },
+        { name: '[Service name]', price: '[Price]' },
+        { name: '[Service name]' },
+        { name: '[Service name]', price: '[Price]' }
+      ]),
+      servicesSparse: services([{ name: '[Service name]' }]),
+
+      experienceFull: experience([
+        { role: 'Senior full-stack developer and part-time teaching assistant for web development', org: '[Organization]', years: '[2025 – present]' },
+        { role: '[Role]', org: '[Org or company name up to eighty characters, e.g. a long university department]', years: '[Years]' },
+        { role: '[Role]', org: '[Organization]', years: '[Years]' },
+        { role: '[Role]', org: '[Organization]', years: '[Years]' },
+        { role: '[Role]', org: '[Organization]', years: '[Years]' },
+        { role: '[Role]', org: '[Organization]', years: '[Years]' },
+        { role: '[Role]', org: '[Organization]', years: '[Years]' },
+        { role: '[Role]', org: '[Organization]', years: '[Years]' },
+        { role: '[Role]', org: '[Organization]', years: '[Years]' },
+        { role: '[Role]', org: '[Organization]', years: '[Years]' },
+        { role: '[Role]', org: '[Organization]', years: '[Years]' },
+        { role: '[Role]', org: '[Organization]', years: '[Years]' },
+        { role: '[Role]', org: '[Organization]', years: '[Years]' },
+        { role: '[Role]', org: '[Organization]', years: '[Years]' },
+        { role: '[Role]', org: '[Organization]', years: '[A years range up to 30 chars]' }
+      ]),
+      experienceSparse: experience([{ role: '[Role]', org: '[Organization]', years: '[Years]' }]),
+
+      skillsFull: skills([
+        'Figma', 'Public speaking', 'Python', 'Video editing', 'Copywriting', 'React', 'Photography', 'Canva',
+        'Accessibility audits and WCAG 2.1 fixes', 'SQL', 'Event hosting', 'Excel', 'Node.js', 'Illustration', 'Git',
+        'Research', '[Skill]', '[Skill]', '[Skill]', '[Skill]', '[Skill]', '[Skill]', '[Skill]', '[Skill]',
+        '[Skill]', '[Skill]', '[Skill]', '[Skill]', '[Skill]', '[Skill]'
+      ]),
+      skillsSparse: skills(['[Skill]']),
+
+      statsFull: stats([
+        { label: 'Experience', value: '8+ years' },
+        { label: '[Stat label]', value: '[Value]' },
+        { label: '[A longer stat label, up to forty chars]', value: 'Dean’s lister every single sem' },
+        { label: '[Stat label]', value: '[Value]' },
+        { label: '[Stat label]', value: '[Value]' },
+        { label: '[Stat label]', value: '[Value]' }
+      ]),
+      statsSparse: stats([{ label: 'Experience', value: '8+ years' }]),
+
+      showPhone: this.props.showPhone ?? false,
+      saved: s.saved,
+      notSaved: !s.saved,
+      saveLabel: s.saved ? 'Saved!' : 'Save contact',
+      saveBg: saveBg,
+      saveInk: s.saved ? '#111111' : (dark ? '#111111' : '#FFFFFF'),
+      save: function () { self.setState({ saved: !self.state.saved }); },
+      openQr: function () {}
+    };
+  }
+}
+</script>
+<script>(function(global,factory){typeof exports==="object"&&typeof module!=="undefined"?module.exports=factory():typeof define==="function"&&define.amd?define(factory):(global=global||self,global.morphdom=factory())})(this,function(){"use strict";var DOCUMENT_FRAGMENT_NODE=11;function morphAttrs(fromNode,toNode){var toNodeAttrs=toNode.attributes;var attr;var attrName;var attrNamespaceURI;var attrValue;var fromValue;if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE||fromNode.nodeType===DOCUMENT_FRAGMENT_NODE){return}for(var i=toNodeAttrs.length-1;i>=0;i--){attr=toNodeAttrs[i];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;attrValue=attr.value;if(attrNamespaceURI){attrName=attr.localName||attrName;fromValue=fromNode.getAttributeNS(attrNamespaceURI,attrName);if(fromValue!==attrValue){if(attr.prefix==="xmlns"){attrName=attr.name}fromNode.setAttributeNS(attrNamespaceURI,attrName,attrValue)}}else{fromValue=fromNode.getAttribute(attrName);if(fromValue!==attrValue){fromNode.setAttribute(attrName,attrValue)}}}var fromNodeAttrs=fromNode.attributes;for(var d=fromNodeAttrs.length-1;d>=0;d--){attr=fromNodeAttrs[d];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;if(attrNamespaceURI){attrName=attr.localName||attrName;if(!toNode.hasAttributeNS(attrNamespaceURI,attrName)){fromNode.removeAttributeNS(attrNamespaceURI,attrName)}}else{if(!toNode.hasAttribute(attrName)){fromNode.removeAttribute(attrName)}}}}var range;var NS_XHTML="http://www.w3.org/1999/xhtml";var doc=typeof document==="undefined"?undefined:document;var HAS_TEMPLATE_SUPPORT=!!doc&&"content"in doc.createElement("template");var HAS_RANGE_SUPPORT=!!doc&&doc.createRange&&"createContextualFragment"in doc.createRange();function createFragmentFromTemplate(str){var template=doc.createElement("template");template.innerHTML=str;return template.content.childNodes[0]}function createFragmentFromRange(str){if(!range){range=doc.createRange();range.selectNode(doc.body)}var fragment=range.createContextualFragment(str);return fragment.childNodes[0]}function createFragmentFromWrap(str){var fragment=doc.createElement("body");fragment.innerHTML=str;return fragment.childNodes[0]}function toElement(str){str=str.trim();if(HAS_TEMPLATE_SUPPORT){return createFragmentFromTemplate(str)}else if(HAS_RANGE_SUPPORT){return createFragmentFromRange(str)}return createFragmentFromWrap(str)}function compareNodeNames(fromEl,toEl){var fromNodeName=fromEl.nodeName;var toNodeName=toEl.nodeName;var fromCodeStart,toCodeStart;if(fromNodeName===toNodeName){return true}fromCodeStart=fromNodeName.charCodeAt(0);toCodeStart=toNodeName.charCodeAt(0);if(fromCodeStart<=90&&toCodeStart>=97){return fromNodeName===toNodeName.toUpperCase()}else if(toCodeStart<=90&&fromCodeStart>=97){return toNodeName===fromNodeName.toUpperCase()}else{return false}}function createElementNS(name,namespaceURI){return!namespaceURI||namespaceURI===NS_XHTML?doc.createElement(name):doc.createElementNS(namespaceURI,name)}function moveChildren(fromEl,toEl){var curChild=fromEl.firstChild;while(curChild){var nextChild=curChild.nextSibling;toEl.appendChild(curChild);curChild=nextChild}return toEl}function syncBooleanAttrProp(fromEl,toEl,name){if(fromEl[name]!==toEl[name]){fromEl[name]=toEl[name];if(fromEl[name]){fromEl.setAttribute(name,"")}else{fromEl.removeAttribute(name)}}}var specialElHandlers={OPTION:function(fromEl,toEl){var parentNode=fromEl.parentNode;if(parentNode){var parentName=parentNode.nodeName.toUpperCase();if(parentName==="OPTGROUP"){parentNode=parentNode.parentNode;parentName=parentNode&&parentNode.nodeName.toUpperCase()}if(parentName==="SELECT"&&!parentNode.hasAttribute("multiple")){if(fromEl.hasAttribute("selected")&&!toEl.selected){fromEl.setAttribute("selected","selected");fromEl.removeAttribute("selected")}parentNode.selectedIndex=-1}}syncBooleanAttrProp(fromEl,toEl,"selected")},INPUT:function(fromEl,toEl){syncBooleanAttrProp(fromEl,toEl,"checked");syncBooleanAttrProp(fromEl,toEl,"disabled");if(fromEl.value!==toEl.value){fromEl.value=toEl.value}if(!toEl.hasAttribute("value")){fromEl.removeAttribute("value")}},TEXTAREA:function(fromEl,toEl){var newValue=toEl.value;if(fromEl.value!==newValue){fromEl.value=newValue}var firstChild=fromEl.firstChild;if(firstChild){var oldValue=firstChild.nodeValue;if(oldValue==newValue||!newValue&&oldValue==fromEl.placeholder){return}firstChild.nodeValue=newValue}},SELECT:function(fromEl,toEl){if(!toEl.hasAttribute("multiple")){var selectedIndex=-1;var i=0;var curChild=fromEl.firstChild;var optgroup;var nodeName;while(curChild){nodeName=curChild.nodeName&&curChild.nodeName.toUpperCase();if(nodeName==="OPTGROUP"){optgroup=curChild;curChild=optgroup.firstChild}else{if(nodeName==="OPTION"){if(curChild.hasAttribute("selected")){selectedIndex=i;break}i++}curChild=curChild.nextSibling;if(!curChild&&optgroup){curChild=optgroup.nextSibling;optgroup=null}}}fromEl.selectedIndex=selectedIndex}}};var ELEMENT_NODE=1;var DOCUMENT_FRAGMENT_NODE$1=11;var TEXT_NODE=3;var COMMENT_NODE=8;function noop(){}function defaultGetNodeKey(node){if(node){return node.getAttribute&&node.getAttribute("id")||node.id}}function morphdomFactory(morphAttrs){return function morphdom(fromNode,toNode,options){if(!options){options={}}if(typeof toNode==="string"){if(fromNode.nodeName==="#document"||fromNode.nodeName==="HTML"||fromNode.nodeName==="BODY"){var toNodeHtml=toNode;toNode=doc.createElement("html");toNode.innerHTML=toNodeHtml}else{toNode=toElement(toNode)}}else if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE$1){toNode=toNode.firstElementChild}var getNodeKey=options.getNodeKey||defaultGetNodeKey;var onBeforeNodeAdded=options.onBeforeNodeAdded||noop;var onNodeAdded=options.onNodeAdded||noop;var onBeforeElUpdated=options.onBeforeElUpdated||noop;var onElUpdated=options.onElUpdated||noop;var onBeforeNodeDiscarded=options.onBeforeNodeDiscarded||noop;var onNodeDiscarded=options.onNodeDiscarded||noop;var onBeforeElChildrenUpdated=options.onBeforeElChildrenUpdated||noop;var skipFromChildren=options.skipFromChildren||noop;var addChild=options.addChild||function(parent,child){return parent.appendChild(child)};var childrenOnly=options.childrenOnly===true;var fromNodesLookup=Object.create(null);var keyedRemovalList=[];function addKeyedRemoval(key){keyedRemovalList.push(key)}function walkDiscardedChildNodes(node,skipKeyedNodes){if(node.nodeType===ELEMENT_NODE){var curChild=node.firstChild;while(curChild){var key=undefined;if(skipKeyedNodes&&(key=getNodeKey(curChild))){addKeyedRemoval(key)}else{onNodeDiscarded(curChild);if(curChild.firstChild){walkDiscardedChildNodes(curChild,skipKeyedNodes)}}curChild=curChild.nextSibling}}}function removeNode(node,parentNode,skipKeyedNodes){if(onBeforeNodeDiscarded(node)===false){return}if(parentNode){parentNode.removeChild(node)}onNodeDiscarded(node);walkDiscardedChildNodes(node,skipKeyedNodes)}function indexTree(node){if(node.nodeType===ELEMENT_NODE||node.nodeType===DOCUMENT_FRAGMENT_NODE$1){var curChild=node.firstChild;while(curChild){var key=getNodeKey(curChild);if(key){fromNodesLookup[key]=curChild}indexTree(curChild);curChild=curChild.nextSibling}}}indexTree(fromNode);function handleNodeAdded(el){onNodeAdded(el);var curChild=el.firstChild;while(curChild){var nextSibling=curChild.nextSibling;var key=getNodeKey(curChild);if(key){var unmatchedFromEl=fromNodesLookup[key];if(unmatchedFromEl&&compareNodeNames(curChild,unmatchedFromEl)){curChild.parentNode.replaceChild(unmatchedFromEl,curChild);morphEl(unmatchedFromEl,curChild)}else{handleNodeAdded(curChild)}}else{handleNodeAdded(curChild)}curChild=nextSibling}}function cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey){while(curFromNodeChild){var fromNextSibling=curFromNodeChild.nextSibling;if(curFromNodeKey=getNodeKey(curFromNodeChild)){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}}function morphEl(fromEl,toEl,childrenOnly){var toElKey=getNodeKey(toEl);if(toElKey){delete fromNodesLookup[toElKey]}if(!childrenOnly){var beforeUpdateResult=onBeforeElUpdated(fromEl,toEl);if(beforeUpdateResult===false){return}else if(beforeUpdateResult instanceof HTMLElement){fromEl=beforeUpdateResult;indexTree(fromEl)}morphAttrs(fromEl,toEl);onElUpdated(fromEl);if(onBeforeElChildrenUpdated(fromEl,toEl)===false){return}}if(fromEl.nodeName!=="TEXTAREA"){morphChildren(fromEl,toEl)}else{specialElHandlers.TEXTAREA(fromEl,toEl)}}function morphChildren(fromEl,toEl){var skipFrom=skipFromChildren(fromEl,toEl);var curToNodeChild=toEl.firstChild;var curFromNodeChild=fromEl.firstChild;var curToNodeKey;var curFromNodeKey;var fromNextSibling;var toNextSibling;var matchingFromEl;outer:while(curToNodeChild){toNextSibling=curToNodeChild.nextSibling;curToNodeKey=getNodeKey(curToNodeChild);while(!skipFrom&&curFromNodeChild){fromNextSibling=curFromNodeChild.nextSibling;if(curToNodeChild.isSameNode&&curToNodeChild.isSameNode(curFromNodeChild)){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}curFromNodeKey=getNodeKey(curFromNodeChild);var curFromNodeType=curFromNodeChild.nodeType;var isCompatible=undefined;if(curFromNodeType===curToNodeChild.nodeType){if(curFromNodeType===ELEMENT_NODE){if(curToNodeKey){if(curToNodeKey!==curFromNodeKey){if(matchingFromEl=fromNodesLookup[curToNodeKey]){if(fromNextSibling===matchingFromEl){isCompatible=false}else{fromEl.insertBefore(matchingFromEl,curFromNodeChild);if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=matchingFromEl;curFromNodeKey=getNodeKey(curFromNodeChild)}}else{isCompatible=false}}}else if(curFromNodeKey){isCompatible=false}isCompatible=isCompatible!==false&&compareNodeNames(curFromNodeChild,curToNodeChild);if(isCompatible){morphEl(curFromNodeChild,curToNodeChild)}}else if(curFromNodeType===TEXT_NODE||curFromNodeType==COMMENT_NODE){isCompatible=true;if(curFromNodeChild.nodeValue!==curToNodeChild.nodeValue){curFromNodeChild.nodeValue=curToNodeChild.nodeValue}}}if(isCompatible){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}if(curToNodeKey&&(matchingFromEl=fromNodesLookup[curToNodeKey])&&compareNodeNames(matchingFromEl,curToNodeChild)){if(!skipFrom){addChild(fromEl,matchingFromEl)}morphEl(matchingFromEl,curToNodeChild)}else{var onBeforeNodeAddedResult=onBeforeNodeAdded(curToNodeChild);if(onBeforeNodeAddedResult!==false){if(onBeforeNodeAddedResult){curToNodeChild=onBeforeNodeAddedResult}if(curToNodeChild.actualize){curToNodeChild=curToNodeChild.actualize(fromEl.ownerDocument||doc)}addChild(fromEl,curToNodeChild);handleNodeAdded(curToNodeChild)}}curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling}cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey);var specialElHandler=specialElHandlers[fromEl.nodeName];if(specialElHandler){specialElHandler(fromEl,toEl)}}var morphedNode=fromNode;var morphedNodeType=morphedNode.nodeType;var toNodeType=toNode.nodeType;if(!childrenOnly){if(morphedNodeType===ELEMENT_NODE){if(toNodeType===ELEMENT_NODE){if(!compareNodeNames(fromNode,toNode)){onNodeDiscarded(fromNode);morphedNode=moveChildren(fromNode,createElementNS(toNode.nodeName,toNode.namespaceURI))}}else{morphedNode=toNode}}else if(morphedNodeType===TEXT_NODE||morphedNodeType===COMMENT_NODE){if(toNodeType===morphedNodeType){if(morphedNode.nodeValue!==toNode.nodeValue){morphedNode.nodeValue=toNode.nodeValue}return morphedNode}else{morphedNode=toNode}}}if(morphedNode===toNode){onNodeDiscarded(fromNode)}else{if(toNode.isSameNode&&toNode.isSameNode(morphedNode)){return}morphEl(morphedNode,toNode,childrenOnly);if(keyedRemovalList){for(var i=0,len=keyedRemovalList.length;i<len;i++){var elToRemove=fromNodesLookup[keyedRemovalList[i]];if(elToRemove){removeNode(elToRemove,elToRemove.parentNode,false)}}}}if(!childrenOnly&&morphedNode!==fromNode&&fromNode.parentNode){if(morphedNode.actualize){morphedNode=morphedNode.actualize(fromNode.ownerDocument||doc)}fromNode.parentNode.replaceChild(morphedNode,fromNode)}return morphedNode}}var morphdom=morphdomFactory(morphAttrs);return morphdom});</script>
+<script>(function () {
+  function legacyCopy(t) { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); }
+  var nativeWrite = navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText.bind(navigator.clipboard) : null;
+  var shim = function (t) { if (!nativeWrite) { legacyCopy(t); return Promise.resolve(); } return nativeWrite(t).catch(function () { legacyCopy(t); }); };
+  try { if (navigator.clipboard) { navigator.clipboard.writeText = shim; } else { Object.defineProperty(navigator, 'clipboard', { value: { writeText: shim } }); } } catch (e) {}
+})();
+(function () {
+  var C = JSON.parse(document.getElementById('dc-contact').textContent);
+  var photoB64 = '';
+  if (C.photo) {
+    fetch(C.photo).then(function (r) { return r.blob(); }).then(function (b) {
+      var fr = new FileReader(); fr.onload = function () { photoB64 = String(fr.result).split(',')[1] || ''; }; fr.readAsDataURL(b);
+    }).catch(function () {});
+  }
+  function esc(v) { return String(v || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1'); }
+  function fold(line) { var out = []; while (line.length > 75) { out.push(line.slice(0, 75)); line = ' ' + line.slice(75); } out.push(line); return out.join('\r\n'); }
+  window.__dcSaveContact = function () {
+    var url = C.website || location.href;
+    var L = ['BEGIN:VCARD', 'VERSION:3.0',
+      'N:' + esc(C.lastName) + ';' + esc(C.firstName) + ';;;',
+      'FN:' + esc(C.fullName)];
+    if (C.title) { L.push('TITLE:' + esc(C.title)); }
+    if (C.org) { L.push('ORG:' + esc(C.org)); }
+    if (C.phone) { L.push('TEL;TYPE=CELL:' + C.phone); }
+    if (C.email) { L.push('EMAIL;TYPE=INTERNET:' + C.email); }
+    if (url) { L.push('URL:' + url); }
+    if (C.city || C.country) { L.push('ADR;TYPE=WORK:;;;' + esc(C.city) + ';;;' + esc(C.country)); }
+    if (C.note) { L.push('NOTE:' + esc(C.note)); }
+    if (photoB64) { L.push('PHOTO;ENCODING=b;TYPE=JPEG:' + photoB64); }
+    L.push('END:VCARD');
+    var text = L.map(fold).join('\r\n') + '\r\n';
+    var blob = new Blob([text], { type: 'text/vcard;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (C.fullName || 'contact').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.vcf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  };
+})();
+(function () {
+  var tpl = document.getElementById('dc-template');
+  var root = document.getElementById('app');
+  var PROPS = JSON.parse(document.getElementById('dc-props').textContent);
+  function DCLogic(props) { this.props = props || {}; this.state = {}; }
+  DCLogic.prototype.setState = function (p) {
+    var next = typeof p === 'function' ? p(this.state, this.props) : p;
+    this.state = Object.assign({}, this.state, next);
+    schedule();
+  };
+  var Component = new Function('DCLogic', document.getElementById('dc-logic').textContent + '\nreturn Component;')(DCLogic);
+  var comp = new Component(PROPS);
+  if (!comp.state) { comp.state = {}; }
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  function get(scope, path) {
+    if (path === 'true') { return true; }
+    if (path === 'false') { return false; }
+    return path.split('.').reduce(function (a, k) { return a == null ? a : a[k]; }, scope);
+  }
+  function sub(str, scope) {
+    return str.replace(HOLE, function (m, p) { var v = get(scope, p); return (v == null || typeof v === 'function') ? '' : String(v); });
+  }
+  function build(node, scope, parent) {
+    var kids = node.childNodes;
+    for (var i = 0; i < kids.length; i++) {
+      var ch = kids[i];
+      if (ch.nodeType === 3) { parent.appendChild(document.createTextNode(sub(ch.textContent, scope))); continue; }
+      if (ch.nodeType !== 1) { continue; }
+      var tag = ch.localName;
+      if (tag === 'sc-if') {
+        var m = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('value') || '');
+        if (m && get(scope, m[1])) { build(ch, scope, parent); }
+        continue;
+      }
+      if (tag === 'sc-for') {
+        var lm = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('list') || '');
+        var as = ch.getAttribute('as');
+        var list = (lm && get(scope, lm[1])) || [];
+        for (var j = 0; j < list.length; j++) { var sc = Object.create(scope); sc[as] = list[j]; build(ch, sc, parent); }
+        continue;
+      }
+      var el = ch.namespaceURI && ch.namespaceURI !== 'http://www.w3.org/1999/xhtml' ? document.createElementNS(ch.namespaceURI, ch.localName) : document.createElement(tag);
+      var attrs = ch.attributes;
+      for (var a = 0; a < attrs.length; a++) {
+        var at = attrs[a];
+        if (/^on[a-z]/i.test(at.name)) {
+          var hm = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/.exec(at.value);
+          var fn = hm ? get(scope, hm[1]) : null;
+          if (typeof fn === 'function') { el['on' + at.name.slice(2).toLowerCase()] = fn; }
+          continue;
+        }
+        if (at.name.indexOf('hint-') === 0) { continue; }
+        el.setAttribute(at.name, sub(at.value, scope));
+      }
+      build(ch.content || ch, scope, el);
+      parent.appendChild(el);
+    }
+  }
+  var EVTS = ['click', 'mousemove', 'mouseleave', 'touchmove', 'touchend', 'touchstart', 'input', 'change', 'keydown'];
+  function render() {
+    var vals = comp.renderVals();
+    if (typeof vals.save === 'function') { var origSave = vals.save; vals.save = function () { window.__dcSaveContact(); return origSave.apply(this, arguments); }; }
+    var next = document.createElement('div');
+    next.id = 'app';
+    build(tpl.content, vals, next);
+    morphdom(root, next, {
+      onBeforeElUpdated: function (from, to) {
+        for (var i = 0; i < EVTS.length; i++) { var k = 'on' + EVTS[i]; if (from[k] !== to[k]) { from[k] = to[k] || null; } }
+        return !from.isEqualNode(to);
+      }
+    });
+    var first = root.firstElementChild;
+    if (first) { document.body.style.background = getComputedStyle(first).backgroundColor; }
+  }
+  var queued = false;
+  function schedule() { if (queued) { return; } queued = true; requestAnimationFrame(function () { queued = false; render(); }); }
+  render();
+  if (comp.componentDidMount) { comp.componentDidMount(); }
+})();
+</script>
+</body>
+</html>

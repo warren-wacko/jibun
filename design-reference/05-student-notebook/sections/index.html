@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Warren Jacob Abdon — Digital Card</title>
+<meta name="description" content="Software Engineer · Full-Stack Developer. Save my contact in one tap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800;900&amp;family=Caveat:wght@500;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible{outline:2px solid #6C7CF0;outline-offset:3px}
+@keyframes dropIn{0%{opacity:0;transform:translateY(-40px) rotate(-12deg)}70%{opacity:1;transform:translateY(4px) rotate(-2deg)}100%{opacity:1;transform:rotate(-3deg)}}
+@keyframes stickIn{0%{opacity:0;transform:scale(.6) rotate(12deg)}100%{opacity:1;transform:rotate(4deg)}}
+@keyframes markIn{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+@keyframes riseIn{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+@keyframes toastIn{0%{opacity:0;transform:translate(-50%,12px)}100%{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion: reduce){.anim{animation:none !important}}
+.clamp2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.clamp3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+@media (max-width: 360px){.statv{font-size:25px !important}}
+</style>
+<style>
+html,body{margin:0;padding:0}
+body{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+#app>div{width:100% !important;max-width:430px;margin:0 auto;min-height:100vh !important;min-height:100dvh !important}
+</style>
+</head>
+<body>
+<!-- 05-student-notebook — new sections — from NotebookSections.dc.html -->
+<div id="app"></div>
+<template id="dc-template">
+<div style="position: relative; width: 390px; min-height: 8440px; box-sizing: border-box; background-color: {{bg}}; background-image: linear-gradient({{grid}} 1px, transparent 1px), linear-gradient(90deg, {{grid}} 1px, transparent 1px); background-size: 24px 24px; font-family: 'Schibsted Grotesk', system-ui, sans-serif; color: {{ink}}; display: flex; flex-direction: column; overflow: hidden; transition: background-color 350ms ease, color 350ms ease">
+
+  <div style="position: relative; height: 64px; margin: 0 20px; display: flex; align-items: center; justify-content: space-between">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">[YOUR BRAND]</span>
+    <div style="display: flex; align-items: center; gap: 4px">
+      <button type="button" onClick="{{toggleTheme}}" aria-label="{{themeAria}}" style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+        <div style="width: 36px; height: 36px; border-radius: 10px; background: {{surface}}; box-shadow: 2px 2px 0 {{ink}}, inset 0 0 0 1.5px {{ink}}; display: flex; align-items: center; justify-content: center">
+          <sc-if value="{{isDark}}" hint-placeholder-val="{{ false }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+          </sc-if>
+          <sc-if value="{{isLight}}" hint-placeholder-val="{{ true }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+          </sc-if>
+        </div>
+      </button>
+      <button type="button" onClick="{{shareCard}}" aria-label="Share this card" style="all: unset; cursor: pointer; height: 44px; display: flex; align-items: center">
+        <div style="height: 36px; padding: 0 12px; border-radius: 10px; background: {{surface}}; box-shadow: 2px 2px 0 {{ink}}, inset 0 0 0 1.5px {{ink}}; display: flex; align-items: center; gap: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 1.4px">
+          SHARE
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"></path><path d="m16 6-4-4-4 4"></path><path d="M12 2v13"></path></svg>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <div style="padding: 8px 22px 0; display: flex; flex-direction: column; gap: 4px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; color: {{muted}}">NEW SECTIONS — STUDENT NOTEBOOK</span>
+    <span style="font-family: 'Caveat', cursive; font-size: 20px; color: {{muted}}">8 add-ons, full and sparse, in page order</span>
+  </div>
+
+  <!-- ===================== VIDEO ===================== -->
+  <div style="padding: 30px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">VIDEO · FULL · sits after Projects</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Video</span>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; color: {{muted}}">tap to watch</span>
+    </div>
+    <div style="position: relative; padding-top: 10px">
+      <a href="{{videoMain.url}}" aria-label="{{videoMain.aria}}" style="display: flex; flex-direction: column; border-radius: 6px; background: {{paper}}; box-shadow: 3px 3px 0 {{shadowInk}}, inset 0 0 0 1.5px {{ink}}; padding: 12px 12px 0; transform: rotate(-0.8deg)">
+        <div style="position: relative; aspect-ratio: 16 / 9; border-radius: 3px; background-color: {{tagBg}}; background-image: linear-gradient({{rule}} 1px, transparent 1px), linear-gradient(90deg, {{rule}} 1px, transparent 1px); background-size: 18px 18px; box-shadow: inset 0 0 0 1px {{line}}; display: flex; align-items: center; justify-content: center">
+          <div style="width: 64px; height: 64px; border-radius: 32px; background: {{accent}}; color: {{accentInk}}; box-shadow: 3px 3px 0 {{shadowInk}}, inset 0 0 0 1.5px {{ink}}; display: flex; align-items: center; justify-content: center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"></path></svg>
+          </div>
+        </div>
+        <div style="min-height: 58px; display: flex; align-items: center; gap: 10px">
+          <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.2px; color: {{muted}}">VIDEO</span>
+            <span style="font-size: 16px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Watch on {{videoMain.host}}</span>
+          </div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+        </div>
+      </a>
+      <div style="position: absolute; left: 50%; top: 0; width: 82px; height: 24px; margin-left: -41px; background: {{tape}}; opacity: 0.85; transform: rotate(-3deg); box-shadow: 0 1px 2px rgba(0,0,0,0.1); pointer-events: none"></div>
+    </div>
+  </div>
+
+  <div style="padding: 34px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">VIDEO · LONG / UNKNOWN HOST</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Video</span>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; color: {{muted}}">tap to watch</span>
+    </div>
+    <div style="position: relative; padding-top: 10px">
+      <a href="{{videoLong.url}}" aria-label="{{videoLong.aria}}" style="display: flex; flex-direction: column; border-radius: 6px; background: {{paper}}; box-shadow: 3px 3px 0 {{shadowInk}}, inset 0 0 0 1.5px {{ink}}; padding: 12px 12px 0; transform: rotate(-0.8deg)">
+        <div style="position: relative; aspect-ratio: 16 / 9; border-radius: 3px; background-color: {{tagBg}}; background-image: linear-gradient({{rule}} 1px, transparent 1px), linear-gradient(90deg, {{rule}} 1px, transparent 1px); background-size: 18px 18px; box-shadow: inset 0 0 0 1px {{line}}; display: flex; align-items: center; justify-content: center">
+          <div style="width: 64px; height: 64px; border-radius: 32px; background: {{accent}}; color: {{accentInk}}; box-shadow: 3px 3px 0 {{shadowInk}}, inset 0 0 0 1.5px {{ink}}; display: flex; align-items: center; justify-content: center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"></path></svg>
+          </div>
+        </div>
+        <div style="min-height: 58px; display: flex; align-items: center; gap: 10px">
+          <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.2px; color: {{muted}}">VIDEO</span>
+            <span style="font-size: 16px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Watch on {{videoLong.host}}</span>
+          </div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+        </div>
+      </a>
+      <div style="position: absolute; left: 50%; top: 0; width: 82px; height: 24px; margin-left: -41px; background: {{tape}}; opacity: 0.85; transform: rotate(-3deg); box-shadow: 0 1px 2px rgba(0,0,0,0.1); pointer-events: none"></div>
+    </div>
+  </div>
+
+  <!-- ===================== BOOKING ===================== -->
+  <div style="padding: 38px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">BOOKING · FULL · sits before Find me online</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Book a chat</span>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; color: {{muted}}">opens my calendar</span>
+    </div>
+    <a href="{{bookMain.url}}" style="min-height: 72px; border-radius: 14px; background: {{surface}}; box-shadow: 3px 3px 0 {{shadowInk}}, inset 0 0 0 1.5px {{ink}}; padding: 12px 14px; box-sizing: border-box; display: flex; align-items: center; gap: 12px">
+      <div style="width: 42px; height: 42px; border-radius: 10px; background: {{accent}}; color: {{accentInk}}; box-shadow: inset 0 0 0 1.5px {{ink}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="2"></rect><path d="M16 2.5v4M8 2.5v4M3 10h18M8.5 15l2.5 2.5 4.5-4.5"></path></svg>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+        <span style="font-size: 16px; font-weight: 800">Book a time with me</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{dim}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{bookMain.host}}</span>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+    </a>
+  </div>
+
+  <div style="padding: 34px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">BOOKING · LONG / UNKNOWN HOST</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Book a chat</span>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; color: {{muted}}">opens my calendar</span>
+    </div>
+    <a href="{{bookLong.url}}" style="min-height: 72px; border-radius: 14px; background: {{surface}}; box-shadow: 3px 3px 0 {{shadowInk}}, inset 0 0 0 1.5px {{ink}}; padding: 12px 14px; box-sizing: border-box; display: flex; align-items: center; gap: 12px">
+      <div style="width: 42px; height: 42px; border-radius: 10px; background: {{accent}}; color: {{accentInk}}; box-shadow: inset 0 0 0 1.5px {{ink}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="2"></rect><path d="M16 2.5v4M8 2.5v4M3 10h18M8.5 15l2.5 2.5 4.5-4.5"></path></svg>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+        <span style="font-size: 16px; font-weight: 800">Book a time with me</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{dim}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{bookLong.host}}</span>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+    </a>
+  </div>
+
+  <!-- ===================== GALLERY ===================== -->
+  <div style="padding: 38px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">GALLERY · FULL (10) · sits after Projects</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 0 0; display: flex; flex-direction: column; gap: 4px">
+    <div style="padding: 0 22px; display: flex; justify-content: space-between; align-items: baseline">
+      <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Gallery</span>
+      <span style="font-family: 'Caveat', cursive; font-size: 20px; color: {{muted}}">swipe →</span>
+    </div>
+    <div style="display: flex; gap: 16px; overflow-x: auto; padding: 22px 22px 22px; scroll-snap-type: x mandatory; scroll-padding: 0 22px">
+      <sc-for list="{{galleryFull}}" as="g" hint-placeholder-count="10">
+        <figure style="position: relative; flex: 0 0 176px; margin: 0; scroll-snap-align: start; transform: {{g.tilt}}">
+          <div style="background: #FFFFFF; padding: 10px 10px 0; box-shadow: 0 10px 20px rgba(0,0,0,0.18), 0 1px 2px rgba(0,0,0,0.15)">
+            <div style="aspect-ratio: 1; overflow: hidden; background: {{g.ph}}">
+              <sc-if value="{{g.hasImg}}" hint-placeholder-val="{{ true }}">
+                <img src="{{g.url}}" alt="{{g.alt}}" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; display: block">
+              </sc-if>
+              <sc-if value="{{g.noImg}}" hint-placeholder-val="{{ false }}">
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: {{g.phInk}}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="1.8"></circle><path d="m21 16-5-5-9 9"></path></svg></div>
+              </sc-if>
+            </div>
+            <figcaption aria-hidden="true" style="min-height: 46px; padding: 6px 2px 10px; font-family: 'Caveat', cursive; font-size: 19px; line-height: 1.05; font-weight: 700; color: #1E2228"><span class="clamp3">{{g.alt}}</span></figcaption>
+          </div>
+          <div style="position: absolute; left: 50%; top: -12px; width: 64px; height: 22px; margin-left: -32px; background: {{tape}}; opacity: 0.85; transform: {{g.tapeTilt}}; box-shadow: 0 1px 2px rgba(0,0,0,0.1)"></div>
+        </figure>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 16px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">GALLERY · SPARSE (1)</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 4px">
+    <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Gallery</span>
+    <div style="padding: 24px 0 8px 8px">
+      <sc-for list="{{gallerySparse}}" as="g" hint-placeholder-count="1">
+        <figure style="position: relative; width: 210px; max-width: 70%; margin: 0; transform: rotate(-2deg)">
+          <div style="background: #FFFFFF; padding: 11px 11px 0; box-shadow: 0 10px 20px rgba(0,0,0,0.18), 0 1px 2px rgba(0,0,0,0.15)">
+            <div style="aspect-ratio: 1; overflow: hidden; background: {{g.ph}}">
+              <sc-if value="{{g.hasImg}}" hint-placeholder-val="{{ true }}">
+                <img src="{{g.url}}" alt="{{g.alt}}" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; display: block">
+              </sc-if>
+              <sc-if value="{{g.noImg}}" hint-placeholder-val="{{ false }}">
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: {{g.phInk}}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="1.8"></circle><path d="m21 16-5-5-9 9"></path></svg></div>
+              </sc-if>
+            </div>
+            <figcaption aria-hidden="true" style="padding: 8px 2px 12px; font-family: 'Caveat', cursive; font-size: 21px; line-height: 1.05; font-weight: 700; color: #1E2228"><span class="clamp3">{{g.alt}}</span></figcaption>
+          </div>
+          <div style="position: absolute; left: 50%; top: -12px; width: 72px; height: 24px; margin-left: -36px; background: {{tape}}; opacity: 0.85; transform: rotate(4deg); box-shadow: 0 1px 2px rgba(0,0,0,0.1)"></div>
+        </figure>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ===================== SERVICES ===================== -->
+  <div style="padding: 34px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">SERVICES · FULL (20) · sits after Skills</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 20px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 2px; font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Services</span>
+    <div style="position: relative; border-radius: 6px; background: {{paper}}; box-shadow: 0 8px 20px rgba(0,0,0,0.10), inset 0 0 0 1px {{line}}; padding: 6px 16px 6px 44px">
+      <div style="position: absolute; left: 30px; top: 0; bottom: 0; width: 1.5px; background: {{margin}}"></div>
+      <sc-for list="{{servicesFull}}" as="sv" hint-placeholder-count="20">
+        <div style="min-height: 46px; padding: 9px 0; box-sizing: border-box; display: flex; align-items: center; gap: 12px; box-shadow: {{sv.divider}}">
+          <span style="flex: 1 1 auto; min-width: 0; font-size: 15px; font-weight: 600; line-height: 1.3">{{sv.name}}</span>
+          <sc-if value="{{sv.price}}" hint-placeholder-val="{{ true }}">
+            <span style="flex: 0 1 auto; max-width: 46%; text-align: right; font-size: 14px; font-weight: 800; line-height: 1.35"><span style="background-image: linear-gradient(transparent 52%, {{mark}} 52%); -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 3px">{{sv.price}}</span></span>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 34px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">SERVICES · SPARSE (1, no price)</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 20px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 2px; font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Services</span>
+    <div style="position: relative; border-radius: 6px; background: {{paper}}; box-shadow: 0 8px 20px rgba(0,0,0,0.10), inset 0 0 0 1px {{line}}; padding: 6px 16px 6px 44px">
+      <div style="position: absolute; left: 30px; top: 0; bottom: 0; width: 1.5px; background: {{margin}}"></div>
+      <sc-for list="{{servicesSparse}}" as="sv" hint-placeholder-count="1">
+        <div style="min-height: 46px; padding: 9px 0; box-sizing: border-box; display: flex; align-items: center; gap: 12px; box-shadow: {{sv.divider}}">
+          <span style="flex: 1 1 auto; min-width: 0; font-size: 15px; font-weight: 600; line-height: 1.3">{{sv.name}}</span>
+          <sc-if value="{{sv.price}}" hint-placeholder-val="{{ false }}">
+            <span style="flex: 0 1 auto; max-width: 46%; text-align: right; font-size: 14px; font-weight: 800; line-height: 1.35"><span style="background-image: linear-gradient(transparent 52%, {{mark}} 52%); -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 3px">{{sv.price}}</span></span>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ===================== EXPERIENCE ===================== -->
+  <div style="padding: 38px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">EXPERIENCE · FULL (15) · sits after Projects</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 20px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 2px; font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Experience</span>
+    <div style="position: relative; border-radius: 6px; background: {{paper}}; box-shadow: 0 8px 20px rgba(0,0,0,0.10), inset 0 0 0 1px {{line}}; padding: 4px 16px 4px 50px">
+      <div style="position: absolute; left: 30px; top: 0; bottom: 0; width: 1.5px; background: {{margin}}"></div>
+      <sc-for list="{{experienceFull}}" as="ex" hint-placeholder-count="15">
+        <div style="position: relative; padding: 14px 0; display: flex; flex-direction: column; gap: 3px; box-shadow: {{ex.divider}}">
+          <span style="position: absolute; left: -25px; top: 17px; width: 12px; height: 12px; border-radius: 6px; background: {{ex.dot}}; box-shadow: inset 0 0 0 1.5px {{ink}}"></span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1px; color: {{muted}}">{{ex.years}}</span>
+          <span style="font-size: 16px; font-weight: 800; line-height: 1.25">{{ex.role}}</span>
+          <span style="font-size: 14px; line-height: 1.35; color: {{dim}}">{{ex.org}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 34px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">EXPERIENCE · SPARSE (1)</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 20px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 2px; font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Experience</span>
+    <div style="position: relative; border-radius: 6px; background: {{paper}}; box-shadow: 0 8px 20px rgba(0,0,0,0.10), inset 0 0 0 1px {{line}}; padding: 4px 16px 4px 50px">
+      <div style="position: absolute; left: 30px; top: 0; bottom: 0; width: 1.5px; background: {{margin}}"></div>
+      <sc-for list="{{experienceSparse}}" as="ex" hint-placeholder-count="1">
+        <div style="position: relative; padding: 14px 0; display: flex; flex-direction: column; gap: 3px; box-shadow: {{ex.divider}}">
+          <span style="position: absolute; left: -25px; top: 17px; width: 12px; height: 12px; border-radius: 6px; background: {{ex.dot}}; box-shadow: inset 0 0 0 1.5px {{ink}}"></span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1px; color: {{muted}}">{{ex.years}}</span>
+          <span style="font-size: 16px; font-weight: 800; line-height: 1.25">{{ex.role}}</span>
+          <span style="font-size: 14px; line-height: 1.35; color: {{dim}}">{{ex.org}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ===================== STATS ===================== -->
+  <div style="padding: 38px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">STATS · FULL (6) · sits after About me</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 16px">
+    <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">By the numbers</span>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 14px; padding: 0 4px 6px">
+      <sc-for list="{{statsFull}}" as="st" hint-placeholder-count="6">
+        <div style="min-height: 104px; box-sizing: border-box; padding: 13px 12px 12px; background: {{st.bg}}; color: {{noteInk}}; box-shadow: 0 8px 16px rgba(0,0,0,0.16); transform: {{st.tilt}}; display: flex; flex-direction: column; justify-content: space-between; gap: 8px">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 1.4px; font-weight: 500; text-transform: uppercase; line-height: 1.4">{{st.label}}</span>
+          <span class="statv" style="font-family: 'Caveat', cursive; font-size: 29px; line-height: 0.95; font-weight: 700; overflow-wrap: break-word; hyphens: auto">{{st.value}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 30px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">STATS · SPARSE (1)</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 16px">
+    <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">By the numbers</span>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 14px; padding: 0 4px 6px">
+      <sc-for list="{{statsSparse}}" as="st" hint-placeholder-count="1">
+        <div style="min-height: 104px; box-sizing: border-box; padding: 13px 12px 12px; background: {{st.bg}}; color: {{noteInk}}; box-shadow: 0 8px 16px rgba(0,0,0,0.16); transform: {{st.tilt}}; display: flex; flex-direction: column; justify-content: space-between; gap: 8px">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 1.4px; font-weight: 500; text-transform: uppercase; line-height: 1.4">{{st.label}}</span>
+          <span class="statv" style="font-family: 'Caveat', cursive; font-size: 29px; line-height: 0.95; font-weight: 700; overflow-wrap: break-word; hyphens: auto">{{st.value}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ===================== INTERESTS ===================== -->
+  <div style="padding: 38px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">INTERESTS · FULL (20) · sits after Skills</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 10px">
+    <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Into lately</span>
+    <div style="display: flex; flex-wrap: wrap; gap: 2px 16px">
+      <sc-for list="{{interestsFull}}" as="it" hint-placeholder-count="20">
+        <span style="font-family: 'Caveat', cursive; font-size: 25px; line-height: 1.25; font-weight: 700"><span style="background-image: linear-gradient(transparent 55%, {{mark}} 55%, {{mark}} 92%, transparent 92%); -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 4px">{{it.t}}</span></span>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 30px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">INTERESTS · SPARSE (1)</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 10px">
+    <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Into lately</span>
+    <div style="display: flex; flex-wrap: wrap; gap: 2px 16px">
+      <sc-for list="{{interestsSparse}}" as="it" hint-placeholder-count="1">
+        <span style="font-family: 'Caveat', cursive; font-size: 25px; line-height: 1.25; font-weight: 700"><span style="background-image: linear-gradient(transparent 55%, {{mark}} 55%, {{mark}} 92%, transparent 92%); -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 4px">{{it.t}}</span></span>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ===================== SONG ===================== -->
+  <div style="padding: 38px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">SONG · FULL · sits after Wins &amp; orgs</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">My song</span>
+    <div style="position: relative; padding-top: 10px">
+      <a href="{{songFull.url}}" aria-label="{{songFull.aria}}" style="min-height: 84px; border-radius: 6px; background: {{paper}}; box-shadow: 3px 3px 0 {{shadowInk}}, inset 0 0 0 1.5px {{ink}}; padding: 16px 14px; box-sizing: border-box; display: flex; align-items: center; gap: 14px; transform: rotate(0.8deg)">
+        <div style="width: 46px; height: 46px; border-radius: 23px; background: #1DB954; color: #121212; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5.5 9.2c4.3-1.3 9-.9 13 1.2"></path><path d="M6.3 12.6c3.6-1 7.4-.6 10.6 1"></path><path d="M7 15.8c2.8-.7 5.6-.4 8.1.8"></path></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+          <span class="clamp2" style="font-size: 17px; font-weight: 800; line-height: 1.2">{{songFull.title}}</span>
+          <sc-if value="{{songFull.artist}}" hint-placeholder-val="{{ true }}">
+            <span style="font-size: 14px; color: {{dim}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{songFull.artist}}</span>
+          </sc-if>
+          <span style="margin-top: 3px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.2px; color: {{muted}}">OPEN IN SPOTIFY</span>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+      </a>
+      <div style="position: absolute; left: 24px; top: 0; width: 70px; height: 22px; background: {{tape}}; opacity: 0.85; transform: rotate(-4deg); box-shadow: 0 1px 2px rgba(0,0,0,0.1); pointer-events: none"></div>
+    </div>
+  </div>
+
+  <div style="padding: 34px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">SONG · SPARSE (link only)</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">My song</span>
+    <div style="position: relative; padding-top: 10px">
+      <a href="{{songSparse.url}}" aria-label="{{songSparse.aria}}" style="min-height: 84px; border-radius: 6px; background: {{paper}}; box-shadow: 3px 3px 0 {{shadowInk}}, inset 0 0 0 1.5px {{ink}}; padding: 16px 14px; box-sizing: border-box; display: flex; align-items: center; gap: 14px; transform: rotate(0.8deg)">
+        <div style="width: 46px; height: 46px; border-radius: 23px; background: #1DB954; color: #121212; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5.5 9.2c4.3-1.3 9-.9 13 1.2"></path><path d="M6.3 12.6c3.6-1 7.4-.6 10.6 1"></path><path d="M7 15.8c2.8-.7 5.6-.4 8.1.8"></path></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+          <span class="clamp2" style="font-size: 17px; font-weight: 800; line-height: 1.2">{{songSparse.title}}</span>
+          <sc-if value="{{songSparse.artist}}" hint-placeholder-val="{{ false }}">
+            <span style="font-size: 14px; color: {{dim}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{songSparse.artist}}</span>
+          </sc-if>
+          <span style="margin-top: 3px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.2px; color: {{muted}}">OPEN IN SPOTIFY</span>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+      </a>
+      <div style="position: absolute; left: 24px; top: 0; width: 70px; height: 22px; background: {{tape}}; opacity: 0.85; transform: rotate(-4deg); box-shadow: 0 1px 2px rgba(0,0,0,0.1); pointer-events: none"></div>
+    </div>
+  </div>
+
+  <!-- ===================== INSIDE THE STARTER LAYOUT ===================== -->
+  <div style="margin-top: 56px; padding: 22px 22px 0; box-shadow: inset 0 2px 0 {{ink}}; display: flex; flex-direction: column; gap: 4px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; color: {{muted}}">INSIDE THE STARTER LAYOUT</span>
+    <span style="font-family: 'Caveat', cursive; font-size: 20px; color: {{muted}}">paid add-ons on a Starter page: video, booking, gallery</span>
+  </div>
+
+  <div style="padding: 26px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">STARTER · VIDEO · sits after About me</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Video</span>
+    <a href="{{videoMain.url}}" aria-label="{{videoMain.aria}}" style="min-height: 66px; border-radius: 14px; background: {{surface}}; box-shadow: 3px 3px 0 {{shadowInk}}, inset 0 0 0 1.5px {{ink}}; padding: 12px 14px; box-sizing: border-box; display: flex; align-items: center; gap: 12px">
+      <div style="width: 38px; height: 38px; border-radius: 19px; background: {{accent}}; color: {{accentInk}}; box-shadow: inset 0 0 0 1.5px {{ink}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"></path></svg>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+        <span style="font-size: 16px; font-weight: 800">Watch my video</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{dim}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{videoMain.host}}</span>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+    </a>
+  </div>
+
+  <div style="padding: 30px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">STARTER · BOOKING · sits after Connect</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Book a chat</span>
+    <a href="{{bookLong.url}}" style="min-height: 66px; border-radius: 14px; background: {{surface}}; box-shadow: 3px 3px 0 {{shadowInk}}, inset 0 0 0 1.5px {{ink}}; padding: 12px 14px; box-sizing: border-box; display: flex; align-items: center; gap: 12px">
+      <div style="width: 38px; height: 38px; border-radius: 10px; background: {{accent}}; color: {{accentInk}}; box-shadow: inset 0 0 0 1.5px {{ink}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="2"></rect><path d="M16 2.5v4M8 2.5v4M3 10h18M8.5 15l2.5 2.5 4.5-4.5"></path></svg>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+        <span style="font-size: 16px; font-weight: 800">Book a time with me</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{dim}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{bookLong.host}}</span>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+    </a>
+  </div>
+
+  <div style="padding: 30px 22px 0; display: flex; align-items: center; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; line-height: 1.6; color: {{muted}}; min-width: 0">STARTER · GALLERY (10) · after About me</span>
+    <span style="flex: 1 0 16px; height: 0; border-top: 1.5px dashed {{line}}"></span>
+  </div>
+  <div style="padding: 18px 22px 0; display: flex; flex-direction: column; gap: 4px">
+    <span style="font-size: 24px; font-weight: 900; letter-spacing: -0.6px">Gallery</span>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 16px; padding: 22px 4px 4px">
+      <sc-for list="{{galleryFull}}" as="g" hint-placeholder-count="10">
+        <figure style="position: relative; margin: 0; transform: {{g.tilt}}">
+          <div style="background: #FFFFFF; padding: 8px 8px 0; box-shadow: 0 8px 16px rgba(0,0,0,0.16), 0 1px 2px rgba(0,0,0,0.15)">
+            <div style="aspect-ratio: 1; overflow: hidden; background: {{g.ph}}">
+              <sc-if value="{{g.hasImg}}" hint-placeholder-val="{{ true }}">
+                <img src="{{g.url}}" alt="{{g.alt}}" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; display: block">
+              </sc-if>
+              <sc-if value="{{g.noImg}}" hint-placeholder-val="{{ false }}">
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: {{g.phInk}}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="1.8"></circle><path d="m21 16-5-5-9 9"></path></svg></div>
+              </sc-if>
+            </div>
+            <figcaption aria-hidden="true" style="padding: 5px 2px 8px; font-family: 'Caveat', cursive; font-size: 18px; line-height: 1.05; font-weight: 700; color: #1E2228"><span class="clamp2">{{g.alt}}</span></figcaption>
+          </div>
+          <div style="position: absolute; left: 50%; top: -11px; width: 56px; height: 20px; margin-left: -28px; background: {{tape}}; opacity: 0.85; transform: {{g.tapeTilt}}; box-shadow: 0 1px 2px rgba(0,0,0,0.1)"></div>
+        </figure>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: relative; margin-top: auto; padding: 40px 22px 20px; display: flex; justify-content: space-between; align-items: center">
+    <span style="font-family: 'Caveat', cursive; font-size: 22px; color: {{muted}}">Always One Tap Away.</span>
+  </div>
+
+  <sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+    <div class="anim" role="status" style="position: fixed; left: 50%; bottom: 28px; z-index: 30; height: 44px; padding: 0 18px; border-radius: 12px; background: {{ink}}; color: {{bg}}; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; white-space: nowrap; box-shadow: 0 12px 30px rgba(0,0,0,0.3); animation: toastIn 260ms ease-out both; transform: translateX(-50%)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+      {{toast}}
+    </div>
+  </sc-if>
+</div>
+</template>
+<!-- EDIT ME: the contact that "Save contact" adds to the visitor's phone -->
+<script type="application/json" id="dc-contact">{
+  "fullName": "Warren Jacob Abdon",
+  "firstName": "Warren Jacob",
+  "lastName": "Abdon",
+  "title": "BS Computer Science student",
+  "org": "[School name]",
+  "phone": "",
+  "email": "hello@warrenabdon.dev",
+  "website": "",
+  "city": "",
+  "country": "",
+  "note": "",
+  "photo": "assets/photo.jpg"
+}</script>
+<script type="application/json" id="dc-props">{"theme": "Light", "accent": "#FFD43B"}</script>
+<script type="text/plain" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { themeOverride: null, accentPick: null, paletteOpen: false, saved: false, flipped: false, toast: '' };
+  }
+  componentWillUnmount() {
+    if (this._toastT) { clearTimeout(this._toastT); }
+  }
+  showToast(msg) {
+    var self = this;
+    if (this._toastT) { clearTimeout(this._toastT); }
+    this.setState({ toast: msg });
+    this._toastT = setTimeout(function () { self.setState({ toast: '' }); }, 2200);
+  }
+  resolveTheme() {
+    if (this.state.themeOverride) { return this.state.themeOverride; }
+    var pref = this.props.theme ?? 'Light';
+    if (pref === 'Dark') { return 'dark'; }
+    if (pref === 'Match phone') {
+      try { if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { return 'dark'; } } catch (err) {}
+    }
+    return 'light';
+  }
+  palette(mode) {
+    if (mode === 'dark') {
+      return { bg: '#16191D', grid: 'rgba(255,255,255,0.045)', ink: '#F2F1EC', muted: '#9AA0A9', surface: '#1F2328', line: '#343941', soft: '#CDD1D7', dim: '#AEB3BB', paper: '#20242A', rule: 'rgba(124,196,255,0.14)', margin: 'rgba(255,120,120,0.45)', tagBg: 'rgba(255,255,255,0.08)', shadowInk: '#000000' };
+    }
+    return { bg: '#FBFBF8', grid: 'rgba(60,110,200,0.07)', ink: '#1A1D22', muted: '#5F646C', surface: '#FFFFFF', line: '#DCDDD8', soft: '#3A3E45', dim: '#4F545C', paper: '#FFFFFF', rule: 'rgba(60,110,200,0.16)', margin: 'rgba(220,60,60,0.45)', tagBg: 'rgba(26,29,34,0.06)', shadowInk: '#1A1D22' };
+  }
+  rgb(hex) {
+    var n = String(hex || '#000000').replace('#', '');
+    if (n.length === 3) { n = n[0] + n[0] + n[1] + n[1] + n[2] + n[2]; }
+    return [parseInt(n.slice(0, 2), 16), parseInt(n.slice(2, 4), 16), parseInt(n.slice(4, 6), 16)];
+  }
+  lum(hex) {
+    var c = this.rgb(hex);
+    return (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255;
+  }
+  rgba(hex, a) {
+    var c = this.rgb(hex);
+    return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+  }
+  mix(hex, toward, amt) {
+    var c = this.rgb(hex);
+    var m = function (v) { return Math.round(v + (toward - v) * amt); };
+    return 'rgb(' + m(c[0]) + ',' + m(c[1]) + ',' + m(c[2]) + ')';
+  }
+  host(url) {
+    var m = String(url || '').match(/^[a-z]+:\/\/([^\/?#:]+)/i);
+    return m ? m[1].replace(/^www\./i, '').toLowerCase() : '';
+  }
+  renderVals() {
+    var self = this;
+    var s = this.state;
+    var mode = this.resolveTheme();
+    var t = this.palette(mode);
+    var dark = mode === 'dark';
+    var accent = s.accentPick || (this.props.accent ?? '#FFD43B');
+    var accentInk = this.lum(accent) > 0.5 ? '#1A1D22' : '#FFFFFF';
+    var markOpacity = dark ? 0.45 : 0.75;
+    // Sticky-note paper for the new notes: the hero's sticky mix, lifted further when the accent is dark,
+    // so the fixed dark note ink (#1E2228) always keeps AA contrast.
+    var noteA = this.lum(accent) < 0.55 ? this.mix(accent, 255, 0.8) : this.mix(accent, 255, 0.35);
+    var noteB = this.lum(accent) < 0.55 ? this.mix(accent, 255, 0.9) : this.mix(accent, 255, 0.62);
+    var tape = this.mix(accent, 255, 0.5);
+    // Highlighter fill (same as the hero mark); a near-black accent on dark paper is lifted so the mark stays visible.
+    var mark = this.rgba(accent, markOpacity);
+    if (dark && this.lum(accent) < 0.3) { mark = this.mix(accent, 255, 0.55).replace('rgb(', 'rgba(').replace(')', ',0.4)'); }
+    var line = t.line;
+    var divider = function (i) { return i === 0 ? 'none' : 'inset 0 1px 0 ' + t.rule; };
+    var tilts = ['rotate(-2deg)', 'rotate(1.5deg)', 'rotate(-0.5deg)', 'rotate(2deg)', 'rotate(-1.5deg)'];
+    var tapeTilts = ['rotate(3deg)', 'rotate(-4deg)', 'rotate(2deg)', 'rotate(-2deg)', 'rotate(5deg)'];
+    var phs = [t.line, this.mix(accent, 255, 0.72), t.rule];
+    var phInks = [dark ? t.muted : 'rgba(30,34,40,0.45)', 'rgba(30,34,40,0.45)', 'rgba(30,34,40,0.45)'];
+    var gal = function (list) {
+      return list.map(function (g, i) {
+        return { url: g.url || '', alt: g.alt, hasImg: !!g.url, noImg: !g.url, phInk: phInks[i % 3], ph: g.url ? '#2A2D33' : phs[i % phs.length], tilt: tilts[i % tilts.length], tapeTilt: tapeTilts[i % tapeTilts.length] };
+      });
+    };
+    var PHOTO = 'assets/photo.jpg';
+    var linkOut = function (url, verb) { var h = self.host(url); return { url: url, host: h || 'link', aria: verb + (h ? ' on ' + h : '') }; };
+    var song = function (d) {
+      return { url: d.spotifyUrl, title: d.title || 'My song on Spotify', artist: d.artist || '', aria: 'Open ' + (d.title ? '“' + d.title + '”' + (d.artist ? ' by ' + d.artist : '') : 'my song') + ' on Spotify' };
+    };
+    var data = {
+      video: { url: 'https://www.youtube.com/watch?v=XXXXXXXXXXX' },
+      videoLong: { url: 'https://media-archive.college-of-computer-studies.example.edu.ph/v/839201' },
+      booking: { url: 'https://calendly.com/yourname/chat' },
+      bookingLong: { url: 'https://appointments.student-career-services.example.edu.ph/book/yourname' },
+      galleryFull: [
+        { url: PHOTO, alt: 'Our capstone team presenting the final prototype to the panel at the college research colloquium, right after the demo' },
+        { alt: '[Photo caption]' }, { alt: '[Photo caption]' }, { url: PHOTO, alt: '[Photo caption]' }, { alt: '[Photo caption]' },
+        { alt: '[Photo caption]' }, { url: PHOTO, alt: '[Photo caption]' }, { alt: '[Photo caption]' }, { alt: '[Photo caption]' }, { alt: '[Photo caption]' }
+      ],
+      gallerySparse: [{ url: PHOTO, alt: '[Photo caption]' }],
+      servicesFull: [
+        { name: 'Website design and development for small businesses, plus a basic hosting setup', price: 'from ₱5,000' },
+        { name: '[Service name]', price: '[from ₱000]' },
+        { name: '[Service name]', price: 'Rates depend on scope, message me first' },
+        { name: '[Service name]' },
+        { name: '[Service name]', price: '[₱000 / hour]' },
+        { name: '[Service name]', price: '[from ₱000]' }, { name: '[Service name]' }, { name: '[Service name]', price: '[from ₱000]' },
+        { name: '[Service name]', price: '[from ₱000]' }, { name: '[Service name]', price: '[from ₱000]' }, { name: '[Service name]' },
+        { name: '[Service name]', price: '[from ₱000]' }, { name: '[Service name]', price: '[from ₱000]' }, { name: '[Service name]', price: '[from ₱000]' },
+        { name: '[Service name]' }, { name: '[Service name]', price: '[from ₱000]' }, { name: '[Service name]', price: '[from ₱000]' },
+        { name: '[Service name]', price: '[from ₱000]' }, { name: '[Service name]' }, { name: '[Service name]', price: '[from ₱000]' }
+      ],
+      servicesSparse: [{ name: '[Service name]' }],
+      experienceFull: [
+        { role: 'Student lab assistant, College of Computer Studies research and extension office', org: 'Department of Information and Communications Technology, Regional Office IV-A', years: 'Jun 2024 – present, part-time' },
+        { role: '[Role]', org: '[Organization name, 30 chars...]', years: '[20XX – 20XX]' },
+        { role: '[Role]', org: '[Organization]', years: '[20XX – 20XX]' }, { role: '[Role]', org: '[Organization]', years: '[20XX – 20XX]' },
+        { role: '[Role]', org: '[Organization]', years: '[20XX – 20XX]' }, { role: '[Role]', org: '[Organization]', years: '[20XX – 20XX]' },
+        { role: '[Role]', org: '[Organization]', years: '[20XX – 20XX]' }, { role: '[Role]', org: '[Organization]', years: '[20XX – 20XX]' },
+        { role: '[Role]', org: '[Organization]', years: '[20XX – 20XX]' }, { role: '[Role]', org: '[Organization]', years: '[20XX – 20XX]' },
+        { role: '[Role]', org: '[Organization]', years: '[20XX – 20XX]' }, { role: '[Role]', org: '[Organization]', years: '[20XX – 20XX]' },
+        { role: '[Role]', org: '[Organization]', years: '[20XX – 20XX]' }, { role: '[Role]', org: '[Organization]', years: '[20XX – 20XX]' },
+        { role: '[Role]', org: '[Organization]', years: '[20XX]' }
+      ],
+      experienceSparse: [{ role: '[Role]', org: '[Organization]', years: '[20XX – 20XX]' }],
+      statsFull: [
+        { label: 'Experience', value: '8+ years' },
+        { label: '[Label]', value: '[Value]' }, { label: '[Label]', value: '[Value]' }, { label: '[Label]', value: '[Value]' },
+        { label: '[A longer label, up to forty characters]', value: '[A value up to 30 characters]' },
+        { label: '[Label]', value: '[Value]' }
+      ],
+      statsSparse: [{ label: '[Label]', value: '[Value]' }],
+      interestsFull: ['Restoring old film cameras and darkrooms', '[Interest]', 'Badminton', 'Anime', '[Interest]', 'Hackathons', 'Coffee', 'Board games', '[Interest]', 'Hiking', 'Open source', 'Baking', '[Interest]', 'Chess', 'K-dramas', 'Volunteering', '[Interest]', 'Sketching', 'Running', '[Interest]'],
+      interestsSparse: ['[Interest]'],
+      songFull: { spotifyUrl: 'https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX', title: '[Song title — long titles wrap onto two lines and then stop with an ellipsis...]', artist: '[Artist name]' },
+      songSparse: { spotifyUrl: 'https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX' }
+    };
+    var svc = function (list) { return list.map(function (x, i) { return { name: x.name, price: x.price || '', divider: divider(i) }; }); };
+    var exp = function (list) { return list.map(function (x, i) { return { role: x.role, org: x.org, years: x.years, divider: divider(i), dot: i === 0 ? accent : t.paper }; }); };
+    var sts = function (list) { return list.map(function (x, i) { return { label: x.label, value: x.value, bg: (i % 3 === 1) ? noteB : noteA, tilt: i % 2 === 0 ? 'rotate(-1.5deg)' : 'rotate(1.2deg)' }; }); };
+    var tags = function (list) { return list.map(function (x) { return { t: x }; }); };
+    return {
+      bg: t.bg, grid: t.grid, ink: t.ink, muted: t.muted, surface: t.surface, line: t.line, soft: t.soft, dim: t.dim,
+      paper: t.paper, rule: t.rule, margin: t.margin, tagBg: t.tagBg, shadowInk: t.shadowInk,
+      accent: accent,
+      accentInk: accentInk,
+      mark: mark,
+      tape: tape,
+      noteInk: '#1E2228',
+      isDark: dark,
+      isLight: !dark,
+      themeAria: dark ? 'Switch to light theme' : 'Switch to dark theme',
+      toggleTheme: function () { self.setState({ themeOverride: self.resolveTheme() === 'dark' ? 'light' : 'dark' }); },
+      shareCard: function () {
+        var url = (typeof location !== 'undefined') ? location.href : '';
+        try {
+          if (navigator.share) { navigator.share({ title: 'Warren Jacob Abdon', url: url }); return; }
+          if (navigator.clipboard) { navigator.clipboard.writeText(url); }
+        } catch (err) {}
+        self.showToast('Link copied');
+      },
+      videoMain: linkOut(data.video.url, 'Watch my video'),
+      videoLong: linkOut(data.videoLong.url, 'Watch my video'),
+      bookMain: linkOut(data.booking.url, 'Book a time'),
+      bookLong: linkOut(data.bookingLong.url, 'Book a time'),
+      galleryFull: gal(data.galleryFull),
+      gallerySparse: gal(data.gallerySparse),
+      servicesFull: svc(data.servicesFull),
+      servicesSparse: svc(data.servicesSparse),
+      experienceFull: exp(data.experienceFull),
+      experienceSparse: exp(data.experienceSparse),
+      statsFull: sts(data.statsFull),
+      statsSparse: sts(data.statsSparse),
+      interestsFull: tags(data.interestsFull),
+      interestsSparse: tags(data.interestsSparse),
+      songFull: song(data.songFull),
+      songSparse: song(data.songSparse),
+      hasToast: !!s.toast,
+      toast: s.toast
+    };
+  }
+}
+</script>
+<script>(function(global,factory){typeof exports==="object"&&typeof module!=="undefined"?module.exports=factory():typeof define==="function"&&define.amd?define(factory):(global=global||self,global.morphdom=factory())})(this,function(){"use strict";var DOCUMENT_FRAGMENT_NODE=11;function morphAttrs(fromNode,toNode){var toNodeAttrs=toNode.attributes;var attr;var attrName;var attrNamespaceURI;var attrValue;var fromValue;if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE||fromNode.nodeType===DOCUMENT_FRAGMENT_NODE){return}for(var i=toNodeAttrs.length-1;i>=0;i--){attr=toNodeAttrs[i];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;attrValue=attr.value;if(attrNamespaceURI){attrName=attr.localName||attrName;fromValue=fromNode.getAttributeNS(attrNamespaceURI,attrName);if(fromValue!==attrValue){if(attr.prefix==="xmlns"){attrName=attr.name}fromNode.setAttributeNS(attrNamespaceURI,attrName,attrValue)}}else{fromValue=fromNode.getAttribute(attrName);if(fromValue!==attrValue){fromNode.setAttribute(attrName,attrValue)}}}var fromNodeAttrs=fromNode.attributes;for(var d=fromNodeAttrs.length-1;d>=0;d--){attr=fromNodeAttrs[d];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;if(attrNamespaceURI){attrName=attr.localName||attrName;if(!toNode.hasAttributeNS(attrNamespaceURI,attrName)){fromNode.removeAttributeNS(attrNamespaceURI,attrName)}}else{if(!toNode.hasAttribute(attrName)){fromNode.removeAttribute(attrName)}}}}var range;var NS_XHTML="http://www.w3.org/1999/xhtml";var doc=typeof document==="undefined"?undefined:document;var HAS_TEMPLATE_SUPPORT=!!doc&&"content"in doc.createElement("template");var HAS_RANGE_SUPPORT=!!doc&&doc.createRange&&"createContextualFragment"in doc.createRange();function createFragmentFromTemplate(str){var template=doc.createElement("template");template.innerHTML=str;return template.content.childNodes[0]}function createFragmentFromRange(str){if(!range){range=doc.createRange();range.selectNode(doc.body)}var fragment=range.createContextualFragment(str);return fragment.childNodes[0]}function createFragmentFromWrap(str){var fragment=doc.createElement("body");fragment.innerHTML=str;return fragment.childNodes[0]}function toElement(str){str=str.trim();if(HAS_TEMPLATE_SUPPORT){return createFragmentFromTemplate(str)}else if(HAS_RANGE_SUPPORT){return createFragmentFromRange(str)}return createFragmentFromWrap(str)}function compareNodeNames(fromEl,toEl){var fromNodeName=fromEl.nodeName;var toNodeName=toEl.nodeName;var fromCodeStart,toCodeStart;if(fromNodeName===toNodeName){return true}fromCodeStart=fromNodeName.charCodeAt(0);toCodeStart=toNodeName.charCodeAt(0);if(fromCodeStart<=90&&toCodeStart>=97){return fromNodeName===toNodeName.toUpperCase()}else if(toCodeStart<=90&&fromCodeStart>=97){return toNodeName===fromNodeName.toUpperCase()}else{return false}}function createElementNS(name,namespaceURI){return!namespaceURI||namespaceURI===NS_XHTML?doc.createElement(name):doc.createElementNS(namespaceURI,name)}function moveChildren(fromEl,toEl){var curChild=fromEl.firstChild;while(curChild){var nextChild=curChild.nextSibling;toEl.appendChild(curChild);curChild=nextChild}return toEl}function syncBooleanAttrProp(fromEl,toEl,name){if(fromEl[name]!==toEl[name]){fromEl[name]=toEl[name];if(fromEl[name]){fromEl.setAttribute(name,"")}else{fromEl.removeAttribute(name)}}}var specialElHandlers={OPTION:function(fromEl,toEl){var parentNode=fromEl.parentNode;if(parentNode){var parentName=parentNode.nodeName.toUpperCase();if(parentName==="OPTGROUP"){parentNode=parentNode.parentNode;parentName=parentNode&&parentNode.nodeName.toUpperCase()}if(parentName==="SELECT"&&!parentNode.hasAttribute("multiple")){if(fromEl.hasAttribute("selected")&&!toEl.selected){fromEl.setAttribute("selected","selected");fromEl.removeAttribute("selected")}parentNode.selectedIndex=-1}}syncBooleanAttrProp(fromEl,toEl,"selected")},INPUT:function(fromEl,toEl){syncBooleanAttrProp(fromEl,toEl,"checked");syncBooleanAttrProp(fromEl,toEl,"disabled");if(fromEl.value!==toEl.value){fromEl.value=toEl.value}if(!toEl.hasAttribute("value")){fromEl.removeAttribute("value")}},TEXTAREA:function(fromEl,toEl){var newValue=toEl.value;if(fromEl.value!==newValue){fromEl.value=newValue}var firstChild=fromEl.firstChild;if(firstChild){var oldValue=firstChild.nodeValue;if(oldValue==newValue||!newValue&&oldValue==fromEl.placeholder){return}firstChild.nodeValue=newValue}},SELECT:function(fromEl,toEl){if(!toEl.hasAttribute("multiple")){var selectedIndex=-1;var i=0;var curChild=fromEl.firstChild;var optgroup;var nodeName;while(curChild){nodeName=curChild.nodeName&&curChild.nodeName.toUpperCase();if(nodeName==="OPTGROUP"){optgroup=curChild;curChild=optgroup.firstChild}else{if(nodeName==="OPTION"){if(curChild.hasAttribute("selected")){selectedIndex=i;break}i++}curChild=curChild.nextSibling;if(!curChild&&optgroup){curChild=optgroup.nextSibling;optgroup=null}}}fromEl.selectedIndex=selectedIndex}}};var ELEMENT_NODE=1;var DOCUMENT_FRAGMENT_NODE$1=11;var TEXT_NODE=3;var COMMENT_NODE=8;function noop(){}function defaultGetNodeKey(node){if(node){return node.getAttribute&&node.getAttribute("id")||node.id}}function morphdomFactory(morphAttrs){return function morphdom(fromNode,toNode,options){if(!options){options={}}if(typeof toNode==="string"){if(fromNode.nodeName==="#document"||fromNode.nodeName==="HTML"||fromNode.nodeName==="BODY"){var toNodeHtml=toNode;toNode=doc.createElement("html");toNode.innerHTML=toNodeHtml}else{toNode=toElement(toNode)}}else if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE$1){toNode=toNode.firstElementChild}var getNodeKey=options.getNodeKey||defaultGetNodeKey;var onBeforeNodeAdded=options.onBeforeNodeAdded||noop;var onNodeAdded=options.onNodeAdded||noop;var onBeforeElUpdated=options.onBeforeElUpdated||noop;var onElUpdated=options.onElUpdated||noop;var onBeforeNodeDiscarded=options.onBeforeNodeDiscarded||noop;var onNodeDiscarded=options.onNodeDiscarded||noop;var onBeforeElChildrenUpdated=options.onBeforeElChildrenUpdated||noop;var skipFromChildren=options.skipFromChildren||noop;var addChild=options.addChild||function(parent,child){return parent.appendChild(child)};var childrenOnly=options.childrenOnly===true;var fromNodesLookup=Object.create(null);var keyedRemovalList=[];function addKeyedRemoval(key){keyedRemovalList.push(key)}function walkDiscardedChildNodes(node,skipKeyedNodes){if(node.nodeType===ELEMENT_NODE){var curChild=node.firstChild;while(curChild){var key=undefined;if(skipKeyedNodes&&(key=getNodeKey(curChild))){addKeyedRemoval(key)}else{onNodeDiscarded(curChild);if(curChild.firstChild){walkDiscardedChildNodes(curChild,skipKeyedNodes)}}curChild=curChild.nextSibling}}}function removeNode(node,parentNode,skipKeyedNodes){if(onBeforeNodeDiscarded(node)===false){return}if(parentNode){parentNode.removeChild(node)}onNodeDiscarded(node);walkDiscardedChildNodes(node,skipKeyedNodes)}function indexTree(node){if(node.nodeType===ELEMENT_NODE||node.nodeType===DOCUMENT_FRAGMENT_NODE$1){var curChild=node.firstChild;while(curChild){var key=getNodeKey(curChild);if(key){fromNodesLookup[key]=curChild}indexTree(curChild);curChild=curChild.nextSibling}}}indexTree(fromNode);function handleNodeAdded(el){onNodeAdded(el);var curChild=el.firstChild;while(curChild){var nextSibling=curChild.nextSibling;var key=getNodeKey(curChild);if(key){var unmatchedFromEl=fromNodesLookup[key];if(unmatchedFromEl&&compareNodeNames(curChild,unmatchedFromEl)){curChild.parentNode.replaceChild(unmatchedFromEl,curChild);morphEl(unmatchedFromEl,curChild)}else{handleNodeAdded(curChild)}}else{handleNodeAdded(curChild)}curChild=nextSibling}}function cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey){while(curFromNodeChild){var fromNextSibling=curFromNodeChild.nextSibling;if(curFromNodeKey=getNodeKey(curFromNodeChild)){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}}function morphEl(fromEl,toEl,childrenOnly){var toElKey=getNodeKey(toEl);if(toElKey){delete fromNodesLookup[toElKey]}if(!childrenOnly){var beforeUpdateResult=onBeforeElUpdated(fromEl,toEl);if(beforeUpdateResult===false){return}else if(beforeUpdateResult instanceof HTMLElement){fromEl=beforeUpdateResult;indexTree(fromEl)}morphAttrs(fromEl,toEl);onElUpdated(fromEl);if(onBeforeElChildrenUpdated(fromEl,toEl)===false){return}}if(fromEl.nodeName!=="TEXTAREA"){morphChildren(fromEl,toEl)}else{specialElHandlers.TEXTAREA(fromEl,toEl)}}function morphChildren(fromEl,toEl){var skipFrom=skipFromChildren(fromEl,toEl);var curToNodeChild=toEl.firstChild;var curFromNodeChild=fromEl.firstChild;var curToNodeKey;var curFromNodeKey;var fromNextSibling;var toNextSibling;var matchingFromEl;outer:while(curToNodeChild){toNextSibling=curToNodeChild.nextSibling;curToNodeKey=getNodeKey(curToNodeChild);while(!skipFrom&&curFromNodeChild){fromNextSibling=curFromNodeChild.nextSibling;if(curToNodeChild.isSameNode&&curToNodeChild.isSameNode(curFromNodeChild)){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}curFromNodeKey=getNodeKey(curFromNodeChild);var curFromNodeType=curFromNodeChild.nodeType;var isCompatible=undefined;if(curFromNodeType===curToNodeChild.nodeType){if(curFromNodeType===ELEMENT_NODE){if(curToNodeKey){if(curToNodeKey!==curFromNodeKey){if(matchingFromEl=fromNodesLookup[curToNodeKey]){if(fromNextSibling===matchingFromEl){isCompatible=false}else{fromEl.insertBefore(matchingFromEl,curFromNodeChild);if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=matchingFromEl;curFromNodeKey=getNodeKey(curFromNodeChild)}}else{isCompatible=false}}}else if(curFromNodeKey){isCompatible=false}isCompatible=isCompatible!==false&&compareNodeNames(curFromNodeChild,curToNodeChild);if(isCompatible){morphEl(curFromNodeChild,curToNodeChild)}}else if(curFromNodeType===TEXT_NODE||curFromNodeType==COMMENT_NODE){isCompatible=true;if(curFromNodeChild.nodeValue!==curToNodeChild.nodeValue){curFromNodeChild.nodeValue=curToNodeChild.nodeValue}}}if(isCompatible){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}if(curToNodeKey&&(matchingFromEl=fromNodesLookup[curToNodeKey])&&compareNodeNames(matchingFromEl,curToNodeChild)){if(!skipFrom){addChild(fromEl,matchingFromEl)}morphEl(matchingFromEl,curToNodeChild)}else{var onBeforeNodeAddedResult=onBeforeNodeAdded(curToNodeChild);if(onBeforeNodeAddedResult!==false){if(onBeforeNodeAddedResult){curToNodeChild=onBeforeNodeAddedResult}if(curToNodeChild.actualize){curToNodeChild=curToNodeChild.actualize(fromEl.ownerDocument||doc)}addChild(fromEl,curToNodeChild);handleNodeAdded(curToNodeChild)}}curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling}cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey);var specialElHandler=specialElHandlers[fromEl.nodeName];if(specialElHandler){specialElHandler(fromEl,toEl)}}var morphedNode=fromNode;var morphedNodeType=morphedNode.nodeType;var toNodeType=toNode.nodeType;if(!childrenOnly){if(morphedNodeType===ELEMENT_NODE){if(toNodeType===ELEMENT_NODE){if(!compareNodeNames(fromNode,toNode)){onNodeDiscarded(fromNode);morphedNode=moveChildren(fromNode,createElementNS(toNode.nodeName,toNode.namespaceURI))}}else{morphedNode=toNode}}else if(morphedNodeType===TEXT_NODE||morphedNodeType===COMMENT_NODE){if(toNodeType===morphedNodeType){if(morphedNode.nodeValue!==toNode.nodeValue){morphedNode.nodeValue=toNode.nodeValue}return morphedNode}else{morphedNode=toNode}}}if(morphedNode===toNode){onNodeDiscarded(fromNode)}else{if(toNode.isSameNode&&toNode.isSameNode(morphedNode)){return}morphEl(morphedNode,toNode,childrenOnly);if(keyedRemovalList){for(var i=0,len=keyedRemovalList.length;i<len;i++){var elToRemove=fromNodesLookup[keyedRemovalList[i]];if(elToRemove){removeNode(elToRemove,elToRemove.parentNode,false)}}}}if(!childrenOnly&&morphedNode!==fromNode&&fromNode.parentNode){if(morphedNode.actualize){morphedNode=morphedNode.actualize(fromNode.ownerDocument||doc)}fromNode.parentNode.replaceChild(morphedNode,fromNode)}return morphedNode}}var morphdom=morphdomFactory(morphAttrs);return morphdom});</script>
+<script>(function () {
+  function legacyCopy(t) { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); }
+  var nativeWrite = navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText.bind(navigator.clipboard) : null;
+  var shim = function (t) { if (!nativeWrite) { legacyCopy(t); return Promise.resolve(); } return nativeWrite(t).catch(function () { legacyCopy(t); }); };
+  try { if (navigator.clipboard) { navigator.clipboard.writeText = shim; } else { Object.defineProperty(navigator, 'clipboard', { value: { writeText: shim } }); } } catch (e) {}
+})();
+(function () {
+  var C = JSON.parse(document.getElementById('dc-contact').textContent);
+  var photoB64 = '';
+  if (C.photo) {
+    fetch(C.photo).then(function (r) { return r.blob(); }).then(function (b) {
+      var fr = new FileReader(); fr.onload = function () { photoB64 = String(fr.result).split(',')[1] || ''; }; fr.readAsDataURL(b);
+    }).catch(function () {});
+  }
+  function esc(v) { return String(v || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1'); }
+  function fold(line) { var out = []; while (line.length > 75) { out.push(line.slice(0, 75)); line = ' ' + line.slice(75); } out.push(line); return out.join('\r\n'); }
+  window.__dcSaveContact = function () {
+    var url = C.website || location.href;
+    var L = ['BEGIN:VCARD', 'VERSION:3.0',
+      'N:' + esc(C.lastName) + ';' + esc(C.firstName) + ';;;',
+      'FN:' + esc(C.fullName)];
+    if (C.title) { L.push('TITLE:' + esc(C.title)); }
+    if (C.org) { L.push('ORG:' + esc(C.org)); }
+    if (C.phone) { L.push('TEL;TYPE=CELL:' + C.phone); }
+    if (C.email) { L.push('EMAIL;TYPE=INTERNET:' + C.email); }
+    if (url) { L.push('URL:' + url); }
+    if (C.city || C.country) { L.push('ADR;TYPE=WORK:;;;' + esc(C.city) + ';;;' + esc(C.country)); }
+    if (C.note) { L.push('NOTE:' + esc(C.note)); }
+    if (photoB64) { L.push('PHOTO;ENCODING=b;TYPE=JPEG:' + photoB64); }
+    L.push('END:VCARD');
+    var text = L.map(fold).join('\r\n') + '\r\n';
+    var blob = new Blob([text], { type: 'text/vcard;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (C.fullName || 'contact').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.vcf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  };
+})();
+(function () {
+  var tpl = document.getElementById('dc-template');
+  var root = document.getElementById('app');
+  var PROPS = JSON.parse(document.getElementById('dc-props').textContent);
+  function DCLogic(props) { this.props = props || {}; this.state = {}; }
+  DCLogic.prototype.setState = function (p) {
+    var next = typeof p === 'function' ? p(this.state, this.props) : p;
+    this.state = Object.assign({}, this.state, next);
+    schedule();
+  };
+  var Component = new Function('DCLogic', document.getElementById('dc-logic').textContent + '\nreturn Component;')(DCLogic);
+  var comp = new Component(PROPS);
+  if (!comp.state) { comp.state = {}; }
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  function get(scope, path) {
+    if (path === 'true') { return true; }
+    if (path === 'false') { return false; }
+    return path.split('.').reduce(function (a, k) { return a == null ? a : a[k]; }, scope);
+  }
+  function sub(str, scope) {
+    return str.replace(HOLE, function (m, p) { var v = get(scope, p); return (v == null || typeof v === 'function') ? '' : String(v); });
+  }
+  function build(node, scope, parent) {
+    var kids = node.childNodes;
+    for (var i = 0; i < kids.length; i++) {
+      var ch = kids[i];
+      if (ch.nodeType === 3) { parent.appendChild(document.createTextNode(sub(ch.textContent, scope))); continue; }
+      if (ch.nodeType !== 1) { continue; }
+      var tag = ch.localName;
+      if (tag === 'sc-if') {
+        var m = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('value') || '');
+        if (m && get(scope, m[1])) { build(ch, scope, parent); }
+        continue;
+      }
+      if (tag === 'sc-for') {
+        var lm = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('list') || '');
+        var as = ch.getAttribute('as');
+        var list = (lm && get(scope, lm[1])) || [];
+        for (var j = 0; j < list.length; j++) { var sc = Object.create(scope); sc[as] = list[j]; build(ch, sc, parent); }
+        continue;
+      }
+      var el = ch.namespaceURI && ch.namespaceURI !== 'http://www.w3.org/1999/xhtml' ? document.createElementNS(ch.namespaceURI, ch.localName) : document.createElement(tag);
+      var attrs = ch.attributes;
+      for (var a = 0; a < attrs.length; a++) {
+        var at = attrs[a];
+        if (/^on[a-z]/i.test(at.name)) {
+          var hm = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/.exec(at.value);
+          var fn = hm ? get(scope, hm[1]) : null;
+          if (typeof fn === 'function') { el['on' + at.name.slice(2).toLowerCase()] = fn; }
+          continue;
+        }
+        if (at.name.indexOf('hint-') === 0) { continue; }
+        el.setAttribute(at.name, sub(at.value, scope));
+      }
+      build(ch.content || ch, scope, el);
+      parent.appendChild(el);
+    }
+  }
+  var EVTS = ['click', 'mousemove', 'mouseleave', 'touchmove', 'touchend', 'touchstart', 'input', 'change', 'keydown'];
+  function render() {
+    var vals = comp.renderVals();
+    if (typeof vals.save === 'function') { var origSave = vals.save; vals.save = function () { window.__dcSaveContact(); return origSave.apply(this, arguments); }; }
+    var next = document.createElement('div');
+    next.id = 'app';
+    build(tpl.content, vals, next);
+    morphdom(root, next, {
+      onBeforeElUpdated: function (from, to) {
+        for (var i = 0; i < EVTS.length; i++) { var k = 'on' + EVTS[i]; if (from[k] !== to[k]) { from[k] = to[k] || null; } }
+        return !from.isEqualNode(to);
+      }
+    });
+    var first = root.firstElementChild;
+    if (first) { document.body.style.background = getComputedStyle(first).backgroundColor; }
+  }
+  var queued = false;
+  function schedule() { if (queued) { return; } queued = true; requestAnimationFrame(function () { queued = false; render(); }); }
+  render();
+  if (comp.componentDidMount) { comp.componentDidMount(); }
+})();
+</script>
+</body>
+</html>

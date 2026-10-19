@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Warren Jacob Abdon — Digital Card</title>
+<meta name="description" content="Software Engineer · Full-Stack Developer. Save my contact in one tap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&amp;family=Gloock&amp;family=Courier+Prime:wght@400;700&amp;family=Caveat:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible{outline:2px dashed #E8604C;outline-offset:3px}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes drop{0%{opacity:0;transform:translateY(-18px) rotate(-6deg)}100%{opacity:1}}
+@keyframes slap{0%{opacity:0;transform:scale(1.4) rotate(10deg)}100%{opacity:1}}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes wiggle{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes sheetUp{0%{transform:translateY(100%)}100%{transform:none}}
+@keyframes toastIn{0%{opacity:0;transform:translate(-50%,12px)}100%{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion: reduce){.anim{animation:none !important}}
+.sb-ticket{-webkit-mask:radial-gradient(circle at 0 50%,transparent 13px,#000 13.5px) left/51% 100% no-repeat,radial-gradient(circle at 100% 50%,transparent 13px,#000 13.5px) right/51% 100% no-repeat;mask:radial-gradient(circle at 0 50%,transparent 13px,#000 13.5px) left/51% 100% no-repeat,radial-gradient(circle at 100% 50%,transparent 13px,#000 13.5px) right/51% 100% no-repeat}
+.sb-stub{-webkit-mask:radial-gradient(circle at 0 50%,transparent 9px,#000 9.5px) left/51% 100% no-repeat,radial-gradient(circle at 100% 50%,transparent 9px,#000 9.5px) right/51% 100% no-repeat;mask:radial-gradient(circle at 0 50%,transparent 9px,#000 9.5px) left/51% 100% no-repeat,radial-gradient(circle at 100% 50%,transparent 9px,#000 9.5px) right/51% 100% no-repeat}
+.sb-zig{-webkit-mask:linear-gradient(#000 0 0) top/100% calc(100% - 8px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/16px 8px repeat-x;mask:linear-gradient(#000 0 0) top/100% calc(100% - 8px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/16px 8px repeat-x}
+.sb-clamp3{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.sb-ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+</style>
+<style>
+html,body{margin:0;padding:0}
+body{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+#app>div{width:100% !important;max-width:430px;margin:0 auto;min-height:100vh !important;min-height:100dvh !important}
+</style>
+</head>
+<body>
+<!-- 07-social-scrapbook — new sections — from ScrapbookSections.dc.html -->
+<div id="app"></div>
+<template id="dc-template">
+<div style="position: relative; width: 390px; min-height: {{pageMin}}; box-sizing: border-box; background-color: {{bg}}; background-image: {{bgDots}}; background-size: 18px 18px; font-family: 'Courier Prime', 'Courier New', monospace; color: {{ink}}; display: flex; flex-direction: column; overflow: hidden; transition: background-color 400ms ease, color 400ms ease">
+
+  <div style="height: 50px; padding: 0 10px 0 20px; display: flex; align-items: center; justify-content: space-between">
+    <span style="font-size: 12px; letter-spacing: 1.2px; color: {{dim}}">[YOUR BRAND]</span>
+    <div style="display: flex">
+      <button type="button" onClick="{{toggleTheme}}" aria-label="{{themeAria}}" style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+        <div style="width: 34px; height: 34px; border-radius: 17px; background: {{paper}}; color: #2A2620; box-shadow: 0 2px 0 rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center">
+          <sc-if value="{{isDark}}" hint-placeholder-val="{{ false }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+          </sc-if>
+          <sc-if value="{{isLight}}" hint-placeholder-val="{{ true }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+          </sc-if>
+        </div>
+      </button>
+      <button type="button" onClick="{{shareCard}}" aria-label="Share this card" style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+        <div style="width: 34px; height: 34px; border-radius: 17px; background: {{paper}}; color: #2A2620; box-shadow: 0 2px 0 rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"></path><path d="m16 6-4-4-4 4"></path><path d="M12 2v13"></path></svg>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <div style="padding: 18px 20px 0; display: flex; flex-direction: column; gap: 2px">
+    <span style="font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">NEW SECTIONS — SOCIAL SCRAPBOOK</span>
+    <span style="font-family: 'Caveat', cursive; font-size: 22px; font-weight: 600; color: {{ink}}">video, booking, résumé, projects, services, experience, skills &amp; stats</span>
+  </div>
+  <div style="margin: 20px 0 0; height: 16px; background: {{checker}}; background-size: 16px 16px"></div>
+
+  <!-- ================= VIDEO ================= -->
+  <div style="padding: 34px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">VIDEO · FULL · sits after the song record</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">watch this</span></span>
+    <sc-for list="{{videoMain}}" as="v" hint-placeholder-count="1">
+      <a href="{{v.url}}" aria-label="Watch video on {{v.host}}" style="position: relative; display: block; margin: 6px 4px 0; padding: 10px 10px 4px; background: #FBF8F1; color: #2A2620; box-shadow: 0 14px 28px rgba(0,0,0,0.16); transform: rotate(-1.2deg)">
+        <div style="position: absolute; left: -14px; top: -8px; width: 78px; height: 22px; background: {{tape}}; transform: rotate(-24deg); opacity: 0.9"></div>
+        <div style="position: absolute; right: -12px; top: -6px; width: 78px; height: 22px; background: {{tape}}; transform: rotate(20deg); opacity: 0.9"></div>
+        <div style="position: relative; padding: 16px 10px; background: #1B1A18">
+          <div style="position: absolute; left: 4px; right: 4px; top: 4px; height: 7px; background: repeating-linear-gradient(90deg, transparent 0 5px, #EDE6D8 5px 13px, transparent 13px 18px)"></div>
+          <div style="position: absolute; left: 4px; right: 4px; bottom: 4px; height: 7px; background: repeating-linear-gradient(90deg, transparent 0 5px, #EDE6D8 5px 13px, transparent 13px 18px)"></div>
+          <div style="aspect-ratio: 16 / 9; background-color: #2E2A25; background-image: repeating-linear-gradient(180deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 4px); display: flex; align-items: center; justify-content: center">
+            <div style="width: 68px; height: 68px; border-radius: 34px; background: {{accent}}; color: {{accentInk}}; box-shadow: 0 6px 0 rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true" style="margin-left: 4px"><path d="M7 4.5v15l12-7.5z"></path></svg>
+            </div>
+          </div>
+        </div>
+        <div style="min-height: 48px; display: flex; align-items: center; gap: 8px; padding: 0 2px">
+          <span style="font-family: 'Caveat', cursive; font-size: 23px; font-weight: 700; flex-shrink: 0">watch on</span>
+          <span class="sb-ell" style="flex: 1 1 auto; min-width: 0; font-size: 14px; font-weight: 700; letter-spacing: 0.5px">{{v.host}}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+
+  <div style="padding: 34px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">VIDEO · LONG / UNKNOWN HOST · host truncates on one line</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">watch this</span></span>
+    <sc-for list="{{videoLong}}" as="v" hint-placeholder-count="1">
+      <a href="{{v.url}}" aria-label="Watch video on {{v.host}}" style="position: relative; display: block; margin: 6px 4px 0; padding: 10px 10px 4px; background: #FBF8F1; color: #2A2620; box-shadow: 0 14px 28px rgba(0,0,0,0.16); transform: rotate(-1.2deg)">
+        <div style="position: absolute; left: -14px; top: -8px; width: 78px; height: 22px; background: {{tape}}; transform: rotate(-24deg); opacity: 0.9"></div>
+        <div style="position: absolute; right: -12px; top: -6px; width: 78px; height: 22px; background: {{tape}}; transform: rotate(20deg); opacity: 0.9"></div>
+        <div style="position: relative; padding: 16px 10px; background: #1B1A18">
+          <div style="position: absolute; left: 4px; right: 4px; top: 4px; height: 7px; background: repeating-linear-gradient(90deg, transparent 0 5px, #EDE6D8 5px 13px, transparent 13px 18px)"></div>
+          <div style="position: absolute; left: 4px; right: 4px; bottom: 4px; height: 7px; background: repeating-linear-gradient(90deg, transparent 0 5px, #EDE6D8 5px 13px, transparent 13px 18px)"></div>
+          <div style="aspect-ratio: 16 / 9; background-color: #2E2A25; background-image: repeating-linear-gradient(180deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 4px); display: flex; align-items: center; justify-content: center">
+            <div style="width: 68px; height: 68px; border-radius: 34px; background: {{accent}}; color: {{accentInk}}; box-shadow: 0 6px 0 rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true" style="margin-left: 4px"><path d="M7 4.5v15l12-7.5z"></path></svg>
+            </div>
+          </div>
+        </div>
+        <div style="min-height: 48px; display: flex; align-items: center; gap: 8px; padding: 0 2px">
+          <span style="font-family: 'Caveat', cursive; font-size: 23px; font-weight: 700; flex-shrink: 0">watch on</span>
+          <span class="sb-ell" style="flex: 1 1 auto; min-width: 0; font-size: 14px; font-weight: 700; letter-spacing: 0.5px">{{v.host}}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+
+  <!-- ================= BOOKING ================= -->
+  <div style="padding: 44px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">BOOKING · FULL · sits after Video, before the contact note</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">book a slot</span></span>
+    <sc-for list="{{bookingMain}}" as="b" hint-placeholder-count="1">
+      <div style="filter: drop-shadow(0 8px 12px rgba(0,0,0,0.14)); transform: rotate(1deg)">
+        <a href="{{b.url}}" class="sb-ticket" style="display: flex; min-height: 104px; background-color: #FBF8F1; background-image: repeating-linear-gradient(180deg, transparent 0 19px, #C9DAEA 19px 20px); color: #2A2620">
+          <div style="flex: 1 1 auto; min-width: 0; padding: 12px 12px 12px 28px; display: flex; flex-direction: column; justify-content: center; gap: 2px">
+            <span style="font-size: 11px; letter-spacing: 2px; font-weight: 700; color: #5A5246">ADMIT ONE · BOOKING</span>
+            <span style="font-family: 'Archivo Black', sans-serif; font-size: 23px; letter-spacing: -0.4px; line-height: 1.05">BOOK A SLOT</span>
+            <span class="sb-ell" style="font-size: 13px; font-weight: 700">{{b.host}}</span>
+          </div>
+          <div style="width: 84px; flex-shrink: 0; background: {{accent}}; color: {{accentInk}}; border-left: 2px dashed rgba(42,38,32,0.45); display: flex; align-items: center; justify-content: center; padding-right: 10px; box-sizing: border-box">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="1.5"></rect><path d="M3 9.5h18M8 2.5v4M16 2.5v4"></path><path d="m9 15 2 2 4-4"></path></svg>
+          </div>
+        </a>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="padding: 34px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">BOOKING · LONG / UNKNOWN HOST · host truncates</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">book a slot</span></span>
+    <sc-for list="{{bookingLong}}" as="b" hint-placeholder-count="1">
+      <div style="filter: drop-shadow(0 8px 12px rgba(0,0,0,0.14)); transform: rotate(1deg)">
+        <a href="{{b.url}}" class="sb-ticket" style="display: flex; min-height: 104px; background-color: #FBF8F1; background-image: repeating-linear-gradient(180deg, transparent 0 19px, #C9DAEA 19px 20px); color: #2A2620">
+          <div style="flex: 1 1 auto; min-width: 0; padding: 12px 12px 12px 28px; display: flex; flex-direction: column; justify-content: center; gap: 2px">
+            <span style="font-size: 11px; letter-spacing: 2px; font-weight: 700; color: #5A5246">ADMIT ONE · BOOKING</span>
+            <span style="font-family: 'Archivo Black', sans-serif; font-size: 23px; letter-spacing: -0.4px; line-height: 1.05">BOOK A SLOT</span>
+            <span class="sb-ell" style="font-size: 13px; font-weight: 700">{{b.host}}</span>
+          </div>
+          <div style="width: 84px; flex-shrink: 0; background: {{accent}}; color: {{accentInk}}; border-left: 2px dashed rgba(42,38,32,0.45); display: flex; align-items: center; justify-content: center; padding-right: 10px; box-sizing: border-box">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="1.5"></rect><path d="M3 9.5h18M8 2.5v4M16 2.5v4"></path><path d="m9 15 2 2 4-4"></path></svg>
+          </div>
+        </a>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- ================= RESUME ================= -->
+  <div style="padding: 44px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">RESUME · FULL · sits right before the contact note</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">résumé</span></span>
+    <sc-for list="{{resumeFull}}" as="r" hint-placeholder-count="1">
+      <a href="{{r.fileUrl}}" download style="position: relative; display: flex; align-items: center; gap: 18px; padding: 20px 16px 20px 20px; background-color: #CFAE84; background-image: radial-gradient(rgba(90,60,30,0.18) 1px, transparent 1.5px); background-size: 6px 6px; color: #2A2016; box-shadow: 0 10px 20px rgba(0,0,0,0.14); transform: rotate(-1deg)">
+        <div style="position: relative; width: 62px; height: 80px; flex-shrink: 0; box-sizing: border-box; padding: 16px 9px 0; background-color: #FFFFFF; background-image: repeating-linear-gradient(180deg, #CFC8BA 0 1.5px, transparent 1.5px 8px); background-clip: content-box; box-shadow: 0 6px 12px rgba(0,0,0,0.16); transform: rotate(-6deg)">
+          <div style="position: absolute; left: 50%; top: -8px; width: 40px; height: 14px; margin-left: -20px; background: {{tape}}; opacity: 0.9; transform: rotate(4deg)"></div>
+        </div>
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 10px">
+          <span style="font-family: 'Gloock', Georgia, serif; font-size: 21px; line-height: 1.12; overflow-wrap: anywhere">{{r.label}}</span>
+          <span style="height: 44px; padding: 0 16px; background: #1B1A18; color: #F4F1EA; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; letter-spacing: 1px; box-shadow: 0 4px 0 rgba(0,0,0,0.2)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+            DOWNLOAD
+          </span>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+
+  <div style="padding: 34px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">RESUME · SPARSE · no label, defaults to "Résumé / CV"</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">résumé</span></span>
+    <sc-for list="{{resumeSparse}}" as="r" hint-placeholder-count="1">
+      <a href="{{r.fileUrl}}" download style="position: relative; display: flex; align-items: center; gap: 18px; padding: 20px 16px 20px 20px; background-color: #CFAE84; background-image: radial-gradient(rgba(90,60,30,0.18) 1px, transparent 1.5px); background-size: 6px 6px; color: #2A2016; box-shadow: 0 10px 20px rgba(0,0,0,0.14); transform: rotate(-1deg)">
+        <div style="position: relative; width: 62px; height: 80px; flex-shrink: 0; box-sizing: border-box; padding: 16px 9px 0; background-color: #FFFFFF; background-image: repeating-linear-gradient(180deg, #CFC8BA 0 1.5px, transparent 1.5px 8px); background-clip: content-box; box-shadow: 0 6px 12px rgba(0,0,0,0.16); transform: rotate(-6deg)">
+          <div style="position: absolute; left: 50%; top: -8px; width: 40px; height: 14px; margin-left: -20px; background: {{tape}}; opacity: 0.9; transform: rotate(4deg)"></div>
+        </div>
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 10px">
+          <span style="font-family: 'Gloock', Georgia, serif; font-size: 21px; line-height: 1.12; overflow-wrap: anywhere">{{r.label}}</span>
+          <span style="height: 44px; padding: 0 16px; background: #1B1A18; color: #F4F1EA; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; letter-spacing: 1px; box-shadow: 0 4px 0 rgba(0,0,0,0.2)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
+            DOWNLOAD
+          </span>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+
+  <!-- ================= PORTFOLIO ================= -->
+  <div style="padding: 44px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">PORTFOLIO · FULL (12) · sits after the photo dump</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 18px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">things i made</span></span>
+    <sc-for list="{{portfolioFull}}" as="p" hint-placeholder-count="12">
+      <a href="{{p.url}}" style="position: relative; display: flex; align-items: flex-start; gap: 14px; min-height: 64px; padding: 14px; box-sizing: border-box; background-color: {{p.paper}}; background-image: {{p.pattern}}; color: #2A2620; box-shadow: 0 8px 16px rgba(0,0,0,0.12); transform: {{p.rot}}">
+        <div style="position: absolute; left: 50%; top: -9px; width: 56px; height: 18px; margin-left: -28px; background: {{tape}}; opacity: 0.85; transform: {{p.tapeRot}}"></div>
+        <sc-if value="{{p.hasThumb}}" hint-placeholder-val="{{ false }}">
+          <div style="width: 76px; flex-shrink: 0; padding: 5px 5px 14px; box-sizing: border-box; background: #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.14); transform: rotate(-3deg)">
+            <img src="{{p.thumbUrl}}" alt="" style="display: block; width: 100%; aspect-ratio: 1; object-fit: cover; object-position: 50% 18%">
+          </div>
+        </sc-if>
+        <sc-if value="{{p.noThumb}}" hint-placeholder-val="{{ true }}">
+          <span style="width: 52px; height: 58px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: {{p.letterBg}}; color: {{p.letterInk}}; font-family: {{p.letterFont}}; font-size: 34px; line-height: 1; transform: {{p.letterRot}}; box-shadow: 0 3px 0 rgba(0,0,0,0.14)">{{p.initial}}</span>
+        </sc-if>
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+          <span style="font-family: 'Gloock', Georgia, serif; font-size: 19px; line-height: 1.15; overflow-wrap: anywhere">{{p.title}}</span>
+          <sc-if value="{{p.hasDesc}}" hint-placeholder-val="{{ true }}">
+            <span class="sb-clamp3" style="font-size: 13px; line-height: 1.45; color: #5A5246">{{p.desc}}</span>
+          </sc-if>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg>
+      </a>
+    </sc-for>
+  </div>
+
+  <div style="padding: 34px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">PORTFOLIO · SPARSE · one item, no thumbnail, no description</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 18px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">things i made</span></span>
+    <sc-for list="{{portfolioSparse}}" as="p" hint-placeholder-count="1">
+      <a href="{{p.url}}" style="position: relative; display: flex; align-items: flex-start; gap: 14px; min-height: 64px; padding: 14px; box-sizing: border-box; background-color: {{p.paper}}; background-image: {{p.pattern}}; color: #2A2620; box-shadow: 0 8px 16px rgba(0,0,0,0.12); transform: {{p.rot}}">
+        <div style="position: absolute; left: 50%; top: -9px; width: 56px; height: 18px; margin-left: -28px; background: {{tape}}; opacity: 0.85; transform: {{p.tapeRot}}"></div>
+        <sc-if value="{{p.hasThumb}}" hint-placeholder-val="{{ false }}">
+          <div style="width: 76px; flex-shrink: 0; padding: 5px 5px 14px; box-sizing: border-box; background: #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.14); transform: rotate(-3deg)">
+            <img src="{{p.thumbUrl}}" alt="" style="display: block; width: 100%; aspect-ratio: 1; object-fit: cover; object-position: 50% 18%">
+          </div>
+        </sc-if>
+        <sc-if value="{{p.noThumb}}" hint-placeholder-val="{{ true }}">
+          <span style="width: 52px; height: 58px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: {{p.letterBg}}; color: {{p.letterInk}}; font-family: {{p.letterFont}}; font-size: 34px; line-height: 1; transform: {{p.letterRot}}; box-shadow: 0 3px 0 rgba(0,0,0,0.14)">{{p.initial}}</span>
+        </sc-if>
+        <div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; align-self: center">
+          <span style="font-family: 'Gloock', Georgia, serif; font-size: 19px; line-height: 1.15; overflow-wrap: anywhere">{{p.title}}</span>
+          <sc-if value="{{p.hasDesc}}" hint-placeholder-val="{{ true }}">
+            <span class="sb-clamp3" style="font-size: 13px; line-height: 1.45; color: #5A5246">{{p.desc}}</span>
+          </sc-if>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg>
+      </a>
+    </sc-for>
+  </div>
+
+  <!-- ================= SERVICES ================= -->
+  <div style="padding: 44px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">SERVICES · FULL (20) · sits after Portfolio</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">services</span></span>
+    <div style="display: flex; justify-content: center">
+      <div style="width: 100%; max-width: 320px; transform: rotate(-0.8deg); filter: drop-shadow(0 8px 12px rgba(0,0,0,0.12))">
+        <div class="sb-zig" style="background: #FBFAF6; color: #2A2620; padding: 18px 18px 24px">
+          <div style="text-align: center; font-weight: 700; font-size: 15px; letter-spacing: 3px">WHAT I CAN DO</div>
+          <div style="text-align: center; font-size: 12px; color: #5A5246; margin-top: 2px">price list</div>
+          <div style="margin: 12px 0 6px; border-top: 2px dashed #CFC8BA"></div>
+          <sc-for list="{{servicesFull}}" as="s" hint-placeholder-count="20">
+            <div style="min-height: 34px; padding: 6px 0; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; font-size: 14px; line-height: 1.35">
+              <span style="flex: 0 1 auto; min-width: 0; font-weight: 700; overflow-wrap: anywhere">{{s.name}}</span>
+              <sc-if value="{{s.hasPrice}}" hint-placeholder-val="{{ true }}">
+                <span style="flex: 1 0 24px; border-bottom: 2px dotted #CFC8BA"></span>
+                <span style="flex: 0 1 auto; margin-left: auto; max-width: 62%; text-align: right; overflow-wrap: anywhere">{{s.price}}</span>
+              </sc-if>
+            </div>
+          </sc-for>
+          <div style="margin: 8px 0 0; border-top: 2px dashed #CFC8BA"></div>
+          <div style="margin-top: 12px; height: 34px; background: repeating-linear-gradient(90deg, #2A2620 0 2px, transparent 2px 4px, #2A2620 4px 5px, transparent 5px 8px, #2A2620 8px 11px, transparent 11px 13px)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding: 34px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">SERVICES · SPARSE · one item, no price (no leader dots)</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">services</span></span>
+    <div style="display: flex; justify-content: center">
+      <div style="width: 100%; max-width: 320px; transform: rotate(-0.8deg); filter: drop-shadow(0 8px 12px rgba(0,0,0,0.12))">
+        <div class="sb-zig" style="background: #FBFAF6; color: #2A2620; padding: 18px 18px 24px">
+          <div style="text-align: center; font-weight: 700; font-size: 15px; letter-spacing: 3px">WHAT I CAN DO</div>
+          <div style="text-align: center; font-size: 12px; color: #5A5246; margin-top: 2px">price list</div>
+          <div style="margin: 12px 0 6px; border-top: 2px dashed #CFC8BA"></div>
+          <sc-for list="{{servicesSparse}}" as="s" hint-placeholder-count="1">
+            <div style="min-height: 34px; padding: 6px 0; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; font-size: 14px; line-height: 1.35">
+              <span style="flex: 0 1 auto; min-width: 0; font-weight: 700; overflow-wrap: anywhere">{{s.name}}</span>
+              <sc-if value="{{s.hasPrice}}" hint-placeholder-val="{{ true }}">
+                <span style="flex: 1 0 24px; border-bottom: 2px dotted #CFC8BA"></span>
+                <span style="flex: 0 1 auto; margin-left: auto; max-width: 62%; text-align: right; overflow-wrap: anywhere">{{s.price}}</span>
+              </sc-if>
+            </div>
+          </sc-for>
+          <div style="margin: 8px 0 0; border-top: 2px dashed #CFC8BA"></div>
+          <div style="margin-top: 12px; height: 34px; background: repeating-linear-gradient(90deg, #2A2620 0 2px, transparent 2px 4px, #2A2620 4px 5px, transparent 5px 8px, #2A2620 8px 11px, transparent 11px 13px)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= EXPERIENCE ================= -->
+  <div style="padding: 44px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">EXPERIENCE · FULL (15) · sits after orgs &amp; clubs</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 16px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">experience</span></span>
+    <div style="position: relative; padding: 4px 0 4px 40px; display: flex; flex-direction: column; gap: 14px">
+      <div style="position: absolute; left: 12px; top: -4px; bottom: -4px; width: 16px; background: {{tape}}; box-shadow: 0 2px 6px rgba(0,0,0,0.08)"></div>
+      <sc-for list="{{experienceFull}}" as="e" hint-placeholder-count="15">
+        <div style="position: relative; padding: 12px 14px 13px; background-color: {{e.paper}}; color: #2A2620; box-shadow: 0 6px 14px rgba(0,0,0,0.1); transform: {{e.rot}}">
+          <div style="position: absolute; left: -27px; top: 15px; width: 14px; height: 14px; border-radius: 7px; box-sizing: border-box; background: #1B1A18; border: 3px solid #FBF8F1"></div>
+          <span style="display: inline-block; max-width: 100%; box-sizing: border-box; padding: 3px 8px; background: #1B1A18; color: #F4F1EA; font-size: 12px; font-weight: 700; letter-spacing: 1px; line-height: 1.3; box-shadow: 0 2px 0 rgba(0,0,0,0.18)">{{e.years}}</span>
+          <div style="margin-top: 7px; font-family: 'Gloock', Georgia, serif; font-size: 19px; line-height: 1.15; overflow-wrap: anywhere">{{e.role}}</div>
+          <div style="margin-top: 2px; font-size: 13px; line-height: 1.35; color: #5A5246; overflow-wrap: anywhere">{{e.org}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 34px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">EXPERIENCE · SPARSE · one item</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 16px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">experience</span></span>
+    <div style="position: relative; padding: 4px 0 4px 40px; display: flex; flex-direction: column; gap: 14px">
+      <div style="position: absolute; left: 12px; top: -4px; bottom: -4px; width: 16px; background: {{tape}}; box-shadow: 0 2px 6px rgba(0,0,0,0.08)"></div>
+      <sc-for list="{{experienceSparse}}" as="e" hint-placeholder-count="1">
+        <div style="position: relative; padding: 12px 14px 13px; background-color: {{e.paper}}; color: #2A2620; box-shadow: 0 6px 14px rgba(0,0,0,0.1); transform: {{e.rot}}">
+          <div style="position: absolute; left: -27px; top: 15px; width: 14px; height: 14px; border-radius: 7px; box-sizing: border-box; background: #1B1A18; border: 3px solid #FBF8F1"></div>
+          <span style="display: inline-block; max-width: 100%; box-sizing: border-box; padding: 3px 8px; background: #1B1A18; color: #F4F1EA; font-size: 12px; font-weight: 700; letter-spacing: 1px; line-height: 1.3; box-shadow: 0 2px 0 rgba(0,0,0,0.18)">{{e.years}}</span>
+          <div style="margin-top: 7px; font-family: 'Gloock', Georgia, serif; font-size: 19px; line-height: 1.15; overflow-wrap: anywhere">{{e.role}}</div>
+          <div style="margin-top: 2px; font-size: 13px; line-height: 1.35; color: #5A5246; overflow-wrap: anywhere">{{e.org}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ================= SKILLS ================= -->
+  <div style="padding: 44px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">SKILLS · FULL (30) · sits after the interests tape strip</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">skills</span></span>
+    <div style="padding: 4px 4px 0; display: flex; flex-wrap: wrap; gap: 12px 8px">
+      <sc-for list="{{skillsFull}}" as="k" hint-placeholder-count="30">
+        <span style="display: inline-flex; align-items: center; min-height: 32px; max-width: 100%; padding: 5px 10px; box-sizing: border-box; background: {{k.bg}}; color: {{k.ink}}; font-size: 13px; font-weight: 700; letter-spacing: 1px; line-height: 1.3; text-transform: uppercase; overflow-wrap: anywhere; transform: {{k.rot}}; box-shadow: {{k.shadow}}">{{k.label}}</span>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 34px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">SKILLS · SPARSE · one tag</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">skills</span></span>
+    <div style="padding: 4px 4px 0; display: flex; flex-wrap: wrap; gap: 12px 8px">
+      <sc-for list="{{skillsSparse}}" as="k" hint-placeholder-count="1">
+        <span style="display: inline-flex; align-items: center; min-height: 32px; max-width: 100%; padding: 5px 10px; box-sizing: border-box; background: {{k.bg}}; color: {{k.ink}}; font-size: 13px; font-weight: 700; letter-spacing: 1px; line-height: 1.3; text-transform: uppercase; overflow-wrap: anywhere; transform: {{k.rot}}; box-shadow: {{k.shadow}}">{{k.label}}</span>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ================= STATS ================= -->
+  <div style="padding: 44px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">STATS · FULL (6) · sits after the tagline / before the IG ticket</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">by the numbers</span></span>
+    <div style="padding: 4px 2px 0; display: flex; flex-wrap: wrap; gap: 14px 12px">
+      <sc-for list="{{statsFull}}" as="st" hint-placeholder-count="6">
+        <div style="flex: 1 1 130px; min-width: 0; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.12)); transform: {{st.rot}}">
+          <div class="sb-stub" style="min-height: 96px; height: 100%; box-sizing: border-box; padding: 14px 18px; background: {{st.paper}}; color: {{st.ink}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; border-top: 5px solid {{accent}}">
+            <span style="font-family: 'Archivo Black', sans-serif; font-size: 21px; line-height: 1.08; letter-spacing: -0.3px; overflow-wrap: anywhere">{{st.value}}</span>
+            <span style="font-size: 11px; font-weight: 700; letter-spacing: 1.4px; line-height: 1.3; text-transform: uppercase; color: {{st.sub}}; overflow-wrap: anywhere">{{st.label}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 34px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">STATS · SPARSE · one stat (stub fills the row)</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">by the numbers</span></span>
+    <div style="padding: 4px 2px 0; display: flex; flex-wrap: wrap; gap: 14px 12px">
+      <sc-for list="{{statsSparse}}" as="st" hint-placeholder-count="1">
+        <div style="flex: 1 1 130px; min-width: 0; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.12)); transform: {{st.rot}}">
+          <div class="sb-stub" style="min-height: 96px; height: 100%; box-sizing: border-box; padding: 14px 18px; background: {{st.paper}}; color: {{st.ink}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; border-top: 5px solid {{accent}}">
+            <span style="font-family: 'Archivo Black', sans-serif; font-size: 21px; line-height: 1.08; letter-spacing: -0.3px; overflow-wrap: anywhere">{{st.value}}</span>
+            <span style="font-size: 11px; font-weight: 700; letter-spacing: 1.4px; line-height: 1.3; text-transform: uppercase; color: {{st.sub}}; overflow-wrap: anywhere">{{st.label}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ================= STARTER ================= -->
+  <div style="margin: 48px 0 0; height: 16px; background: {{checker}}; background-size: 16px 16px"></div>
+  <div style="padding: 22px 20px 0; display: flex; flex-direction: column; gap: 2px">
+    <span style="font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">INSIDE THE STARTER LAYOUT</span>
+    <span style="font-size: 13px; line-height: 1.5; color: {{labelInk}}">Starter has no Standard block, so add-ons sit between the ALSO FIND ME ON receipt and the "want my contact?" note. Same 16px gutter, same objects.</span>
+  </div>
+
+  <div style="padding: 24px 0 0; display: flex; justify-content: center">
+    <div style="width: 300px; max-width: calc(100% - 32px); transform: rotate(1.2deg); filter: drop-shadow(0 8px 12px rgba(0,0,0,0.12))">
+      <div class="sb-zig" style="background: #FBFAF6; color: #2A2620; padding: 14px 20px 24px">
+        <div style="border-top: 2px dashed #CFC8BA"></div>
+        <div style="margin-top: 12px; height: 34px; background: repeating-linear-gradient(90deg, #2A2620 0 2px, transparent 2px 4px, #2A2620 4px 5px, transparent 5px 8px, #2A2620 8px 11px, transparent 11px 13px)"></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding: 30px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">STARTER · VIDEO</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">watch this</span></span>
+    <sc-for list="{{videoMain}}" as="v" hint-placeholder-count="1">
+      <a href="{{v.url}}" aria-label="Watch video on {{v.host}}" style="position: relative; display: block; margin: 6px 4px 0; padding: 10px 10px 4px; background: #FBF8F1; color: #2A2620; box-shadow: 0 14px 28px rgba(0,0,0,0.16); transform: rotate(-1.2deg)">
+        <div style="position: absolute; left: -14px; top: -8px; width: 78px; height: 22px; background: {{tape}}; transform: rotate(-24deg); opacity: 0.9"></div>
+        <div style="position: absolute; right: -12px; top: -6px; width: 78px; height: 22px; background: {{tape}}; transform: rotate(20deg); opacity: 0.9"></div>
+        <div style="position: relative; padding: 16px 10px; background: #1B1A18">
+          <div style="position: absolute; left: 4px; right: 4px; top: 4px; height: 7px; background: repeating-linear-gradient(90deg, transparent 0 5px, #EDE6D8 5px 13px, transparent 13px 18px)"></div>
+          <div style="position: absolute; left: 4px; right: 4px; bottom: 4px; height: 7px; background: repeating-linear-gradient(90deg, transparent 0 5px, #EDE6D8 5px 13px, transparent 13px 18px)"></div>
+          <div style="aspect-ratio: 16 / 9; background-color: #2E2A25; background-image: repeating-linear-gradient(180deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 4px); display: flex; align-items: center; justify-content: center">
+            <div style="width: 68px; height: 68px; border-radius: 34px; background: {{accent}}; color: {{accentInk}}; box-shadow: 0 6px 0 rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" aria-hidden="true" style="margin-left: 4px"><path d="M7 4.5v15l12-7.5z"></path></svg>
+            </div>
+          </div>
+        </div>
+        <div style="min-height: 48px; display: flex; align-items: center; gap: 8px; padding: 0 2px">
+          <span style="font-family: 'Caveat', cursive; font-size: 23px; font-weight: 700; flex-shrink: 0">watch on</span>
+          <span class="sb-ell" style="flex: 1 1 auto; min-width: 0; font-size: 14px; font-weight: 700; letter-spacing: 0.5px">{{v.host}}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M7 17 17 7"></path><path d="M8 7h9v9"></path></svg>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+
+  <div style="padding: 34px 20px 0; font-size: 11px; letter-spacing: 1.6px; font-weight: 700; color: {{labelInk}}">STARTER · BOOKING</div>
+  <div style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <span style="padding: 0 6px; font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700"><span style="background: {{highlight}}; padding: 0 6px">book a slot</span></span>
+    <sc-for list="{{bookingMain}}" as="b" hint-placeholder-count="1">
+      <div style="filter: drop-shadow(0 8px 12px rgba(0,0,0,0.14)); transform: rotate(1deg)">
+        <a href="{{b.url}}" class="sb-ticket" style="display: flex; min-height: 104px; background-color: #FBF8F1; background-image: repeating-linear-gradient(180deg, transparent 0 19px, #C9DAEA 19px 20px); color: #2A2620">
+          <div style="flex: 1 1 auto; min-width: 0; padding: 12px 12px 12px 28px; display: flex; flex-direction: column; justify-content: center; gap: 2px">
+            <span style="font-size: 11px; letter-spacing: 2px; font-weight: 700; color: #5A5246">ADMIT ONE · BOOKING</span>
+            <span style="font-family: 'Archivo Black', sans-serif; font-size: 23px; letter-spacing: -0.4px; line-height: 1.05">BOOK A SLOT</span>
+            <span class="sb-ell" style="font-size: 13px; font-weight: 700">{{b.host}}</span>
+          </div>
+          <div style="width: 84px; flex-shrink: 0; background: {{accent}}; color: {{accentInk}}; border-left: 2px dashed rgba(42,38,32,0.45); display: flex; align-items: center; justify-content: center; padding-right: 10px; box-sizing: border-box">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="1.5"></rect><path d="M3 9.5h18M8 2.5v4M16 2.5v4"></path><path d="m9 15 2 2 4-4"></path></svg>
+          </div>
+        </a>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="height: 56px"></div>
+
+  <sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+    <div class="anim" role="status" style="position: fixed; left: 50%; bottom: 28px; z-index: 30; height: 42px; padding: 0 16px; background: #1B1A18; color: #F4F1EA; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; letter-spacing: 1px; white-space: nowrap; box-shadow: 0 12px 30px rgba(0,0,0,0.25); animation: toastIn 260ms ease-out both; transform: translateX(-50%)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+      {{toast}}
+    </div>
+  </sc-if>
+</div>
+</template>
+<!-- EDIT ME: the contact that "Save contact" adds to the visitor's phone -->
+<script type="application/json" id="dc-contact">{
+  "fullName": "Warren Jacob Abdon",
+  "firstName": "Warren Jacob",
+  "lastName": "Abdon",
+  "title": "BS Computer Science student",
+  "org": "[School name]",
+  "phone": "",
+  "email": "hello@warrenabdon.dev",
+  "website": "",
+  "city": "",
+  "country": "",
+  "note": "",
+  "photo": "assets/photo.jpg"
+}</script>
+<script type="application/json" id="dc-props">{"package": "Standard", "theme": "Light", "tape": "Tomato", "showPhone": false}</script>
+<script type="text/plain" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { themeOverride: null, toast: '' };
+  }
+  componentWillUnmount() {
+    if (this._toastT) { clearTimeout(this._toastT); }
+  }
+  showToast(msg) {
+    var self = this;
+    if (this._toastT) { clearTimeout(this._toastT); }
+    this.setState({ toast: msg });
+    this._toastT = setTimeout(function () { self.setState({ toast: '' }); }, 2200);
+  }
+  resolveTheme() {
+    if (this.state.themeOverride) { return this.state.themeOverride; }
+    var pref = this.props.theme ?? 'Light';
+    if (pref === 'Dark') { return 'dark'; }
+    if (pref === 'Match phone') {
+      try { if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { return 'dark'; } } catch (err) {}
+    }
+    return 'light';
+  }
+  rgb(hex) {
+    var n = String(hex || '#000000').replace('#', '');
+    return [parseInt(n.slice(0, 2), 16), parseInt(n.slice(2, 4), 16), parseInt(n.slice(4, 6), 16)];
+  }
+  rgba(hex, a) {
+    var c = this.rgb(hex);
+    return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+  }
+  host(u) {
+    try { return new URL(u).hostname.replace(/^www\./, ''); } catch (err) { return String(u || ''); }
+  }
+  initial(title) {
+    var m = String(title || '').match(/[A-Za-z0-9]/);
+    return m ? m[0].toUpperCase() : '·';
+  }
+  renderVals() {
+    var self = this;
+    var s = this.state;
+    var dark = this.resolveTheme() === 'dark';
+    var tapes = { Tomato: ['#E8604C', '#FFFFFF'], Pink: ['#F4A7B9', '#2A2620'], Sage: ['#A9C4A0', '#2A2620'], Sky: ['#9EC5E8', '#2A2620'], Butter: ['#F2D479', '#2A2620'], Lilac: ['#C3B1E1', '#2A2620'] };
+    var name = this.props.tape ?? 'Tomato';
+    if (!tapes[name]) { name = 'Tomato'; }
+    var A = tapes[name][0], AInk = tapes[name][1];
+    var t = dark
+      ? { bg: '#1F1C18', dots: 'rgba(255,240,220,0.05)', ink: '#EFE7D6', dim: '#A79E8E', paper: '#E9E1D0' }
+      : { bg: '#F1EBDF', dots: 'rgba(90,70,40,0.08)', ink: '#2A2620', dim: '#857C6D', paper: '#FBF8F1' };
+    var ruled = 'repeating-linear-gradient(180deg, transparent 0 19px, #C9DAEA 19px 20px)';
+    var grid = 'repeating-linear-gradient(0deg, #DCD6CA 0 1px, transparent 1px 14px), repeating-linear-gradient(90deg, #DCD6CA 0 1px, transparent 1px 14px)';
+    var paperDark = '#1B1A18';
+    var photo = 'assets/photo.jpg';
+
+    // ---- portfolio: index cards; no thumb -> cutout letter of the title ----
+    var papers = [['#FBF8F1', ruled], ['#F7F4EC', grid], ['#E9D9BE', 'none'], ['#FBF8F1', 'none']];
+    var letterStyles = [
+      [paperDark, '#F4F1EA', "'Archivo Black', sans-serif", 'rotate(-4deg)'],
+      [A, AInk, "'Gloock', Georgia, serif", 'rotate(3deg)'],
+      ['#CFAE84', '#2A2016', "'Gloock', Georgia, serif", 'rotate(-2deg)'],
+      ['#FFFFFF', '#2A2620', "'Courier Prime', monospace", 'rotate(4deg)']
+    ];
+    var rots = ['rotate(-0.9deg)', 'rotate(0.7deg)', 'rotate(-0.4deg)', 'rotate(1deg)'];
+    var tapeRots = ['rotate(-4deg)', 'rotate(5deg)', 'rotate(3deg)', 'rotate(-6deg)'];
+    var shapePortfolio = function (list) {
+      return list.map(function (p, i) {
+        var ls = letterStyles[i % 4];
+        var pp = papers[i % 4];
+        return {
+          title: p.title, url: p.url, desc: p.desc || '', thumbUrl: p.thumbUrl || '',
+          hasDesc: !!p.desc, hasThumb: !!p.thumbUrl, noThumb: !p.thumbUrl,
+          initial: self.initial(p.title),
+          letterBg: ls[0], letterInk: ls[1], letterFont: ls[2], letterRot: ls[3],
+          paper: pp[0], pattern: pp[1], rot: rots[i % 4], tapeRot: tapeRots[i % 4]
+        };
+      });
+    };
+    var portfolioFull = [
+      { title: '[Project title]', url: 'https://example.com/project-1', desc: '[One or two lines about the project and what you did on it.]', thumbUrl: photo },
+      { title: 'Barangay Health Center Appointment and Queue Systems for Rural Community Clinics', url: 'https://example.com/project-2', desc: 'A web app that lets rural clinics book patient visits, manage walk-in queues and send SMS reminders. Built with Next.js, Prisma and PostgreSQL; deployed for two partner barangays during our capstone.' },
+      { title: '[Project title]', url: 'https://example.com/project-3' },
+      { title: '[Project title]', url: 'https://example.com/project-4', desc: '[Short description.]' },
+      { title: '[Project title]', url: 'https://example.com/project-5', thumbUrl: photo },
+      { title: '[Project title]', url: 'https://example.com/project-6', desc: '[Short description.]' },
+      { title: '[Project title]', url: 'https://example.com/project-7' },
+      { title: '[Project title]', url: 'https://example.com/project-8', desc: '[Short description.]', thumbUrl: photo },
+      { title: '[Project title]', url: 'https://example.com/project-9' },
+      { title: '[Project title]', url: 'https://example.com/project-10', desc: '[Short description.]' },
+      { title: '[Project title]', url: 'https://example.com/project-11' },
+      { title: '[Project title]', url: 'https://example.com/project-12', desc: '[Short description.]' }
+    ];
+    var portfolioSparse = [{ title: '[Project title]', url: 'https://example.com/project' }];
+
+    // ---- services: receipt lines; price optional ----
+    var servicesFull = [
+      { name: 'Logo and brand identity design', price: 'from ₱3,500' },
+      { name: 'Event photography and same-day edit video coverage for weddings, debuts and more', price: 'from ₱15,000 per event, travel fee extra' },
+      { name: '[Service]', price: '[Price]' },
+      { name: '[Service]' },
+      { name: '[Service]', price: '[Price]' },
+      { name: '[Service]', price: '[Price]' },
+      { name: '[Service]' },
+      { name: '[Service]', price: '[Price]' },
+      { name: '[Service]', price: '[Price]' },
+      { name: '[Service]', price: '[Price]' },
+      { name: '[Service]' },
+      { name: '[Service]', price: '[Price]' },
+      { name: '[Service]', price: '[Price]' },
+      { name: '[Service]', price: '[Price]' },
+      { name: '[Service]' },
+      { name: '[Service]', price: '[Price]' },
+      { name: '[Service]', price: '[Price]' },
+      { name: '[Service]', price: '[Price]' },
+      { name: '[Service]' },
+      { name: '[Service]', price: '[Price]' }
+    ];
+    var shapeServices = function (list) { return list.map(function (x) { return { name: x.name, price: x.price || '', hasPrice: !!x.price }; }); };
+
+    // ---- experience: label-maker years on taped timeline ----
+    var expPapers = ['#FBF8F1', '#F7F4EC', '#FBF8F1', '#E9D9BE'];
+    var expRots = ['rotate(-0.6deg)', 'rotate(0.5deg)', 'rotate(-0.3deg)', 'rotate(0.7deg)'];
+    var shapeExp = function (list) { return list.map(function (x, i) { return { role: x.role, org: x.org, years: x.years, paper: expPapers[i % 4], rot: expRots[i % 4] }; }); };
+    var experienceFull = [
+      { role: 'Student Assistant, Office of the Registrar and Admission Records Management Unit', org: 'Lyceum of the Philippines Univ', years: 'Jun 2021 – Present · Part-time' }
+    ];
+    for (var ei = 0; ei < 14; ei++) { experienceFull.push({ role: '[Role]', org: '[Organization]', years: '[Years]' }); }
+    var experienceSparse = [{ role: '[Role]', org: '[Organization]', years: '[Years]' }];
+
+    // ---- skills: label-maker / cutout tags, no levels ----
+    var tagStyles = [[paperDark, '#F4F1EA'], ['#FFFFFF', '#2A2620'], ['#CFAE84', '#2A2016'], ['#FBF8F1', '#2A2620']];
+    var tagRots = ['rotate(-2deg)', 'rotate(1.5deg)', 'rotate(-1deg)', 'rotate(2.5deg)', 'rotate(0.5deg)'];
+    var shapeSkills = function (list) { return list.map(function (l, i) { var st = tagStyles[i % 4]; return { label: l, bg: st[0], ink: st[1], rot: tagRots[i % 5], shadow: (dark && st[0] === paperDark) ? 'inset 0 0 0 1.5px rgba(239,231,214,0.32), 0 3px 0 rgba(0,0,0,0.3)' : '0 3px 0 rgba(0,0,0,0.14)' }; }); };
+    var skillsFull = ['Figma', 'Technical writing and documentation (EN)', 'Photoshop', 'Public speaking', 'React'];
+    for (var si = 0; si < 25; si++) { skillsFull.push('[Skill]'); }
+
+    // ---- stats: notched raffle stubs ----
+    var statPapers = [['#FBF8F1', '#2A2620', '#5A5246'], ['#CFAE84', '#2A2016', '#3E3022'], ['#FBF8F1', '#2A2620', '#5A5246'], ['#E9D9BE', '#2A2620', '#5A5246']];
+    var statRots = ['rotate(-1.5deg)', 'rotate(1.2deg)', 'rotate(0.8deg)', 'rotate(-1deg)'];
+    var shapeStats = function (list) { return list.map(function (x, i) { var p = statPapers[i % 4]; return { label: x.label, value: x.value, paper: p[0], ink: p[1], sub: p[2], rot: statRots[i % 4] }; }); };
+    var statsFull = [
+      { label: 'Experience', value: '8+ years' },
+      { label: 'Volunteer hours logged with student orgs', value: 'Roughly 1,200 hours since 2022' },
+      { label: '[Label]', value: '[Value]' },
+      { label: '[Label]', value: '[Value]' },
+      { label: '[Label]', value: '[Value]' },
+      { label: '[Label]', value: '[Value]' }
+    ];
+
+    var vid = function (u) { return [{ url: u, host: self.host(u) }]; };
+
+    return {
+      pageMin: '9668px',
+      bg: t.bg,
+      bgDots: 'radial-gradient(' + t.dots + ' 1.2px, transparent 1.6px)',
+      ink: t.ink, dim: t.dim, paper: t.paper,
+      labelInk: dark ? '#B8AF9F' : '#6A6255',
+      accent: A,
+      accentInk: AInk,
+      accentName: name,
+      tape: this.rgba(A, 0.78),
+      tapeInk: AInk,
+      highlight: this.rgba(A, dark ? 0.45 : 0.4),
+      checker: 'repeating-conic-gradient(' + (dark ? '#EFE7D6' : '#2A2620') + ' 0 25%, transparent 0 50%)',
+      isDark: dark,
+      isLight: !dark,
+      themeAria: dark ? 'Switch to light theme' : 'Switch to dark theme',
+      toggleTheme: function () { self.setState({ themeOverride: self.resolveTheme() === 'dark' ? 'light' : 'dark' }); },
+      shareCard: function () {
+        var url = (typeof location !== 'undefined') ? location.href : '';
+        try {
+          if (navigator.share) { navigator.share({ title: 'Warren Jacob Abdon', url: url }); return; }
+          if (navigator.clipboard) { navigator.clipboard.writeText(url); }
+        } catch (err) {}
+        self.showToast('LINK COPIED');
+      },
+      hasToast: !!s.toast,
+      toast: s.toast,
+
+      videoMain: vid('https://www.youtube.com/watch?v=xxxxxxxxxxx'),
+      videoLong: vid('https://media.lyceum-campus-broadcast-archive.example.edu.ph/v/123'),
+      bookingMain: vid('https://calendly.com/yourname/30min'),
+      bookingLong: vid('https://appointments.studio-booking-portal-for-creatives.example.ph/yourname'),
+      resumeFull: [{ fileUrl: 'https://example.com/resume.pdf', label: 'Curriculum Vitae, Software Engineering Internship Applicant' }],
+      resumeSparse: [{ fileUrl: 'https://example.com/resume.pdf', label: 'Résumé / CV' }],
+      portfolioFull: shapePortfolio(portfolioFull),
+      portfolioSparse: shapePortfolio(portfolioSparse),
+      servicesFull: shapeServices(servicesFull),
+      servicesSparse: shapeServices([{ name: '[Service]' }]),
+      experienceFull: shapeExp(experienceFull),
+      experienceSparse: shapeExp(experienceSparse),
+      skillsFull: shapeSkills(skillsFull),
+      skillsSparse: shapeSkills(['[Skill]']),
+      statsFull: shapeStats(statsFull),
+      statsSparse: shapeStats([{ label: '[Label]', value: '[Value]' }])
+    };
+  }
+}
+</script>
+<script>(function(global,factory){typeof exports==="object"&&typeof module!=="undefined"?module.exports=factory():typeof define==="function"&&define.amd?define(factory):(global=global||self,global.morphdom=factory())})(this,function(){"use strict";var DOCUMENT_FRAGMENT_NODE=11;function morphAttrs(fromNode,toNode){var toNodeAttrs=toNode.attributes;var attr;var attrName;var attrNamespaceURI;var attrValue;var fromValue;if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE||fromNode.nodeType===DOCUMENT_FRAGMENT_NODE){return}for(var i=toNodeAttrs.length-1;i>=0;i--){attr=toNodeAttrs[i];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;attrValue=attr.value;if(attrNamespaceURI){attrName=attr.localName||attrName;fromValue=fromNode.getAttributeNS(attrNamespaceURI,attrName);if(fromValue!==attrValue){if(attr.prefix==="xmlns"){attrName=attr.name}fromNode.setAttributeNS(attrNamespaceURI,attrName,attrValue)}}else{fromValue=fromNode.getAttribute(attrName);if(fromValue!==attrValue){fromNode.setAttribute(attrName,attrValue)}}}var fromNodeAttrs=fromNode.attributes;for(var d=fromNodeAttrs.length-1;d>=0;d--){attr=fromNodeAttrs[d];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;if(attrNamespaceURI){attrName=attr.localName||attrName;if(!toNode.hasAttributeNS(attrNamespaceURI,attrName)){fromNode.removeAttributeNS(attrNamespaceURI,attrName)}}else{if(!toNode.hasAttribute(attrName)){fromNode.removeAttribute(attrName)}}}}var range;var NS_XHTML="http://www.w3.org/1999/xhtml";var doc=typeof document==="undefined"?undefined:document;var HAS_TEMPLATE_SUPPORT=!!doc&&"content"in doc.createElement("template");var HAS_RANGE_SUPPORT=!!doc&&doc.createRange&&"createContextualFragment"in doc.createRange();function createFragmentFromTemplate(str){var template=doc.createElement("template");template.innerHTML=str;return template.content.childNodes[0]}function createFragmentFromRange(str){if(!range){range=doc.createRange();range.selectNode(doc.body)}var fragment=range.createContextualFragment(str);return fragment.childNodes[0]}function createFragmentFromWrap(str){var fragment=doc.createElement("body");fragment.innerHTML=str;return fragment.childNodes[0]}function toElement(str){str=str.trim();if(HAS_TEMPLATE_SUPPORT){return createFragmentFromTemplate(str)}else if(HAS_RANGE_SUPPORT){return createFragmentFromRange(str)}return createFragmentFromWrap(str)}function compareNodeNames(fromEl,toEl){var fromNodeName=fromEl.nodeName;var toNodeName=toEl.nodeName;var fromCodeStart,toCodeStart;if(fromNodeName===toNodeName){return true}fromCodeStart=fromNodeName.charCodeAt(0);toCodeStart=toNodeName.charCodeAt(0);if(fromCodeStart<=90&&toCodeStart>=97){return fromNodeName===toNodeName.toUpperCase()}else if(toCodeStart<=90&&fromCodeStart>=97){return toNodeName===fromNodeName.toUpperCase()}else{return false}}function createElementNS(name,namespaceURI){return!namespaceURI||namespaceURI===NS_XHTML?doc.createElement(name):doc.createElementNS(namespaceURI,name)}function moveChildren(fromEl,toEl){var curChild=fromEl.firstChild;while(curChild){var nextChild=curChild.nextSibling;toEl.appendChild(curChild);curChild=nextChild}return toEl}function syncBooleanAttrProp(fromEl,toEl,name){if(fromEl[name]!==toEl[name]){fromEl[name]=toEl[name];if(fromEl[name]){fromEl.setAttribute(name,"")}else{fromEl.removeAttribute(name)}}}var specialElHandlers={OPTION:function(fromEl,toEl){var parentNode=fromEl.parentNode;if(parentNode){var parentName=parentNode.nodeName.toUpperCase();if(parentName==="OPTGROUP"){parentNode=parentNode.parentNode;parentName=parentNode&&parentNode.nodeName.toUpperCase()}if(parentName==="SELECT"&&!parentNode.hasAttribute("multiple")){if(fromEl.hasAttribute("selected")&&!toEl.selected){fromEl.setAttribute("selected","selected");fromEl.removeAttribute("selected")}parentNode.selectedIndex=-1}}syncBooleanAttrProp(fromEl,toEl,"selected")},INPUT:function(fromEl,toEl){syncBooleanAttrProp(fromEl,toEl,"checked");syncBooleanAttrProp(fromEl,toEl,"disabled");if(fromEl.value!==toEl.value){fromEl.value=toEl.value}if(!toEl.hasAttribute("value")){fromEl.removeAttribute("value")}},TEXTAREA:function(fromEl,toEl){var newValue=toEl.value;if(fromEl.value!==newValue){fromEl.value=newValue}var firstChild=fromEl.firstChild;if(firstChild){var oldValue=firstChild.nodeValue;if(oldValue==newValue||!newValue&&oldValue==fromEl.placeholder){return}firstChild.nodeValue=newValue}},SELECT:function(fromEl,toEl){if(!toEl.hasAttribute("multiple")){var selectedIndex=-1;var i=0;var curChild=fromEl.firstChild;var optgroup;var nodeName;while(curChild){nodeName=curChild.nodeName&&curChild.nodeName.toUpperCase();if(nodeName==="OPTGROUP"){optgroup=curChild;curChild=optgroup.firstChild}else{if(nodeName==="OPTION"){if(curChild.hasAttribute("selected")){selectedIndex=i;break}i++}curChild=curChild.nextSibling;if(!curChild&&optgroup){curChild=optgroup.nextSibling;optgroup=null}}}fromEl.selectedIndex=selectedIndex}}};var ELEMENT_NODE=1;var DOCUMENT_FRAGMENT_NODE$1=11;var TEXT_NODE=3;var COMMENT_NODE=8;function noop(){}function defaultGetNodeKey(node){if(node){return node.getAttribute&&node.getAttribute("id")||node.id}}function morphdomFactory(morphAttrs){return function morphdom(fromNode,toNode,options){if(!options){options={}}if(typeof toNode==="string"){if(fromNode.nodeName==="#document"||fromNode.nodeName==="HTML"||fromNode.nodeName==="BODY"){var toNodeHtml=toNode;toNode=doc.createElement("html");toNode.innerHTML=toNodeHtml}else{toNode=toElement(toNode)}}else if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE$1){toNode=toNode.firstElementChild}var getNodeKey=options.getNodeKey||defaultGetNodeKey;var onBeforeNodeAdded=options.onBeforeNodeAdded||noop;var onNodeAdded=options.onNodeAdded||noop;var onBeforeElUpdated=options.onBeforeElUpdated||noop;var onElUpdated=options.onElUpdated||noop;var onBeforeNodeDiscarded=options.onBeforeNodeDiscarded||noop;var onNodeDiscarded=options.onNodeDiscarded||noop;var onBeforeElChildrenUpdated=options.onBeforeElChildrenUpdated||noop;var skipFromChildren=options.skipFromChildren||noop;var addChild=options.addChild||function(parent,child){return parent.appendChild(child)};var childrenOnly=options.childrenOnly===true;var fromNodesLookup=Object.create(null);var keyedRemovalList=[];function addKeyedRemoval(key){keyedRemovalList.push(key)}function walkDiscardedChildNodes(node,skipKeyedNodes){if(node.nodeType===ELEMENT_NODE){var curChild=node.firstChild;while(curChild){var key=undefined;if(skipKeyedNodes&&(key=getNodeKey(curChild))){addKeyedRemoval(key)}else{onNodeDiscarded(curChild);if(curChild.firstChild){walkDiscardedChildNodes(curChild,skipKeyedNodes)}}curChild=curChild.nextSibling}}}function removeNode(node,parentNode,skipKeyedNodes){if(onBeforeNodeDiscarded(node)===false){return}if(parentNode){parentNode.removeChild(node)}onNodeDiscarded(node);walkDiscardedChildNodes(node,skipKeyedNodes)}function indexTree(node){if(node.nodeType===ELEMENT_NODE||node.nodeType===DOCUMENT_FRAGMENT_NODE$1){var curChild=node.firstChild;while(curChild){var key=getNodeKey(curChild);if(key){fromNodesLookup[key]=curChild}indexTree(curChild);curChild=curChild.nextSibling}}}indexTree(fromNode);function handleNodeAdded(el){onNodeAdded(el);var curChild=el.firstChild;while(curChild){var nextSibling=curChild.nextSibling;var key=getNodeKey(curChild);if(key){var unmatchedFromEl=fromNodesLookup[key];if(unmatchedFromEl&&compareNodeNames(curChild,unmatchedFromEl)){curChild.parentNode.replaceChild(unmatchedFromEl,curChild);morphEl(unmatchedFromEl,curChild)}else{handleNodeAdded(curChild)}}else{handleNodeAdded(curChild)}curChild=nextSibling}}function cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey){while(curFromNodeChild){var fromNextSibling=curFromNodeChild.nextSibling;if(curFromNodeKey=getNodeKey(curFromNodeChild)){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}}function morphEl(fromEl,toEl,childrenOnly){var toElKey=getNodeKey(toEl);if(toElKey){delete fromNodesLookup[toElKey]}if(!childrenOnly){var beforeUpdateResult=onBeforeElUpdated(fromEl,toEl);if(beforeUpdateResult===false){return}else if(beforeUpdateResult instanceof HTMLElement){fromEl=beforeUpdateResult;indexTree(fromEl)}morphAttrs(fromEl,toEl);onElUpdated(fromEl);if(onBeforeElChildrenUpdated(fromEl,toEl)===false){return}}if(fromEl.nodeName!=="TEXTAREA"){morphChildren(fromEl,toEl)}else{specialElHandlers.TEXTAREA(fromEl,toEl)}}function morphChildren(fromEl,toEl){var skipFrom=skipFromChildren(fromEl,toEl);var curToNodeChild=toEl.firstChild;var curFromNodeChild=fromEl.firstChild;var curToNodeKey;var curFromNodeKey;var fromNextSibling;var toNextSibling;var matchingFromEl;outer:while(curToNodeChild){toNextSibling=curToNodeChild.nextSibling;curToNodeKey=getNodeKey(curToNodeChild);while(!skipFrom&&curFromNodeChild){fromNextSibling=curFromNodeChild.nextSibling;if(curToNodeChild.isSameNode&&curToNodeChild.isSameNode(curFromNodeChild)){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}curFromNodeKey=getNodeKey(curFromNodeChild);var curFromNodeType=curFromNodeChild.nodeType;var isCompatible=undefined;if(curFromNodeType===curToNodeChild.nodeType){if(curFromNodeType===ELEMENT_NODE){if(curToNodeKey){if(curToNodeKey!==curFromNodeKey){if(matchingFromEl=fromNodesLookup[curToNodeKey]){if(fromNextSibling===matchingFromEl){isCompatible=false}else{fromEl.insertBefore(matchingFromEl,curFromNodeChild);if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=matchingFromEl;curFromNodeKey=getNodeKey(curFromNodeChild)}}else{isCompatible=false}}}else if(curFromNodeKey){isCompatible=false}isCompatible=isCompatible!==false&&compareNodeNames(curFromNodeChild,curToNodeChild);if(isCompatible){morphEl(curFromNodeChild,curToNodeChild)}}else if(curFromNodeType===TEXT_NODE||curFromNodeType==COMMENT_NODE){isCompatible=true;if(curFromNodeChild.nodeValue!==curToNodeChild.nodeValue){curFromNodeChild.nodeValue=curToNodeChild.nodeValue}}}if(isCompatible){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}if(curToNodeKey&&(matchingFromEl=fromNodesLookup[curToNodeKey])&&compareNodeNames(matchingFromEl,curToNodeChild)){if(!skipFrom){addChild(fromEl,matchingFromEl)}morphEl(matchingFromEl,curToNodeChild)}else{var onBeforeNodeAddedResult=onBeforeNodeAdded(curToNodeChild);if(onBeforeNodeAddedResult!==false){if(onBeforeNodeAddedResult){curToNodeChild=onBeforeNodeAddedResult}if(curToNodeChild.actualize){curToNodeChild=curToNodeChild.actualize(fromEl.ownerDocument||doc)}addChild(fromEl,curToNodeChild);handleNodeAdded(curToNodeChild)}}curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling}cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey);var specialElHandler=specialElHandlers[fromEl.nodeName];if(specialElHandler){specialElHandler(fromEl,toEl)}}var morphedNode=fromNode;var morphedNodeType=morphedNode.nodeType;var toNodeType=toNode.nodeType;if(!childrenOnly){if(morphedNodeType===ELEMENT_NODE){if(toNodeType===ELEMENT_NODE){if(!compareNodeNames(fromNode,toNode)){onNodeDiscarded(fromNode);morphedNode=moveChildren(fromNode,createElementNS(toNode.nodeName,toNode.namespaceURI))}}else{morphedNode=toNode}}else if(morphedNodeType===TEXT_NODE||morphedNodeType===COMMENT_NODE){if(toNodeType===morphedNodeType){if(morphedNode.nodeValue!==toNode.nodeValue){morphedNode.nodeValue=toNode.nodeValue}return morphedNode}else{morphedNode=toNode}}}if(morphedNode===toNode){onNodeDiscarded(fromNode)}else{if(toNode.isSameNode&&toNode.isSameNode(morphedNode)){return}morphEl(morphedNode,toNode,childrenOnly);if(keyedRemovalList){for(var i=0,len=keyedRemovalList.length;i<len;i++){var elToRemove=fromNodesLookup[keyedRemovalList[i]];if(elToRemove){removeNode(elToRemove,elToRemove.parentNode,false)}}}}if(!childrenOnly&&morphedNode!==fromNode&&fromNode.parentNode){if(morphedNode.actualize){morphedNode=morphedNode.actualize(fromNode.ownerDocument||doc)}fromNode.parentNode.replaceChild(morphedNode,fromNode)}return morphedNode}}var morphdom=morphdomFactory(morphAttrs);return morphdom});</script>
+<script>(function () {
+  function legacyCopy(t) { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); }
+  var nativeWrite = navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText.bind(navigator.clipboard) : null;
+  var shim = function (t) { if (!nativeWrite) { legacyCopy(t); return Promise.resolve(); } return nativeWrite(t).catch(function () { legacyCopy(t); }); };
+  try { if (navigator.clipboard) { navigator.clipboard.writeText = shim; } else { Object.defineProperty(navigator, 'clipboard', { value: { writeText: shim } }); } } catch (e) {}
+})();
+(function () {
+  var C = JSON.parse(document.getElementById('dc-contact').textContent);
+  var photoB64 = '';
+  if (C.photo) {
+    fetch(C.photo).then(function (r) { return r.blob(); }).then(function (b) {
+      var fr = new FileReader(); fr.onload = function () { photoB64 = String(fr.result).split(',')[1] || ''; }; fr.readAsDataURL(b);
+    }).catch(function () {});
+  }
+  function esc(v) { return String(v || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1'); }
+  function fold(line) { var out = []; while (line.length > 75) { out.push(line.slice(0, 75)); line = ' ' + line.slice(75); } out.push(line); return out.join('\r\n'); }
+  window.__dcSaveContact = function () {
+    var url = C.website || location.href;
+    var L = ['BEGIN:VCARD', 'VERSION:3.0',
+      'N:' + esc(C.lastName) + ';' + esc(C.firstName) + ';;;',
+      'FN:' + esc(C.fullName)];
+    if (C.title) { L.push('TITLE:' + esc(C.title)); }
+    if (C.org) { L.push('ORG:' + esc(C.org)); }
+    if (C.phone) { L.push('TEL;TYPE=CELL:' + C.phone); }
+    if (C.email) { L.push('EMAIL;TYPE=INTERNET:' + C.email); }
+    if (url) { L.push('URL:' + url); }
+    if (C.city || C.country) { L.push('ADR;TYPE=WORK:;;;' + esc(C.city) + ';;;' + esc(C.country)); }
+    if (C.note) { L.push('NOTE:' + esc(C.note)); }
+    if (photoB64) { L.push('PHOTO;ENCODING=b;TYPE=JPEG:' + photoB64); }
+    L.push('END:VCARD');
+    var text = L.map(fold).join('\r\n') + '\r\n';
+    var blob = new Blob([text], { type: 'text/vcard;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (C.fullName || 'contact').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.vcf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  };
+})();
+(function () {
+  var tpl = document.getElementById('dc-template');
+  var root = document.getElementById('app');
+  var PROPS = JSON.parse(document.getElementById('dc-props').textContent);
+  function DCLogic(props) { this.props = props || {}; this.state = {}; }
+  DCLogic.prototype.setState = function (p) {
+    var next = typeof p === 'function' ? p(this.state, this.props) : p;
+    this.state = Object.assign({}, this.state, next);
+    schedule();
+  };
+  var Component = new Function('DCLogic', document.getElementById('dc-logic').textContent + '\nreturn Component;')(DCLogic);
+  var comp = new Component(PROPS);
+  if (!comp.state) { comp.state = {}; }
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  function get(scope, path) {
+    if (path === 'true') { return true; }
+    if (path === 'false') { return false; }
+    return path.split('.').reduce(function (a, k) { return a == null ? a : a[k]; }, scope);
+  }
+  function sub(str, scope) {
+    return str.replace(HOLE, function (m, p) { var v = get(scope, p); return (v == null || typeof v === 'function') ? '' : String(v); });
+  }
+  function build(node, scope, parent) {
+    var kids = node.childNodes;
+    for (var i = 0; i < kids.length; i++) {
+      var ch = kids[i];
+      if (ch.nodeType === 3) { parent.appendChild(document.createTextNode(sub(ch.textContent, scope))); continue; }
+      if (ch.nodeType !== 1) { continue; }
+      var tag = ch.localName;
+      if (tag === 'sc-if') {
+        var m = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('value') || '');
+        if (m && get(scope, m[1])) { build(ch, scope, parent); }
+        continue;
+      }
+      if (tag === 'sc-for') {
+        var lm = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('list') || '');
+        var as = ch.getAttribute('as');
+        var list = (lm && get(scope, lm[1])) || [];
+        for (var j = 0; j < list.length; j++) { var sc = Object.create(scope); sc[as] = list[j]; build(ch, sc, parent); }
+        continue;
+      }
+      var el = ch.namespaceURI && ch.namespaceURI !== 'http://www.w3.org/1999/xhtml' ? document.createElementNS(ch.namespaceURI, ch.localName) : document.createElement(tag);
+      var attrs = ch.attributes;
+      for (var a = 0; a < attrs.length; a++) {
+        var at = attrs[a];
+        if (/^on[a-z]/i.test(at.name)) {
+          var hm = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/.exec(at.value);
+          var fn = hm ? get(scope, hm[1]) : null;
+          if (typeof fn === 'function') { el['on' + at.name.slice(2).toLowerCase()] = fn; }
+          continue;
+        }
+        if (at.name.indexOf('hint-') === 0) { continue; }
+        el.setAttribute(at.name, sub(at.value, scope));
+      }
+      build(ch.content || ch, scope, el);
+      parent.appendChild(el);
+    }
+  }
+  var EVTS = ['click', 'mousemove', 'mouseleave', 'touchmove', 'touchend', 'touchstart', 'input', 'change', 'keydown'];
+  function render() {
+    var vals = comp.renderVals();
+    if (typeof vals.save === 'function') { var origSave = vals.save; vals.save = function () { window.__dcSaveContact(); return origSave.apply(this, arguments); }; }
+    var next = document.createElement('div');
+    next.id = 'app';
+    build(tpl.content, vals, next);
+    morphdom(root, next, {
+      onBeforeElUpdated: function (from, to) {
+        for (var i = 0; i < EVTS.length; i++) { var k = 'on' + EVTS[i]; if (from[k] !== to[k]) { from[k] = to[k] || null; } }
+        return !from.isEqualNode(to);
+      }
+    });
+    var first = root.firstElementChild;
+    if (first) { document.body.style.background = getComputedStyle(first).backgroundColor; }
+  }
+  var queued = false;
+  function schedule() { if (queued) { return; } queued = true; requestAnimationFrame(function () { queued = false; render(); }); }
+  render();
+  if (comp.componentDidMount) { comp.componentDidMount(); }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Warren Jacob Abdon — Digital Card</title>
+<meta name="description" content="Software Engineer · Full-Stack Developer. Save my contact in one tap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Serif+4:wght@600;700&amp;family=Source+Sans+3:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700;800&amp;family=IBM+Plex+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #1D4ED8;outline-offset:2px}
+@keyframes cardIn{0%{opacity:0;transform:translateY(40px)}100%{opacity:1;transform:none}}
+@keyframes zoomOut{0%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes sheen{0%,55%{background-position:120% 0}100%{background-position:-20% 0}}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:none}}
+@keyframes sheetUp{0%{transform:translateY(100%)}100%{transform:none}}
+@keyframes toastIn{0%{opacity:0;transform:translate(-50%,12px)}100%{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion: reduce){.anim{animation:none !important}}
+</style>
+<style>
+html,body{margin:0;padding:0}
+body{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+#app>div{width:100% !important;max-width:430px;margin:0 auto;min-height:100vh !important;min-height:100dvh !important}
+</style>
+</head>
+<body>
+<!-- 04-pro-company — new sections — from CompanySections.dc.html -->
+<div id="app"></div>
+<template id="dc-template">
+<div style="position: relative; width: 390px; min-height: {{pageMin}}; box-sizing: border-box; background: {{bg}}; font-family: {{fBody}}; color: {{ink}}; display: flex; flex-direction: column; overflow: hidden; transition: background 400ms ease, color 400ms ease">
+
+  <div style="position: relative; background: {{stage}}; border-radius: 0 0 32px 32px; color: #FFFFFF; overflow: hidden; padding: 4px 16px 24px">
+    <div aria-hidden="true" style="position: absolute; left: -120px; top: -40px; width: 300px; height: 300px; border-radius: 50%; background: {{glow}}; pointer-events: none"></div>
+    <div style="position: relative; height: 52px; display: flex; align-items: center; justify-content: space-between; margin-right: -8px">
+      <div style="height: 32px; padding: 0 12px; border-radius: 8px; background: rgba(255,255,255,0.1); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18); display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 1.2px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><path d="M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01"></path></svg>[COMPANY LOGO]</div>
+      <button type="button" onClick="{{toggleTheme}}" aria-label="{{themeAria}}" style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+        <sc-if value="{{isDark}}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg></sc-if>
+        <sc-if value="{{isLight}}" hint-placeholder-val="{{ true }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></sc-if>
+      </button>
+    </div>
+    <div style="position: relative; margin-top: 18px; padding: 14px 0; display: flex; flex-direction: column; gap: 6px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -1px 0 rgba(255,255,255,0.14)">
+      <span style="font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: rgba(255,255,255,0.7)">NEW SECTIONS — PRO COMPANY</span>
+      <span style="font-size: 13px; line-height: 1.45; color: rgba(255,255,255,0.85)">Video, booking, interests, organizations and song, numbered 07–11 after the six existing sections.</span>
+    </div>
+  </div>
+
+  <!-- ============ 07 VIDEO ============ -->
+  <div style="padding: 32px 16px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 4px; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">VIDEO · FULL · SITS AFTER SELECTED WORK</span>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 4px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 1.6px; color: {{brandText}}">07</span><span style="font-family: {{fHead}}; font-size: 19px; font-weight: {{headWeight}}; letter-spacing: -0.3px; white-space: nowrap">Video</span><span style="flex-grow: 1; height: 1px; background: {{line}}"></span><span style="height: 22px; padding: 0 8px; border-radius: 11px; background: {{brandSoft}}; display: flex; align-items: center; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; color: {{brandText}}">ADD-ON</span></div>
+    <sc-for list="{{videoFull}}" as="v" hint-placeholder-count="1">
+      <a href="{{v.url}}" aria-label="Watch video on {{v.host}}" style="position: relative; min-height: 200px; padding: 16px 12px 14px 18px; box-sizing: border-box; border-radius: 18px; background: {{deepBg}}; color: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; overflow: hidden; box-shadow: 0 12px 26px {{brandShadow}}, inset 0 0 0 1px rgba(255,255,255,0.1)">
+        <div aria-hidden="true" style="position: absolute; right: -100px; top: -120px; width: 280px; height: 280px; border-radius: 50%; background: {{glow}}; pointer-events: none"></div>
+        <div aria-hidden="true" style="position: absolute; right: -62px; bottom: -76px; opacity: 0.1"><svg width="170" height="170" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"></rect><path d="m10 9 5 3-5 3z"></path></svg></div>
+        <span style="position: relative; font-size: 11px; font-weight: 700; letter-spacing: 1.6px; opacity: 0.8">VIDEO</span>
+        <span style="position: relative; align-self: center; width: 64px; height: 64px; border-radius: 32px; background: #FFFFFF; color: {{playInk}}; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 8px rgba(255,255,255,0.12), 0 12px 28px rgba(0,0,0,0.35)"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 3px"><path d="M7 4.5v15l12.5-7.5z"></path></svg></span>
+        <div style="position: relative; display: flex; align-items: center; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0"><span style="font-size: 17px; font-weight: 700">Watch the video</span><span style="font-size: 13px; opacity: 0.85; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{v.host}}</span></div>
+          <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 18px; background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></div>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+
+  <div style="padding: 32px 16px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 4px; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">VIDEO · LONG / UNKNOWN HOST</span>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 4px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 1.6px; color: {{brandText}}">07</span><span style="font-family: {{fHead}}; font-size: 19px; font-weight: {{headWeight}}; letter-spacing: -0.3px; white-space: nowrap">Video</span><span style="flex-grow: 1; height: 1px; background: {{line}}"></span><span style="height: 22px; padding: 0 8px; border-radius: 11px; background: {{brandSoft}}; display: flex; align-items: center; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; color: {{brandText}}">ADD-ON</span></div>
+    <sc-for list="{{videoLong}}" as="v" hint-placeholder-count="1">
+      <a href="{{v.url}}" aria-label="Watch video on {{v.host}}" style="position: relative; min-height: 200px; padding: 16px 12px 14px 18px; box-sizing: border-box; border-radius: 18px; background: {{deepBg}}; color: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; overflow: hidden; box-shadow: 0 12px 26px {{brandShadow}}, inset 0 0 0 1px rgba(255,255,255,0.1)">
+        <div aria-hidden="true" style="position: absolute; right: -100px; top: -120px; width: 280px; height: 280px; border-radius: 50%; background: {{glow}}; pointer-events: none"></div>
+        <div aria-hidden="true" style="position: absolute; right: -62px; bottom: -76px; opacity: 0.1"><svg width="170" height="170" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"></rect><path d="m10 9 5 3-5 3z"></path></svg></div>
+        <span style="position: relative; font-size: 11px; font-weight: 700; letter-spacing: 1.6px; opacity: 0.8">VIDEO</span>
+        <span style="position: relative; align-self: center; width: 64px; height: 64px; border-radius: 32px; background: #FFFFFF; color: {{playInk}}; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 8px rgba(255,255,255,0.12), 0 12px 28px rgba(0,0,0,0.35)"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 3px"><path d="M7 4.5v15l12.5-7.5z"></path></svg></span>
+        <div style="position: relative; display: flex; align-items: center; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0"><span style="font-size: 17px; font-weight: 700">Watch the video</span><span style="font-size: 13px; opacity: 0.85; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{v.host}}</span></div>
+          <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 18px; background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></div>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+
+  <!-- ============ 08 BOOKING ============ -->
+  <div style="padding: 32px 16px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 4px; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">BOOKING · FULL · SITS AFTER GET IN TOUCH</span>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 4px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 1.6px; color: {{brandText}}">08</span><span style="font-family: {{fHead}}; font-size: 19px; font-weight: {{headWeight}}; letter-spacing: -0.3px; white-space: nowrap">Book a meeting</span><span style="flex-grow: 1; height: 1px; background: {{line}}"></span><span style="height: 22px; padding: 0 8px; border-radius: 11px; background: {{brandSoft}}; display: flex; align-items: center; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; color: {{brandText}}">ADD-ON</span></div>
+    <sc-for list="{{bookingFull}}" as="bk" hint-placeholder-count="1">
+      <div style="position: relative; padding: 18px; border-radius: 18px; background: {{surface}}; box-shadow: 0 0 0 1px {{line}}; display: flex; flex-direction: column; gap: 16px; overflow: hidden">
+        <div aria-hidden="true" style="position: absolute; right: -24px; top: -30px; color: {{brandText}}; opacity: 0.08"><svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg></div>
+        <div style="position: relative; display: flex; align-items: center; gap: 14px">
+          <span style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 14px; background: {{brandSoft}}; color: {{brandText}}; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"></path></svg></span>
+          <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0"><span style="font-size: 11px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">BOOKING</span><span style="font-size: 16px; font-weight: 600">Schedule a call or visit</span><span style="font-size: 13px; color: {{dim}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{bk.host}}</span></div>
+        </div>
+        <a href="{{bk.url}}" style="position: relative; box-sizing: border-box; min-height: 52px; padding: 0 16px; border-radius: 14px; background: {{brand}}; color: {{onBrand}}; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 600; box-shadow: {{brandBtnShadow}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>Open booking page<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></a>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="padding: 32px 16px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 4px; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">BOOKING · LONG / UNKNOWN HOST</span>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 4px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 1.6px; color: {{brandText}}">08</span><span style="font-family: {{fHead}}; font-size: 19px; font-weight: {{headWeight}}; letter-spacing: -0.3px; white-space: nowrap">Book a meeting</span><span style="flex-grow: 1; height: 1px; background: {{line}}"></span><span style="height: 22px; padding: 0 8px; border-radius: 11px; background: {{brandSoft}}; display: flex; align-items: center; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; color: {{brandText}}">ADD-ON</span></div>
+    <sc-for list="{{bookingLong}}" as="bk" hint-placeholder-count="1">
+      <div style="position: relative; padding: 18px; border-radius: 18px; background: {{surface}}; box-shadow: 0 0 0 1px {{line}}; display: flex; flex-direction: column; gap: 16px; overflow: hidden">
+        <div aria-hidden="true" style="position: absolute; right: -24px; top: -30px; color: {{brandText}}; opacity: 0.08"><svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg></div>
+        <div style="position: relative; display: flex; align-items: center; gap: 14px">
+          <span style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 14px; background: {{brandSoft}}; color: {{brandText}}; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"></path></svg></span>
+          <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0"><span style="font-size: 11px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">BOOKING</span><span style="font-size: 16px; font-weight: 600">Schedule a call or visit</span><span style="font-size: 13px; color: {{dim}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{bk.host}}</span></div>
+        </div>
+        <a href="{{bk.url}}" style="position: relative; box-sizing: border-box; min-height: 52px; padding: 0 16px; border-radius: 14px; background: {{brand}}; color: {{onBrand}}; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 600; box-shadow: {{brandBtnShadow}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>Open booking page<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></a>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- ============ 09 INTERESTS ============ -->
+  <div style="padding: 32px 16px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 4px; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">INTERESTS · FULL (20) · SITS AFTER ABOUT OR SKILLS</span>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 4px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 1.6px; color: {{brandText}}">09</span><span style="font-family: {{fHead}}; font-size: 19px; font-weight: {{headWeight}}; letter-spacing: -0.3px; white-space: nowrap">Interests</span><span style="flex-grow: 1; height: 1px; background: {{line}}"></span></div>
+    <div style="border-radius: 18px; background: {{surface}}; box-shadow: 0 0 0 1px {{line}}; padding: 18px; display: flex; flex-wrap: wrap; gap: 8px">
+      <sc-for list="{{interestsFull}}" as="it" hint-placeholder-count="20"><span style="box-sizing: border-box; max-width: 100%; min-height: 32px; padding: 6px 12px 6px 10px; border-radius: 8px; background: {{bg}}; display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 1.35; font-weight: 500; color: {{soft}}; overflow-wrap: anywhere"><span style="width: 6px; height: 6px; flex-shrink: 0; border-radius: 3px; background: {{brandText}}"></span>{{it.label}}</span></sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 32px 16px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 4px; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">INTERESTS · SPARSE</span>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 4px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 1.6px; color: {{brandText}}">09</span><span style="font-family: {{fHead}}; font-size: 19px; font-weight: {{headWeight}}; letter-spacing: -0.3px; white-space: nowrap">Interests</span><span style="flex-grow: 1; height: 1px; background: {{line}}"></span></div>
+    <div style="border-radius: 18px; background: {{surface}}; box-shadow: 0 0 0 1px {{line}}; padding: 18px; display: flex; flex-wrap: wrap; gap: 8px">
+      <sc-for list="{{interestsSparse}}" as="it" hint-placeholder-count="1"><span style="box-sizing: border-box; max-width: 100%; min-height: 32px; padding: 6px 12px 6px 10px; border-radius: 8px; background: {{bg}}; display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 1.35; font-weight: 500; color: {{soft}}; overflow-wrap: anywhere"><span style="width: 6px; height: 6px; flex-shrink: 0; border-radius: 3px; background: {{brandText}}"></span>{{it.label}}</span></sc-for>
+    </div>
+  </div>
+
+  <!-- ============ 10 ORGANIZATIONS ============ -->
+  <div style="padding: 32px 16px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 4px; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">ORGS · FULL (12) · SITS AFTER EXPERIENCE</span>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 4px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 1.6px; color: {{brandText}}">10</span><span style="font-family: {{fHead}}; font-size: 19px; font-weight: {{headWeight}}; letter-spacing: -0.3px; white-space: nowrap">Organizations</span><span style="flex-grow: 1; height: 1px; background: {{line}}"></span></div>
+    <div style="border-radius: 18px; background: {{surface}}; box-shadow: 0 0 0 1px {{line}}; padding: 8px 18px; display: flex; flex-direction: column">
+      <sc-for list="{{orgsFull}}" as="o" hint-placeholder-count="12">
+        <div style="padding: 10px 0; display: flex; align-items: center; gap: 12px; box-shadow: {{o.divider}}"><span aria-hidden="true" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: {{brandSoft}}; color: {{brandText}}; display: flex; align-items: center; justify-content: center; font-family: {{fHead}}; font-size: 15px; font-weight: {{headWeight}}; letter-spacing: 0.4px">{{o.initials}}</span><div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0"><span style="font-size: 15px; line-height: 1.3; font-weight: 600; overflow-wrap: anywhere">{{o.name}}</span><sc-if value="{{o.hasRole}}" hint-placeholder-val="{{ true }}"><span style="font-size: 13px; line-height: 1.35; color: {{dim}}">{{o.role}}</span></sc-if></div></div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 32px 16px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 4px; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">ORGS · SPARSE · ONE ITEM, NO ROLE</span>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 4px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 1.6px; color: {{brandText}}">10</span><span style="font-family: {{fHead}}; font-size: 19px; font-weight: {{headWeight}}; letter-spacing: -0.3px; white-space: nowrap">Organizations</span><span style="flex-grow: 1; height: 1px; background: {{line}}"></span></div>
+    <div style="border-radius: 18px; background: {{surface}}; box-shadow: 0 0 0 1px {{line}}; padding: 8px 18px; display: flex; flex-direction: column">
+      <sc-for list="{{orgsSparse}}" as="o" hint-placeholder-count="1">
+        <div style="padding: 10px 0; display: flex; align-items: center; gap: 12px; box-shadow: {{o.divider}}"><span aria-hidden="true" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: {{brandSoft}}; color: {{brandText}}; display: flex; align-items: center; justify-content: center; font-family: {{fHead}}; font-size: 15px; font-weight: {{headWeight}}; letter-spacing: 0.4px">{{o.initials}}</span><div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0"><span style="font-size: 15px; line-height: 1.3; font-weight: 600; overflow-wrap: anywhere">{{o.name}}</span><sc-if value="{{o.hasRole}}" hint-placeholder-val="{{ true }}"><span style="font-size: 13px; line-height: 1.35; color: {{dim}}">{{o.role}}</span></sc-if></div></div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ============ 11 SONG ============ -->
+  <div style="padding: 32px 16px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 4px; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">SONG · FULL · SITS AFTER INTERESTS OR ABOUT</span>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 4px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 1.6px; color: {{brandText}}">11</span><span style="font-family: {{fHead}}; font-size: 19px; font-weight: {{headWeight}}; letter-spacing: -0.3px; white-space: nowrap">Favourite song</span><span style="flex-grow: 1; height: 1px; background: {{line}}"></span></div>
+    <sc-for list="{{songFull}}" as="sg" hint-placeholder-count="1">
+      <a href="{{sg.spotifyUrl}}" aria-label="{{sg.aria}}" style="position: relative; min-height: 84px; padding: 16px 12px 16px 16px; box-sizing: border-box; border-radius: 18px; background: {{surface}}; box-shadow: 0 0 0 1px {{line}}; display: flex; align-items: center; gap: 14px; overflow: hidden">
+        <div aria-hidden="true" style="position: absolute; right: -30px; bottom: -44px; color: {{brandText}}; opacity: 0.08"><svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M7 9.4c3.6-1.1 7.6-.7 10.6 1.1M7.6 12.8c2.9-.8 6.1-.5 8.6 1M8.2 16c2.2-.6 4.6-.4 6.5.7"></path></svg></div>
+        <span style="position: relative; width: 46px; height: 46px; flex-shrink: 0; border-radius: 12px; background: {{brand}}; color: {{onBrand}}; display: flex; align-items: center; justify-content: center; box-shadow: {{brandBtnShadow}}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M7 9.4c3.6-1.1 7.6-.7 10.6 1.1M7.6 12.8c2.9-.8 6.1-.5 8.6 1M8.2 16c2.2-.6 4.6-.4 6.5.7"></path></svg></span>
+        <div style="position: relative; display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0"><span style="font-size: 11px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">SPOTIFY</span><span style="font-size: 16px; line-height: 1.3; font-weight: 700; overflow-wrap: anywhere">{{sg.titleText}}</span><sc-if value="{{sg.hasArtist}}" hint-placeholder-val="{{ true }}"><span style="font-size: 13px; line-height: 1.35; color: {{dim}}">{{sg.artist}}</span></sc-if></div>
+        <div style="position: relative; width: 36px; height: 36px; flex-shrink: 0; border-radius: 18px; background: {{brandSoft}}; color: {{brandText}}; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></div>
+      </a>
+    </sc-for>
+  </div>
+
+  <div style="padding: 32px 16px 0; display: flex; flex-direction: column; gap: 12px">
+    <span style="padding: 0 4px; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">SONG · SPARSE · LINK ONLY, NO TITLE OR ARTIST</span>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 4px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 1.6px; color: {{brandText}}">11</span><span style="font-family: {{fHead}}; font-size: 19px; font-weight: {{headWeight}}; letter-spacing: -0.3px; white-space: nowrap">Favourite song</span><span style="flex-grow: 1; height: 1px; background: {{line}}"></span></div>
+    <sc-for list="{{songSparse}}" as="sg" hint-placeholder-count="1">
+      <a href="{{sg.spotifyUrl}}" aria-label="{{sg.aria}}" style="position: relative; min-height: 84px; padding: 16px 12px 16px 16px; box-sizing: border-box; border-radius: 18px; background: {{surface}}; box-shadow: 0 0 0 1px {{line}}; display: flex; align-items: center; gap: 14px; overflow: hidden">
+        <div aria-hidden="true" style="position: absolute; right: -30px; bottom: -44px; color: {{brandText}}; opacity: 0.08"><svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M7 9.4c3.6-1.1 7.6-.7 10.6 1.1M7.6 12.8c2.9-.8 6.1-.5 8.6 1M8.2 16c2.2-.6 4.6-.4 6.5.7"></path></svg></div>
+        <span style="position: relative; width: 46px; height: 46px; flex-shrink: 0; border-radius: 12px; background: {{brand}}; color: {{onBrand}}; display: flex; align-items: center; justify-content: center; box-shadow: {{brandBtnShadow}}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M7 9.4c3.6-1.1 7.6-.7 10.6 1.1M7.6 12.8c2.9-.8 6.1-.5 8.6 1M8.2 16c2.2-.6 4.6-.4 6.5.7"></path></svg></span>
+        <div style="position: relative; display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0"><span style="font-size: 11px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">SPOTIFY</span><span style="font-size: 16px; line-height: 1.3; font-weight: 700; overflow-wrap: anywhere">{{sg.titleText}}</span><sc-if value="{{sg.hasArtist}}" hint-placeholder-val="{{ true }}"><span style="font-size: 13px; line-height: 1.35; color: {{dim}}">{{sg.artist}}</span></sc-if></div>
+        <div style="position: relative; width: 36px; height: 36px; flex-shrink: 0; border-radius: 18px; background: {{brandSoft}}; color: {{brandText}}; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></div>
+      </a>
+    </sc-for>
+  </div>
+
+  <!-- ============ INSIDE THE STARTER LAYOUT ============ -->
+  <div style="margin-top: 44px; padding: 22px 20px 0; display: flex; flex-direction: column; gap: 4px; box-shadow: inset 0 1px 0 {{line}}">
+    <span style="font-size: 12px; font-weight: 600; letter-spacing: 1.4px; color: {{soft}}">INSIDE THE STARTER LAYOUT</span>
+    <span style="font-size: 12px; line-height: 1.45; color: {{dim}}">Starter keeps Navy and Inter, and its four core sections run 01–04, so the add-ons take 05 and 06.</span>
+  </div>
+
+  <div style="padding: 20px 16px 0; display: flex; flex-direction: column; gap: 12px; font-family: {{sFont}}">
+    <span style="padding: 0 4px; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">STARTER · VIDEO · AFTER MESSAGE ME</span>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 4px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 1.6px; color: {{sBrandText}}">05</span><span style="font-size: 19px; font-weight: 700; letter-spacing: -0.3px; white-space: nowrap">Video</span><span style="flex-grow: 1; height: 1px; background: {{line}}"></span><span style="height: 22px; padding: 0 8px; border-radius: 11px; background: {{sBrandSoft}}; display: flex; align-items: center; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; color: {{sBrandText}}">ADD-ON</span></div>
+    <sc-for list="{{videoFull}}" as="v" hint-placeholder-count="1">
+      <a href="{{v.url}}" aria-label="Watch video on {{v.host}}" style="position: relative; min-height: 200px; padding: 16px 12px 14px 18px; box-sizing: border-box; border-radius: 18px; background: {{sDeepBg}}; color: #FFFFFF; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; overflow: hidden; box-shadow: 0 12px 26px {{sBrandShadow}}, inset 0 0 0 1px rgba(255,255,255,0.1)">
+        <div aria-hidden="true" style="position: absolute; right: -100px; top: -120px; width: 280px; height: 280px; border-radius: 50%; background: {{sGlow}}; pointer-events: none"></div>
+        <div aria-hidden="true" style="position: absolute; right: -62px; bottom: -76px; opacity: 0.1"><svg width="170" height="170" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"></rect><path d="m10 9 5 3-5 3z"></path></svg></div>
+        <span style="position: relative; font-size: 11px; font-weight: 700; letter-spacing: 1.6px; opacity: 0.8">VIDEO</span>
+        <span style="position: relative; align-self: center; width: 64px; height: 64px; border-radius: 32px; background: #FFFFFF; color: {{sPlayInk}}; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 8px rgba(255,255,255,0.12), 0 12px 28px rgba(0,0,0,0.35)"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 3px"><path d="M7 4.5v15l12.5-7.5z"></path></svg></span>
+        <div style="position: relative; display: flex; align-items: center; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0"><span style="font-size: 17px; font-weight: 700">Watch the video</span><span style="font-size: 13px; opacity: 0.85; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{v.host}}</span></div>
+          <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 18px; background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></div>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+
+  <div style="padding: 28px 16px 0; display: flex; flex-direction: column; gap: 12px; font-family: {{sFont}}">
+    <span style="padding: 0 4px; font-size: 10px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">STARTER · BOOKING · AFTER VIDEO</span>
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 4px"><span style="font-size: 12px; font-weight: 700; letter-spacing: 1.6px; color: {{sBrandText}}">06</span><span style="font-size: 19px; font-weight: 700; letter-spacing: -0.3px; white-space: nowrap">Book a meeting</span><span style="flex-grow: 1; height: 1px; background: {{line}}"></span><span style="height: 22px; padding: 0 8px; border-radius: 11px; background: {{sBrandSoft}}; display: flex; align-items: center; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; color: {{sBrandText}}">ADD-ON</span></div>
+    <sc-for list="{{bookingFull}}" as="bk" hint-placeholder-count="1">
+      <div style="position: relative; padding: 18px; border-radius: 18px; background: {{surface}}; box-shadow: 0 0 0 1px {{line}}; display: flex; flex-direction: column; gap: 16px; overflow: hidden">
+        <div aria-hidden="true" style="position: absolute; right: -24px; top: -30px; color: {{sBrandText}}; opacity: 0.08"><svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg></div>
+        <div style="position: relative; display: flex; align-items: center; gap: 14px">
+          <span style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 14px; background: {{sBrandSoft}}; color: {{sBrandText}}; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"></path></svg></span>
+          <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0"><span style="font-size: 11px; font-weight: 700; letter-spacing: 1.6px; color: {{dim}}">BOOKING</span><span style="font-size: 16px; font-weight: 600">Schedule a call or visit</span><span style="font-size: 13px; color: {{dim}}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{bk.host}}</span></div>
+        </div>
+        <a href="{{bk.url}}" style="position: relative; box-sizing: border-box; min-height: 52px; padding: 0 16px; border-radius: 14px; background: {{sBrand}}; color: {{sOnBrand}}; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 600; box-shadow: {{sBrandBtnShadow}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>Open booking page<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></a>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: relative; margin-top: auto; padding: 28px 12px 20px 20px; display: flex; justify-content: space-between; align-items: center">
+    <div style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 12px; font-weight: 600; letter-spacing: 1.4px; color: {{soft}}">ALWAYS ONE TAP AWAY.</span><span style="font-size: 11px; color: {{dim}}">Digital card by [YOUR BRAND]</span></div>
+  </div>
+</div>
+</template>
+<!-- EDIT ME: the contact that "Save contact" adds to the visitor's phone -->
+<script type="application/json" id="dc-contact">{
+  "fullName": "Warren Jacob Abdon",
+  "firstName": "Warren Jacob",
+  "lastName": "Abdon",
+  "title": "Software Engineer · Full-Stack Developer",
+  "org": "Freelance",
+  "phone": "+63 9XX XXX XXXX",
+  "email": "hello@warrenabdon.dev",
+  "website": "",
+  "city": "Cavite",
+  "country": "Philippines",
+  "note": "",
+  "photo": "assets/photo.jpg"
+}</script>
+<script type="application/json" id="dc-props">{"package": "Standard", "theme": "Light", "brand": "#0F2A4A", "fontPair": "Corporate — Inter", "sectionA": "Experience", "sectionB": "Services list", "order": "about, sectionA, connect, sectionB, profiles, messages"}</script>
+<script type="text/plain" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { themeOverride: null };
+  }
+  resolveTheme() {
+    if (this.state.themeOverride) { return this.state.themeOverride; }
+    var pref = this.props.theme ?? 'Light';
+    if (pref === 'Dark') { return 'dark'; }
+    if (pref === 'Match phone') {
+      try { if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { return 'dark'; } } catch (err) {}
+    }
+    return 'light';
+  }
+  hex(v, fb) { var s = String(v || '').trim(); return /^#[0-9a-fA-F]{6}$/.test(s) ? s : fb; }
+  rgb(hex) { var n = String(hex).replace('#', ''); return [parseInt(n.slice(0, 2), 16), parseInt(n.slice(2, 4), 16), parseInt(n.slice(4, 6), 16)]; }
+  lum(hex) { var c = this.rgb(hex); return (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255; }
+  mix(hex, toward, amt) { var c = this.rgb(hex); var m = function (v) { return Math.round(v + (toward - v) * amt); }; return 'rgb(' + m(c[0]) + ',' + m(c[1]) + ',' + m(c[2]) + ')'; }
+  stageEnd(hex) { var c = this.rgb(hex); var m = function (v) { return Math.round(v * 0.38); }; return '#' + [m(c[0]), m(c[1]), m(c[2])].map(function (v) { return (v < 16 ? '0' : '') + v.toString(16); }).join(''); }
+  rgba(hex, a) { var c = this.rgb(hex); return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+  fonts(name) {
+    var map = {
+      'Corporate — Inter': ["'Inter', system-ui, sans-serif", "'Inter', system-ui, sans-serif", '700'],
+      'Classic — Source Serif': ["'Source Serif 4', Georgia, serif", "'Source Sans 3', system-ui, sans-serif", '700'],
+      'Modern — Manrope': ["'Manrope', system-ui, sans-serif", "'Manrope', system-ui, sans-serif", '800'],
+      'Executive — IBM Plex': ["'IBM Plex Sans', system-ui, sans-serif", "'IBM Plex Sans', system-ui, sans-serif", '600']
+    };
+    return map[name] || map['Corporate — Inter'];
+  }
+  // WCAG relative luminance, used only to pick black or white text on the brand colour.
+  relLum(hex) { var c = this.rgb(hex).map(function (v) { v = v / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }
+  onColor(hex) { var L = this.relLum(hex); return (1.05 / (L + 0.05)) >= ((L + 0.05) / 0.05) ? '#FFFFFF' : '#0F172A'; }
+  // Brand-derived tokens for the new sections (same formulas as the Standard page, plus on-brand ink and the deep video tile).
+  brandTokens(B, dark, t) {
+    var light = this.lum(B) > 0.6;
+    return {
+      brand: B,
+      brandText: dark ? (this.lum(B) < 0.45 ? this.mix(B, 255, 0.55) : B) : (light ? this.mix(B, 0, 0.5) : B),
+      brandSoft: this.rgba(dark && this.lum(B) < 0.45 ? '#FFFFFF' : B, 0.08),
+      brandShadow: this.rgba(B, dark ? 0.4 : 0.28),
+      onBrand: this.onColor(B),
+      brandBtnShadow: 'inset 0 0 0 1px ' + (dark ? 'rgba(255,255,255,0.12)' : 'rgba(15,23,42,0.06)'),
+      deepBg: 'linear-gradient(140deg, ' + this.mix(B, 0, 0.55) + ' 0%, ' + this.stageEnd(B) + ' 100%)',
+      glow: 'radial-gradient(circle, ' + this.rgba(B, light ? 0.22 : 0.55) + ' 0%, transparent 70%)',
+      playInk: this.stageEnd(B)
+    };
+  }
+  host(url) { var m = String(url || '').match(/^[a-z]+:\/\/(?:www\.)?([^\/?#]+)/i); return m ? m[1].toLowerCase() : ''; }
+  initials(name) {
+    var skip = { of: 1, the: 1, and: 1, for: 1, in: 1, at: 1, ng: 1, sa: 1 };
+    var w = String(name).replace(/[^A-Za-z0-9 ]+/g, ' ').split(/\s+/).filter(function (x) { return x && !skip[x.toLowerCase()]; });
+    return ((w[0] || '?').charAt(0) + (w[1] ? w[1].charAt(0) : '')).toUpperCase();
+  }
+  renderVals() {
+    var self = this;
+    var dark = this.resolveTheme() === 'dark';
+    var std = (this.props.package ?? 'Standard') === 'Standard';
+    var f = this.fonts(std ? (this.props.fontPair ?? 'Corporate — Inter') : 'Corporate — Inter');
+    var B = std ? this.hex(this.props.brand, '#0F2A4A') : '#0F2A4A';
+    var t = dark
+      ? { bg: '#0B1220', surface: '#121A2B', ink: '#E5E9F0', soft: '#C2CAD6', dim: '#8C97A8', line: '#1F2A3D' }
+      : { bg: '#F4F6F9', surface: '#FFFFFF', ink: '#0F172A', soft: '#334155', dim: '#64748B', line: '#E2E8F0' };
+    var k = this.brandTokens(B, dark, t);
+    var s = this.brandTokens('#0F2A4A', dark, t); // Starter pages always use Navy
+    var div = 'inset 0 1px 0 ' + t.line;
+
+    // ---- sample data (shapes match the stored section data) ----
+    var video = function (url) { return { url: url, host: self.host(url) }; };
+    var booking = function (url) { return { url: url, host: self.host(url) }; };
+    var interests = ['Photography', 'Hiking', 'Coffee', 'Chess', 'Basketball', 'Reading', 'Travel', 'Cooking', 'Open source', 'Film',
+      'Running', 'Music production', 'Board games', 'Cycling', 'Gardening', 'Volunteering', 'Design', 'Podcasts', 'Swimming',
+      'Restoring and collecting vintage watches'];
+    var orgs = [
+      { name: 'Association of Information Technology Educators and Practitioners, Region IV-A', role: 'Vice President for External Affairs and Industry Partners' },
+      { name: 'Cavite Young Developers Circle', role: 'Founding member' },
+      { name: 'Campus Computing Society', role: 'President' },
+      { name: 'Regional Startup Network', role: 'Mentor' },
+      { name: 'Community Volunteers Alliance', role: '' },
+      { name: 'Open Source Study Group', role: 'Organizer' },
+      { name: 'Data Science Guild', role: 'Member' },
+      { name: 'Toastmasters Chapter', role: '' },
+      { name: 'Hackathon Organizers League', role: 'Volunteer' },
+      { name: 'Women in Engineering Circle', role: 'Ally member' },
+      { name: '[Organization name]', role: '[Role]' },
+      { name: 'Alumni Tech Council', role: 'Secretary' }
+    ];
+    var org = function (o, i) { return { name: o.name, role: o.role, hasRole: !!o.role, initials: self.initials(o.name.replace(/[\[\]]/g, '')), divider: i ? div : 'none' }; };
+    var song = function (o) {
+      var hasTitle = !!o.title;
+      return { spotifyUrl: o.spotifyUrl, title: o.title, artist: o.artist, hasArtist: !!o.artist,
+        titleText: hasTitle ? o.title : 'Listen on Spotify',
+        aria: hasTitle ? ('Listen to ' + o.title + (o.artist ? ' by ' + o.artist : '') + ' on Spotify') : 'Listen on Spotify' };
+    };
+
+    return {
+      pageMin: '4098px',
+      bg: t.bg, surface: t.surface, ink: t.ink, soft: t.soft, dim: t.dim, line: t.line,
+      fHead: f[0], fBody: f[1], headWeight: f[2],
+      brand: k.brand, brandText: k.brandText, brandSoft: k.brandSoft, brandShadow: k.brandShadow, onBrand: k.onBrand,
+      brandBtnShadow: k.brandBtnShadow, deepBg: k.deepBg, glow: k.glow, playInk: k.playInk,
+      sFont: "'Inter', system-ui, sans-serif",
+      sBrand: s.brand, sBrandText: s.brandText, sBrandSoft: s.brandSoft, sBrandShadow: s.brandShadow, sOnBrand: s.onBrand,
+      sBrandBtnShadow: s.brandBtnShadow, sDeepBg: s.deepBg, sGlow: s.glow, sPlayInk: s.playInk,
+      stage: 'linear-gradient(180deg, ' + this.stageEnd(B) + ' 0%, ' + this.stageEnd(B) + ' 85%, ' + this.mix(B, 0, 0.25) + ' 100%)',
+      isDark: dark, isLight: !dark,
+      themeAria: dark ? 'Switch to light theme' : 'Switch to dark theme',
+      toggleTheme: function () { self.setState({ themeOverride: self.resolveTheme() === 'dark' ? 'light' : 'dark' }); },
+
+      videoFull: [video('https://www.youtube.com/watch?v=XXXXXXXXXXX')],
+      videoLong: [video('https://media.example-company-streaming-platform.com.ph/watch/intro-2026')],
+      bookingFull: [booking('https://calendly.com/yourname')],
+      bookingLong: [booking('https://appointments.example-professional-services-group.com.ph/yourname')],
+      interestsFull: interests.map(function (x) { return { label: x }; }),
+      interestsSparse: [{ label: 'Photography' }],
+      orgsFull: orgs.map(org),
+      orgsSparse: [{ name: 'Cavite Young Developers Circle', role: '' }].map(org),
+      songFull: [song({ spotifyUrl: 'https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX', title: 'Midnight Drive Through the City Lights (Extended Acoustic Version) [Remastered]', artist: '[Artist name]' })],
+      songSparse: [song({ spotifyUrl: 'https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX', title: '', artist: '' })]
+    };
+  }
+}
+</script>
+<script>(function(global,factory){typeof exports==="object"&&typeof module!=="undefined"?module.exports=factory():typeof define==="function"&&define.amd?define(factory):(global=global||self,global.morphdom=factory())})(this,function(){"use strict";var DOCUMENT_FRAGMENT_NODE=11;function morphAttrs(fromNode,toNode){var toNodeAttrs=toNode.attributes;var attr;var attrName;var attrNamespaceURI;var attrValue;var fromValue;if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE||fromNode.nodeType===DOCUMENT_FRAGMENT_NODE){return}for(var i=toNodeAttrs.length-1;i>=0;i--){attr=toNodeAttrs[i];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;attrValue=attr.value;if(attrNamespaceURI){attrName=attr.localName||attrName;fromValue=fromNode.getAttributeNS(attrNamespaceURI,attrName);if(fromValue!==attrValue){if(attr.prefix==="xmlns"){attrName=attr.name}fromNode.setAttributeNS(attrNamespaceURI,attrName,attrValue)}}else{fromValue=fromNode.getAttribute(attrName);if(fromValue!==attrValue){fromNode.setAttribute(attrName,attrValue)}}}var fromNodeAttrs=fromNode.attributes;for(var d=fromNodeAttrs.length-1;d>=0;d--){attr=fromNodeAttrs[d];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;if(attrNamespaceURI){attrName=attr.localName||attrName;if(!toNode.hasAttributeNS(attrNamespaceURI,attrName)){fromNode.removeAttributeNS(attrNamespaceURI,attrName)}}else{if(!toNode.hasAttribute(attrName)){fromNode.removeAttribute(attrName)}}}}var range;var NS_XHTML="http://www.w3.org/1999/xhtml";var doc=typeof document==="undefined"?undefined:document;var HAS_TEMPLATE_SUPPORT=!!doc&&"content"in doc.createElement("template");var HAS_RANGE_SUPPORT=!!doc&&doc.createRange&&"createContextualFragment"in doc.createRange();function createFragmentFromTemplate(str){var template=doc.createElement("template");template.innerHTML=str;return template.content.childNodes[0]}function createFragmentFromRange(str){if(!range){range=doc.createRange();range.selectNode(doc.body)}var fragment=range.createContextualFragment(str);return fragment.childNodes[0]}function createFragmentFromWrap(str){var fragment=doc.createElement("body");fragment.innerHTML=str;return fragment.childNodes[0]}function toElement(str){str=str.trim();if(HAS_TEMPLATE_SUPPORT){return createFragmentFromTemplate(str)}else if(HAS_RANGE_SUPPORT){return createFragmentFromRange(str)}return createFragmentFromWrap(str)}function compareNodeNames(fromEl,toEl){var fromNodeName=fromEl.nodeName;var toNodeName=toEl.nodeName;var fromCodeStart,toCodeStart;if(fromNodeName===toNodeName){return true}fromCodeStart=fromNodeName.charCodeAt(0);toCodeStart=toNodeName.charCodeAt(0);if(fromCodeStart<=90&&toCodeStart>=97){return fromNodeName===toNodeName.toUpperCase()}else if(toCodeStart<=90&&fromCodeStart>=97){return toNodeName===fromNodeName.toUpperCase()}else{return false}}function createElementNS(name,namespaceURI){return!namespaceURI||namespaceURI===NS_XHTML?doc.createElement(name):doc.createElementNS(namespaceURI,name)}function moveChildren(fromEl,toEl){var curChild=fromEl.firstChild;while(curChild){var nextChild=curChild.nextSibling;toEl.appendChild(curChild);curChild=nextChild}return toEl}function syncBooleanAttrProp(fromEl,toEl,name){if(fromEl[name]!==toEl[name]){fromEl[name]=toEl[name];if(fromEl[name]){fromEl.setAttribute(name,"")}else{fromEl.removeAttribute(name)}}}var specialElHandlers={OPTION:function(fromEl,toEl){var parentNode=fromEl.parentNode;if(parentNode){var parentName=parentNode.nodeName.toUpperCase();if(parentName==="OPTGROUP"){parentNode=parentNode.parentNode;parentName=parentNode&&parentNode.nodeName.toUpperCase()}if(parentName==="SELECT"&&!parentNode.hasAttribute("multiple")){if(fromEl.hasAttribute("selected")&&!toEl.selected){fromEl.setAttribute("selected","selected");fromEl.removeAttribute("selected")}parentNode.selectedIndex=-1}}syncBooleanAttrProp(fromEl,toEl,"selected")},INPUT:function(fromEl,toEl){syncBooleanAttrProp(fromEl,toEl,"checked");syncBooleanAttrProp(fromEl,toEl,"disabled");if(fromEl.value!==toEl.value){fromEl.value=toEl.value}if(!toEl.hasAttribute("value")){fromEl.removeAttribute("value")}},TEXTAREA:function(fromEl,toEl){var newValue=toEl.value;if(fromEl.value!==newValue){fromEl.value=newValue}var firstChild=fromEl.firstChild;if(firstChild){var oldValue=firstChild.nodeValue;if(oldValue==newValue||!newValue&&oldValue==fromEl.placeholder){return}firstChild.nodeValue=newValue}},SELECT:function(fromEl,toEl){if(!toEl.hasAttribute("multiple")){var selectedIndex=-1;var i=0;var curChild=fromEl.firstChild;var optgroup;var nodeName;while(curChild){nodeName=curChild.nodeName&&curChild.nodeName.toUpperCase();if(nodeName==="OPTGROUP"){optgroup=curChild;curChild=optgroup.firstChild}else{if(nodeName==="OPTION"){if(curChild.hasAttribute("selected")){selectedIndex=i;break}i++}curChild=curChild.nextSibling;if(!curChild&&optgroup){curChild=optgroup.nextSibling;optgroup=null}}}fromEl.selectedIndex=selectedIndex}}};var ELEMENT_NODE=1;var DOCUMENT_FRAGMENT_NODE$1=11;var TEXT_NODE=3;var COMMENT_NODE=8;function noop(){}function defaultGetNodeKey(node){if(node){return node.getAttribute&&node.getAttribute("id")||node.id}}function morphdomFactory(morphAttrs){return function morphdom(fromNode,toNode,options){if(!options){options={}}if(typeof toNode==="string"){if(fromNode.nodeName==="#document"||fromNode.nodeName==="HTML"||fromNode.nodeName==="BODY"){var toNodeHtml=toNode;toNode=doc.createElement("html");toNode.innerHTML=toNodeHtml}else{toNode=toElement(toNode)}}else if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE$1){toNode=toNode.firstElementChild}var getNodeKey=options.getNodeKey||defaultGetNodeKey;var onBeforeNodeAdded=options.onBeforeNodeAdded||noop;var onNodeAdded=options.onNodeAdded||noop;var onBeforeElUpdated=options.onBeforeElUpdated||noop;var onElUpdated=options.onElUpdated||noop;var onBeforeNodeDiscarded=options.onBeforeNodeDiscarded||noop;var onNodeDiscarded=options.onNodeDiscarded||noop;var onBeforeElChildrenUpdated=options.onBeforeElChildrenUpdated||noop;var skipFromChildren=options.skipFromChildren||noop;var addChild=options.addChild||function(parent,child){return parent.appendChild(child)};var childrenOnly=options.childrenOnly===true;var fromNodesLookup=Object.create(null);var keyedRemovalList=[];function addKeyedRemoval(key){keyedRemovalList.push(key)}function walkDiscardedChildNodes(node,skipKeyedNodes){if(node.nodeType===ELEMENT_NODE){var curChild=node.firstChild;while(curChild){var key=undefined;if(skipKeyedNodes&&(key=getNodeKey(curChild))){addKeyedRemoval(key)}else{onNodeDiscarded(curChild);if(curChild.firstChild){walkDiscardedChildNodes(curChild,skipKeyedNodes)}}curChild=curChild.nextSibling}}}function removeNode(node,parentNode,skipKeyedNodes){if(onBeforeNodeDiscarded(node)===false){return}if(parentNode){parentNode.removeChild(node)}onNodeDiscarded(node);walkDiscardedChildNodes(node,skipKeyedNodes)}function indexTree(node){if(node.nodeType===ELEMENT_NODE||node.nodeType===DOCUMENT_FRAGMENT_NODE$1){var curChild=node.firstChild;while(curChild){var key=getNodeKey(curChild);if(key){fromNodesLookup[key]=curChild}indexTree(curChild);curChild=curChild.nextSibling}}}indexTree(fromNode);function handleNodeAdded(el){onNodeAdded(el);var curChild=el.firstChild;while(curChild){var nextSibling=curChild.nextSibling;var key=getNodeKey(curChild);if(key){var unmatchedFromEl=fromNodesLookup[key];if(unmatchedFromEl&&compareNodeNames(curChild,unmatchedFromEl)){curChild.parentNode.replaceChild(unmatchedFromEl,curChild);morphEl(unmatchedFromEl,curChild)}else{handleNodeAdded(curChild)}}else{handleNodeAdded(curChild)}curChild=nextSibling}}function cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey){while(curFromNodeChild){var fromNextSibling=curFromNodeChild.nextSibling;if(curFromNodeKey=getNodeKey(curFromNodeChild)){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}}function morphEl(fromEl,toEl,childrenOnly){var toElKey=getNodeKey(toEl);if(toElKey){delete fromNodesLookup[toElKey]}if(!childrenOnly){var beforeUpdateResult=onBeforeElUpdated(fromEl,toEl);if(beforeUpdateResult===false){return}else if(beforeUpdateResult instanceof HTMLElement){fromEl=beforeUpdateResult;indexTree(fromEl)}morphAttrs(fromEl,toEl);onElUpdated(fromEl);if(onBeforeElChildrenUpdated(fromEl,toEl)===false){return}}if(fromEl.nodeName!=="TEXTAREA"){morphChildren(fromEl,toEl)}else{specialElHandlers.TEXTAREA(fromEl,toEl)}}function morphChildren(fromEl,toEl){var skipFrom=skipFromChildren(fromEl,toEl);var curToNodeChild=toEl.firstChild;var curFromNodeChild=fromEl.firstChild;var curToNodeKey;var curFromNodeKey;var fromNextSibling;var toNextSibling;var matchingFromEl;outer:while(curToNodeChild){toNextSibling=curToNodeChild.nextSibling;curToNodeKey=getNodeKey(curToNodeChild);while(!skipFrom&&curFromNodeChild){fromNextSibling=curFromNodeChild.nextSibling;if(curToNodeChild.isSameNode&&curToNodeChild.isSameNode(curFromNodeChild)){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}curFromNodeKey=getNodeKey(curFromNodeChild);var curFromNodeType=curFromNodeChild.nodeType;var isCompatible=undefined;if(curFromNodeType===curToNodeChild.nodeType){if(curFromNodeType===ELEMENT_NODE){if(curToNodeKey){if(curToNodeKey!==curFromNodeKey){if(matchingFromEl=fromNodesLookup[curToNodeKey]){if(fromNextSibling===matchingFromEl){isCompatible=false}else{fromEl.insertBefore(matchingFromEl,curFromNodeChild);if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=matchingFromEl;curFromNodeKey=getNodeKey(curFromNodeChild)}}else{isCompatible=false}}}else if(curFromNodeKey){isCompatible=false}isCompatible=isCompatible!==false&&compareNodeNames(curFromNodeChild,curToNodeChild);if(isCompatible){morphEl(curFromNodeChild,curToNodeChild)}}else if(curFromNodeType===TEXT_NODE||curFromNodeType==COMMENT_NODE){isCompatible=true;if(curFromNodeChild.nodeValue!==curToNodeChild.nodeValue){curFromNodeChild.nodeValue=curToNodeChild.nodeValue}}}if(isCompatible){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}if(curToNodeKey&&(matchingFromEl=fromNodesLookup[curToNodeKey])&&compareNodeNames(matchingFromEl,curToNodeChild)){if(!skipFrom){addChild(fromEl,matchingFromEl)}morphEl(matchingFromEl,curToNodeChild)}else{var onBeforeNodeAddedResult=onBeforeNodeAdded(curToNodeChild);if(onBeforeNodeAddedResult!==false){if(onBeforeNodeAddedResult){curToNodeChild=onBeforeNodeAddedResult}if(curToNodeChild.actualize){curToNodeChild=curToNodeChild.actualize(fromEl.ownerDocument||doc)}addChild(fromEl,curToNodeChild);handleNodeAdded(curToNodeChild)}}curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling}cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey);var specialElHandler=specialElHandlers[fromEl.nodeName];if(specialElHandler){specialElHandler(fromEl,toEl)}}var morphedNode=fromNode;var morphedNodeType=morphedNode.nodeType;var toNodeType=toNode.nodeType;if(!childrenOnly){if(morphedNodeType===ELEMENT_NODE){if(toNodeType===ELEMENT_NODE){if(!compareNodeNames(fromNode,toNode)){onNodeDiscarded(fromNode);morphedNode=moveChildren(fromNode,createElementNS(toNode.nodeName,toNode.namespaceURI))}}else{morphedNode=toNode}}else if(morphedNodeType===TEXT_NODE||morphedNodeType===COMMENT_NODE){if(toNodeType===morphedNodeType){if(morphedNode.nodeValue!==toNode.nodeValue){morphedNode.nodeValue=toNode.nodeValue}return morphedNode}else{morphedNode=toNode}}}if(morphedNode===toNode){onNodeDiscarded(fromNode)}else{if(toNode.isSameNode&&toNode.isSameNode(morphedNode)){return}morphEl(morphedNode,toNode,childrenOnly);if(keyedRemovalList){for(var i=0,len=keyedRemovalList.length;i<len;i++){var elToRemove=fromNodesLookup[keyedRemovalList[i]];if(elToRemove){removeNode(elToRemove,elToRemove.parentNode,false)}}}}if(!childrenOnly&&morphedNode!==fromNode&&fromNode.parentNode){if(morphedNode.actualize){morphedNode=morphedNode.actualize(fromNode.ownerDocument||doc)}fromNode.parentNode.replaceChild(morphedNode,fromNode)}return morphedNode}}var morphdom=morphdomFactory(morphAttrs);return morphdom});</script>
+<script>(function () {
+  function legacyCopy(t) { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); }
+  var nativeWrite = navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText.bind(navigator.clipboard) : null;
+  var shim = function (t) { if (!nativeWrite) { legacyCopy(t); return Promise.resolve(); } return nativeWrite(t).catch(function () { legacyCopy(t); }); };
+  try { if (navigator.clipboard) { navigator.clipboard.writeText = shim; } else { Object.defineProperty(navigator, 'clipboard', { value: { writeText: shim } }); } } catch (e) {}
+})();
+(function () {
+  var C = JSON.parse(document.getElementById('dc-contact').textContent);
+  var photoB64 = '';
+  if (C.photo) {
+    fetch(C.photo).then(function (r) { return r.blob(); }).then(function (b) {
+      var fr = new FileReader(); fr.onload = function () { photoB64 = String(fr.result).split(',')[1] || ''; }; fr.readAsDataURL(b);
+    }).catch(function () {});
+  }
+  function esc(v) { return String(v || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1'); }
+  function fold(line) { var out = []; while (line.length > 75) { out.push(line.slice(0, 75)); line = ' ' + line.slice(75); } out.push(line); return out.join('\r\n'); }
+  window.__dcSaveContact = function () {
+    var url = C.website || location.href;
+    var L = ['BEGIN:VCARD', 'VERSION:3.0',
+      'N:' + esc(C.lastName) + ';' + esc(C.firstName) + ';;;',
+      'FN:' + esc(C.fullName)];
+    if (C.title) { L.push('TITLE:' + esc(C.title)); }
+    if (C.org) { L.push('ORG:' + esc(C.org)); }
+    if (C.phone) { L.push('TEL;TYPE=CELL:' + C.phone); }
+    if (C.email) { L.push('EMAIL;TYPE=INTERNET:' + C.email); }
+    if (url) { L.push('URL:' + url); }
+    if (C.city || C.country) { L.push('ADR;TYPE=WORK:;;;' + esc(C.city) + ';;;' + esc(C.country)); }
+    if (C.note) { L.push('NOTE:' + esc(C.note)); }
+    if (photoB64) { L.push('PHOTO;ENCODING=b;TYPE=JPEG:' + photoB64); }
+    L.push('END:VCARD');
+    var text = L.map(fold).join('\r\n') + '\r\n';
+    var blob = new Blob([text], { type: 'text/vcard;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (C.fullName || 'contact').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.vcf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  };
+})();
+(function () {
+  var tpl = document.getElementById('dc-template');
+  var root = document.getElementById('app');
+  var PROPS = JSON.parse(document.getElementById('dc-props').textContent);
+  function DCLogic(props) { this.props = props || {}; this.state = {}; }
+  DCLogic.prototype.setState = function (p) {
+    var next = typeof p === 'function' ? p(this.state, this.props) : p;
+    this.state = Object.assign({}, this.state, next);
+    schedule();
+  };
+  var Component = new Function('DCLogic', document.getElementById('dc-logic').textContent + '\nreturn Component;')(DCLogic);
+  var comp = new Component(PROPS);
+  if (!comp.state) { comp.state = {}; }
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  function get(scope, path) {
+    if (path === 'true') { return true; }
+    if (path === 'false') { return false; }
+    return path.split('.').reduce(function (a, k) { return a == null ? a : a[k]; }, scope);
+  }
+  function sub(str, scope) {
+    return str.replace(HOLE, function (m, p) { var v = get(scope, p); return (v == null || typeof v === 'function') ? '' : String(v); });
+  }
+  function build(node, scope, parent) {
+    var kids = node.childNodes;
+    for (var i = 0; i < kids.length; i++) {
+      var ch = kids[i];
+      if (ch.nodeType === 3) { parent.appendChild(document.createTextNode(sub(ch.textContent, scope))); continue; }
+      if (ch.nodeType !== 1) { continue; }
+      var tag = ch.localName;
+      if (tag === 'sc-if') {
+        var m = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('value') || '');
+        if (m && get(scope, m[1])) { build(ch, scope, parent); }
+        continue;
+      }
+      if (tag === 'sc-for') {
+        var lm = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('list') || '');
+        var as = ch.getAttribute('as');
+        var list = (lm && get(scope, lm[1])) || [];
+        for (var j = 0; j < list.length; j++) { var sc = Object.create(scope); sc[as] = list[j]; build(ch, sc, parent); }
+        continue;
+      }
+      var el = ch.namespaceURI && ch.namespaceURI !== 'http://www.w3.org/1999/xhtml' ? document.createElementNS(ch.namespaceURI, ch.localName) : document.createElement(tag);
+      var attrs = ch.attributes;
+      for (var a = 0; a < attrs.length; a++) {
+        var at = attrs[a];
+        if (/^on[a-z]/i.test(at.name)) {
+          var hm = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/.exec(at.value);
+          var fn = hm ? get(scope, hm[1]) : null;
+          if (typeof fn === 'function') { el['on' + at.name.slice(2).toLowerCase()] = fn; }
+          continue;
+        }
+        if (at.name.indexOf('hint-') === 0) { continue; }
+        el.setAttribute(at.name, sub(at.value, scope));
+      }
+      build(ch.content || ch, scope, el);
+      parent.appendChild(el);
+    }
+  }
+  var EVTS = ['click', 'mousemove', 'mouseleave', 'touchmove', 'touchend', 'touchstart', 'input', 'change', 'keydown'];
+  function render() {
+    var vals = comp.renderVals();
+    if (typeof vals.save === 'function') { var origSave = vals.save; vals.save = function () { window.__dcSaveContact(); return origSave.apply(this, arguments); }; }
+    var next = document.createElement('div');
+    next.id = 'app';
+    build(tpl.content, vals, next);
+    morphdom(root, next, {
+      onBeforeElUpdated: function (from, to) {
+        for (var i = 0; i < EVTS.length; i++) { var k = 'on' + EVTS[i]; if (from[k] !== to[k]) { from[k] = to[k] || null; } }
+        return !from.isEqualNode(to);
+      }
+    });
+    var first = root.firstElementChild;
+    if (first) { document.body.style.background = getComputedStyle(first).backgroundColor; }
+  }
+  var queued = false;
+  function schedule() { if (queued) { return; } queued = true; requestAnimationFrame(function () { queued = false; render(); }); }
+  render();
+  if (comp.componentDidMount) { comp.componentDidMount(); }
+})();
+</script>
+</body>
+</html>

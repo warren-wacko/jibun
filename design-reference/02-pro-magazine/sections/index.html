@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Warren Jacob Abdon — Digital Card</title>
+<meta name="description" content="Software Engineer · Full-Stack Developer. Save my contact in one tap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=Playfair+Display:wght@600;700;800;900&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;family=Anton&amp;family=Work+Sans:wght@400;500;600;700&amp;family=Fraunces:opsz,wght@9..144,600;9..144,800&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible{outline:2px solid #6C7CF0;outline-offset:3px}
+@keyframes nameUp{0%{opacity:0;transform:translateY(28px)}100%{opacity:1;transform:none}}
+@keyframes riseIn{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+@keyframes toastIn{0%{opacity:0;transform:translate(-50%,12px)}100%{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion: reduce){.anim{animation:none !important}}
+.mz-trunc{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+</style>
+<style>
+html,body{margin:0;padding:0}
+body{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+#app>div{width:100% !important;max-width:430px;margin:0 auto;min-height:100vh !important;min-height:100dvh !important}
+</style>
+</head>
+<body>
+<!-- 02-pro-magazine — new sections — from MagazineSections.dc.html -->
+<div id="app"></div>
+<template id="dc-template">
+<div style="position: relative; width: 390px; min-height: 4395px; box-sizing: border-box; background: {{bg}}; font-family: {{fBody}}; color: {{ink}}; display: flex; flex-direction: column; transition: background 350ms ease, color 350ms ease">
+
+  <!-- Masthead strip: the template's own top bar, on a cropped band of the cover photo -->
+  <div style="position: relative; height: 132px; background: {{photoBg}}; overflow: hidden">
+    <img src="assets/photo.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%">
+    <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.38) 100%); pointer-events: none"></div>
+    <div style="position: absolute; left: 0; right: 0; top: 0; padding: 14px 20px 0; display: flex; align-items: center; justify-content: space-between; color: #FFFFFF">
+      <span style="font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px">[YOUR BRAND]</span>
+      <div style="display: flex; align-items: center; gap: 4px">
+        <button type="button" onClick="{{toggleTheme}}" aria-label="{{themeAria}}" style="all: unset; cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center">
+          <div style="width: 36px; height: 36px; border-radius: 18px; background: rgba(12,13,15,0.32); border: 1px solid rgba(255,255,255,0.28); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center">
+            <sc-if value="{{isDark}}" hint-placeholder-val="{{ false }}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+            </sc-if>
+            <sc-if value="{{isLight}}" hint-placeholder-val="{{ true }}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+            </sc-if>
+          </div>
+        </button>
+      </div>
+    </div>
+    <div style="position: absolute; left: 20px; right: 20px; top: 66px; display: flex; justify-content: space-between; gap: 12px; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.6px; color: rgba(255,255,255,0.85); border-top: 1px solid rgba(255,255,255,0.35); padding-top: 8px">
+      <span>ISSUE NO. 01</span>
+      <span>THE STANDARD EDITION</span>
+    </div>
+  </div>
+
+  <div style="padding: 28px 24px 0; display: flex; flex-direction: column; gap: 8px">
+    <span style="font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">NEW SECTIONS — PRO MAGAZINE</span>
+    <span style="font-family: {{fMono}}; font-size: 10px; letter-spacing: 1px; line-height: 1.6; color: {{faint}}">Page numbers continue after the Standard page's last block (P. 06): video P. 07, booking P. 08, interests P. 09, orgs P. 10, song P. 11.</span>
+  </div>
+
+  <!-- ============ VIDEO ============ -->
+  <div style="padding: 44px 24px 0"><div style="border-top: 1px dashed {{line}}; padding-top: 8px; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.2px; color: {{faint}}">VIDEO · FULL · sits after Selected Work</div></div>
+  <div style="position: relative; padding: 18px 24px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">
+      <span>VIDEO</span>
+      <span style="display: flex; gap: 10px; align-items: baseline"><span style="font-size: 9px; color: {{accentText}}">ADD-ON</span><span>P. 07</span></span>
+    </div>
+    <a href="{{videoA.url}}" target="_blank" rel="noopener" aria-label="Watch the video on {{videoA.host}} (opens in a new tab)" style="background: {{ink}}; color: {{bg}}; padding: 20px; display: flex; align-items: center; gap: 16px">
+      <div style="display: flex; flex-direction: column; gap: 10px; flex-grow: 1; min-width: 0">
+        <span style="font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.6px; opacity: 0.7">ON FILM</span>
+        <span style="font-family: {{fHead}}; font-size: 30px; line-height: 0.95; font-weight: {{headWeight}}; font-stretch: {{headStretch}}; text-transform: uppercase">Watch the video</span>
+        <span style="display: flex; align-items: center; gap: 6px; min-width: 0; font-family: {{fMono}}; font-size: 11px; letter-spacing: 0.4px; opacity: 0.8">
+          <span class="mz-trunc" style="min-width: 0">{{videoA.host}}</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+        </span>
+      </div>
+      <div style="width: 64px; height: 64px; flex-shrink: 0; border-radius: 32px; background: {{onInkChip}}; color: {{onInkChipInk}}; display: flex; align-items: center; justify-content: center">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" style="margin-left: 3px"><path d="M7 4.5v15l12.5-7.5z"></path></svg>
+      </div>
+    </a>
+  </div>
+
+  <div style="padding: 44px 24px 0"><div style="border-top: 1px dashed {{line}}; padding-top: 8px; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.2px; color: {{faint}}">VIDEO · LONG / UNKNOWN HOST · host truncates</div></div>
+  <div style="position: relative; padding: 18px 24px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">
+      <span>VIDEO</span>
+      <span style="display: flex; gap: 10px; align-items: baseline"><span style="font-size: 9px; color: {{accentText}}">ADD-ON</span><span>P. 07</span></span>
+    </div>
+    <a href="{{videoB.url}}" target="_blank" rel="noopener" aria-label="Watch the video on {{videoB.host}} (opens in a new tab)" style="background: {{ink}}; color: {{bg}}; padding: 20px; display: flex; align-items: center; gap: 16px">
+      <div style="display: flex; flex-direction: column; gap: 10px; flex-grow: 1; min-width: 0">
+        <span style="font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.6px; opacity: 0.7">ON FILM</span>
+        <span style="font-family: {{fHead}}; font-size: 30px; line-height: 0.95; font-weight: {{headWeight}}; font-stretch: {{headStretch}}; text-transform: uppercase">Watch the video</span>
+        <span style="display: flex; align-items: center; gap: 6px; min-width: 0; font-family: {{fMono}}; font-size: 11px; letter-spacing: 0.4px; opacity: 0.8">
+          <span class="mz-trunc" style="min-width: 0">{{videoB.host}}</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+        </span>
+      </div>
+      <div style="width: 64px; height: 64px; flex-shrink: 0; border-radius: 32px; background: {{onInkChip}}; color: {{onInkChipInk}}; display: flex; align-items: center; justify-content: center">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" style="margin-left: 3px"><path d="M7 4.5v15l12.5-7.5z"></path></svg>
+      </div>
+    </a>
+  </div>
+
+  <!-- ============ BOOKING ============ -->
+  <div style="padding: 44px 24px 0"><div style="border-top: 1px dashed {{line}}; padding-top: 8px; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.2px; color: {{faint}}">BOOKING · FULL · sits after Get in Touch</div></div>
+  <div style="position: relative; padding: 18px 24px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">
+      <span>BOOK A TIME</span>
+      <span style="display: flex; gap: 10px; align-items: baseline"><span style="font-size: 9px; color: {{accentText}}">ADD-ON</span><span>P. 08</span></span>
+    </div>
+    <div style="display: flex; flex-direction: column">
+      <div style="display: flex; flex-direction: column; gap: 4px; padding-bottom: 16px">
+        <span style="font-family: {{fHead}}; font-size: 28px; line-height: 1.1; font-weight: 800; letter-spacing: -0.4px">Book a time with me.</span>
+        <span style="font-size: 16px; line-height: 1.4; color: {{dim}}">Pick a slot on my booking page.</span>
+      </div>
+      <a href="{{bookingA.url}}" target="_blank" rel="noopener" style="min-height: 84px; box-sizing: border-box; padding: 14px 16px; background: {{ink}}; color: {{bg}}; display: flex; align-items: center; gap: 14px">
+        <div style="width: 54px; height: 54px; flex-shrink: 0; border-radius: 27px; background: {{onInkChip}}; color: {{onInkChipInk}}; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2"></rect><path d="M16 2.5v4M8 2.5v4M3 10h18M9 15.5l2 2 4-4"></path></svg></div>
+        <div style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+          <span style="font-size: 22px; font-weight: 800; line-height: 1.15">Book an appointment</span>
+          <span class="mz-trunc" style="font-family: {{fMono}}; font-size: 12px; letter-spacing: 0.4px; opacity: 0.85">{{bookingA.host}}</span>
+        </div>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+      </a>
+    </div>
+  </div>
+
+  <div style="padding: 44px 24px 0"><div style="border-top: 1px dashed {{line}}; padding-top: 8px; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.2px; color: {{faint}}">BOOKING · LONG / UNKNOWN HOST · host truncates</div></div>
+  <div style="position: relative; padding: 18px 24px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">
+      <span>BOOK A TIME</span>
+      <span style="display: flex; gap: 10px; align-items: baseline"><span style="font-size: 9px; color: {{accentText}}">ADD-ON</span><span>P. 08</span></span>
+    </div>
+    <div style="display: flex; flex-direction: column">
+      <div style="display: flex; flex-direction: column; gap: 4px; padding-bottom: 16px">
+        <span style="font-family: {{fHead}}; font-size: 28px; line-height: 1.1; font-weight: 800; letter-spacing: -0.4px">Book a time with me.</span>
+        <span style="font-size: 16px; line-height: 1.4; color: {{dim}}">Pick a slot on my booking page.</span>
+      </div>
+      <a href="{{bookingB.url}}" target="_blank" rel="noopener" style="min-height: 84px; box-sizing: border-box; padding: 14px 16px; background: {{ink}}; color: {{bg}}; display: flex; align-items: center; gap: 14px">
+        <div style="width: 54px; height: 54px; flex-shrink: 0; border-radius: 27px; background: {{onInkChip}}; color: {{onInkChipInk}}; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2"></rect><path d="M16 2.5v4M8 2.5v4M3 10h18M9 15.5l2 2 4-4"></path></svg></div>
+        <div style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+          <span style="font-size: 22px; font-weight: 800; line-height: 1.15">Book an appointment</span>
+          <span class="mz-trunc" style="font-family: {{fMono}}; font-size: 12px; letter-spacing: 0.4px; opacity: 0.85">{{bookingB.host}}</span>
+        </div>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- ============ INTERESTS ============ -->
+  <div style="padding: 44px 24px 0"><div style="border-top: 1px dashed {{line}}; padding-top: 8px; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.2px; color: {{faint}}">INTERESTS · FULL (20) · sits after In Brief</div></div>
+  <div style="position: relative; padding: 18px 24px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">
+      <span>OFF THE CLOCK</span>
+      <span>P. 09</span>
+    </div>
+    <p style="margin: 0; border-top: 1.5px solid {{ink}}; padding-top: 14px; font-size: 21px; line-height: 1.45; font-weight: 500; letter-spacing: -0.2px; overflow-wrap: anywhere">
+      <sc-for list="{{interestsFull}}" as="it" hint-placeholder-count="20">
+        <span style="white-space: {{it.ws}}">{{it.label}}</span><sc-if value="{{it.sep}}" hint-placeholder-val="{{ true }}"><span aria-hidden="true" style="font-family: {{fHead}}; font-weight: {{headWeight}}; color: {{accentText}}; padding: 0 9px">/</span> </sc-if>
+      </sc-for>
+    </p>
+  </div>
+
+  <div style="padding: 44px 24px 0"><div style="border-top: 1px dashed {{line}}; padding-top: 8px; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.2px; color: {{faint}}">INTERESTS · SPARSE (1)</div></div>
+  <div style="position: relative; padding: 18px 24px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">
+      <span>OFF THE CLOCK</span>
+      <span>P. 09</span>
+    </div>
+    <p style="margin: 0; border-top: 1.5px solid {{ink}}; padding-top: 14px; font-size: 21px; line-height: 1.45; font-weight: 500; letter-spacing: -0.2px; overflow-wrap: anywhere">
+      <sc-for list="{{interestsSparse}}" as="it" hint-placeholder-count="1">
+        <span style="white-space: {{it.ws}}">{{it.label}}</span><sc-if value="{{it.sep}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="font-family: {{fHead}}; font-weight: {{headWeight}}; color: {{accentText}}; padding: 0 9px">/</span> </sc-if>
+      </sc-for>
+    </p>
+  </div>
+
+  <!-- ============ ORGS ============ -->
+  <div style="padding: 44px 24px 0"><div style="border-top: 1px dashed {{line}}; padding-top: 8px; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.2px; color: {{faint}}">ORGS · FULL (12) · sits after Experience</div></div>
+  <div style="position: relative; padding: 18px 24px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">
+      <span>AFFILIATIONS</span>
+      <span>P. 10</span>
+    </div>
+    <div style="display: flex; flex-direction: column">
+      <sc-for list="{{orgsFull}}" as="o" hint-placeholder-count="12">
+        <div style="padding: 14px 0; display: flex; align-items: center; gap: 14px; border-top: {{o.top}}; border-bottom: {{o.bottom}}">
+          <div aria-hidden="true" style="width: 46px; height: 46px; flex-shrink: 0; box-shadow: inset 0 0 0 1.5px {{ink}}; display: flex; align-items: center; justify-content: center; font-family: {{fHead}}; font-size: 18px; font-weight: {{headWeight}}; font-stretch: {{headStretch}}; letter-spacing: 0.4px; color: {{o.badgeInk}}">{{o.initials}}</div>
+          <div style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+            <span style="font-size: 16px; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere">{{o.name}}</span>
+            <sc-if value="{{o.role}}" hint-placeholder-val="{{ true }}"><span style="font-family: {{fMono}}; font-size: 11px; line-height: 1.45; color: {{dim}}; overflow-wrap: anywhere">{{o.role}}</span></sc-if>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding: 44px 24px 0"><div style="border-top: 1px dashed {{line}}; padding-top: 8px; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.2px; color: {{faint}}">ORGS · SPARSE (1, no role)</div></div>
+  <div style="position: relative; padding: 18px 24px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">
+      <span>AFFILIATIONS</span>
+      <span>P. 10</span>
+    </div>
+    <div style="display: flex; flex-direction: column">
+      <sc-for list="{{orgsSparse}}" as="o" hint-placeholder-count="1">
+        <div style="padding: 14px 0; display: flex; align-items: center; gap: 14px; border-top: {{o.top}}; border-bottom: {{o.bottom}}">
+          <div aria-hidden="true" style="width: 46px; height: 46px; flex-shrink: 0; box-shadow: inset 0 0 0 1.5px {{ink}}; display: flex; align-items: center; justify-content: center; font-family: {{fHead}}; font-size: 18px; font-weight: {{headWeight}}; font-stretch: {{headStretch}}; letter-spacing: 0.4px; color: {{o.badgeInk}}">{{o.initials}}</div>
+          <div style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+            <span style="font-size: 16px; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere">{{o.name}}</span>
+            <sc-if value="{{o.role}}" hint-placeholder-val="{{ false }}"><span style="font-family: {{fMono}}; font-size: 11px; line-height: 1.45; color: {{dim}}; overflow-wrap: anywhere">{{o.role}}</span></sc-if>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ============ SONG ============ -->
+  <div style="padding: 44px 24px 0"><div style="border-top: 1px dashed {{line}}; padding-top: 8px; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.2px; color: {{faint}}">SONG · FULL (80-char title + artist) · sits after Elsewhere</div></div>
+  <div style="position: relative; padding: 18px 24px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">
+      <span>SOUNDTRACK</span>
+      <span>P. 11</span>
+    </div>
+    <a href="{{songFull.spotifyUrl}}" target="_blank" rel="noopener" style="min-height: 84px; box-sizing: border-box; padding: 16px; border: 1.5px solid {{ink}}; background: {{surface}}; display: flex; align-items: center; gap: 14px">
+      <div style="width: 48px; height: 48px; flex-shrink: 0; background: #1ED760; color: #000000; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" role="img" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"></path></svg></div>
+      <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0">
+        <span style="font-family: {{fHead}}; font-size: 19px; line-height: 1.1; font-weight: {{headWeight}}; font-stretch: {{headStretch}}; text-transform: uppercase; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden">{{songFull.title}}</span>
+        <span style="font-size: 15px; line-height: 1.3; color: {{dim}}; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden">{{songFull.artist}}</span>
+        <span style="font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.4px; color: {{muted}}; padding-top: 2px">LISTEN ON SPOTIFY</span>
+      </div>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+    </a>
+  </div>
+
+  <div style="padding: 44px 24px 0"><div style="border-top: 1px dashed {{line}}; padding-top: 8px; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.2px; color: {{faint}}">SONG · SPARSE (link only, no title or artist)</div></div>
+  <div style="position: relative; padding: 18px 24px 0; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">
+      <span>SOUNDTRACK</span>
+      <span>P. 11</span>
+    </div>
+    <a href="{{songSparse.spotifyUrl}}" target="_blank" rel="noopener" style="min-height: 84px; box-sizing: border-box; padding: 16px; border: 1.5px solid {{ink}}; background: {{surface}}; display: flex; align-items: center; gap: 14px">
+      <div style="width: 48px; height: 48px; flex-shrink: 0; background: #1ED760; color: #000000; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" role="img" aria-hidden="true"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"></path></svg></div>
+      <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0">
+        <sc-if value="{{songSparse.title}}" hint-placeholder-val="{{ false }}"><span style="font-family: {{fHead}}; font-size: 19px; line-height: 1.1; font-weight: {{headWeight}}; font-stretch: {{headStretch}}; text-transform: uppercase; overflow-wrap: anywhere">{{songSparse.title}}</span></sc-if>
+        <sc-if value="{{songSparse.noTitle}}" hint-placeholder-val="{{ true }}"><span style="font-family: {{fHead}}; font-size: 19px; line-height: 1.1; font-weight: {{headWeight}}; font-stretch: {{headStretch}}; text-transform: uppercase">Hear my song</span></sc-if>
+        <sc-if value="{{songSparse.artist}}" hint-placeholder-val="{{ false }}"><span style="font-size: 15px; line-height: 1.3; color: {{dim}}; overflow-wrap: anywhere">{{songSparse.artist}}</span></sc-if>
+        <span style="font-family: {{fMono}}; font-size: 10px; letter-spacing: 1.4px; color: {{muted}}; padding-top: 2px">LISTEN ON SPOTIFY</span>
+      </div>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+    </a>
+  </div>
+
+  <!-- ============ INSIDE THE STARTER LAYOUT ============ -->
+  <div style="margin-top: 56px; padding: 22px 24px 0; border-top: 1.5px solid {{ink}}; display: flex; flex-direction: column; gap: 8px">
+    <span style="font-family: {{fMono}}; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">INSIDE THE STARTER LAYOUT</span>
+    <span style="font-family: {{fMono}}; font-size: 10px; letter-spacing: 1px; line-height: 1.6; color: {{faint}}">Starter blocks have no page numbers: plain label, 36 px top padding, Archivo only. Video and booking sit after Connect, before the profile lists.</span>
+  </div>
+
+  <div style="padding: 36px 24px 0"><div style="border-top: 1px dashed {{line}}; padding-top: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.2px; color: {{faint}}">STARTER · VIDEO</div></div>
+  <div style="padding: 18px 24px 0; display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">VIDEO</span>
+    <a href="{{videoA.url}}" target="_blank" rel="noopener" aria-label="Watch the video on {{videoA.host}} (opens in a new tab)" style="background: {{ink}}; color: {{bg}}; padding: 20px; display: flex; align-items: center; gap: 16px">
+      <div style="display: flex; flex-direction: column; gap: 10px; flex-grow: 1; min-width: 0">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.6px; opacity: 0.7">ON FILM</span>
+        <span style="font-family: 'Archivo', system-ui, sans-serif; font-size: 30px; line-height: 0.95; font-weight: 800; font-stretch: 72%; text-transform: uppercase">Watch the video</span>
+        <span style="display: flex; align-items: center; gap: 6px; min-width: 0; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.4px; opacity: 0.8">
+          <span class="mz-trunc" style="min-width: 0">{{videoA.host}}</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+        </span>
+      </div>
+      <div style="width: 64px; height: 64px; flex-shrink: 0; border-radius: 32px; background: {{onInkChip}}; color: {{onInkChipInk}}; display: flex; align-items: center; justify-content: center">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" style="margin-left: 3px"><path d="M7 4.5v15l12.5-7.5z"></path></svg>
+      </div>
+    </a>
+  </div>
+
+  <div style="padding: 36px 24px 0"><div style="border-top: 1px dashed {{line}}; padding-top: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.2px; color: {{faint}}">STARTER · BOOKING</div></div>
+  <div style="padding: 18px 24px 0; display: flex; flex-direction: column">
+    <div style="display: flex; flex-direction: column; gap: 4px; padding-bottom: 16px">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1.6px; color: {{muted}}">BOOK A TIME</span>
+      <span style="font-family: 'Archivo', sans-serif; font-size: 28px; line-height: 1.1; font-weight: 800; letter-spacing: -0.4px">Book a time with me.</span>
+      <span style="font-size: 16px; line-height: 1.4; color: {{dim}}">Pick a slot on my booking page.</span>
+    </div>
+    <a href="{{bookingA.url}}" target="_blank" rel="noopener" style="min-height: 84px; box-sizing: border-box; padding: 14px 16px; background: {{ink}}; color: {{bg}}; display: flex; align-items: center; gap: 14px">
+      <div style="width: 54px; height: 54px; flex-shrink: 0; border-radius: 27px; background: {{onInkChip}}; color: {{onInkChipInk}}; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2"></rect><path d="M16 2.5v4M8 2.5v4M3 10h18M9 15.5l2 2 4-4"></path></svg></div>
+      <div style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+        <span style="font-family: 'Archivo', system-ui, sans-serif; font-size: 22px; font-weight: 800; line-height: 1.15">Book an appointment</span>
+        <span class="mz-trunc" style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.4px; opacity: 0.85">{{bookingA.host}}</span>
+      </div>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M7 17 17 7M8 7h9v9"></path></svg>
+    </a>
+  </div>
+
+  <div style="position: relative; margin-top: auto; padding: 48px 24px 24px; display: flex; justify-content: space-between; align-items: center; font-family: {{fMono}}; font-size: 10px; letter-spacing: 1px; color: {{faint}}">
+    <span>ALWAYS ONE TAP AWAY.</span>
+  </div>
+</div>
+</template>
+<!-- EDIT ME: the contact that "Save contact" adds to the visitor's phone -->
+<script type="application/json" id="dc-contact">{
+  "fullName": "Warren Jacob Abdon",
+  "firstName": "Warren Jacob",
+  "lastName": "Abdon",
+  "title": "Software Engineer · Full-Stack Developer",
+  "org": "Freelance",
+  "phone": "+63 9XX XXX XXXX",
+  "email": "hello@warrenabdon.dev",
+  "website": "",
+  "city": "Cavite",
+  "country": "Philippines",
+  "note": "",
+  "photo": "assets/photo.jpg"
+}</script>
+<script type="application/json" id="dc-props">{"theme": "Light", "accent": "#D7261E", "fontPair": "Cover — Archivo Condensed", "sectionA": "Skills", "sectionB": "Experience", "order": "about, contents, sectionA, connect, sectionB, socials"}</script>
+<script type="text/plain" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { themeOverride: null, accentPick: null };
+  }
+  resolveTheme() {
+    if (this.state.themeOverride) { return this.state.themeOverride; }
+    var pref = this.props.theme ?? 'Light';
+    if (pref === 'Dark') { return 'dark'; }
+    if (pref === 'Match phone') {
+      try { if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { return 'dark'; } } catch (err) {}
+    }
+    return 'light';
+  }
+  palette(mode) {
+    if (mode === 'dark') {
+      return { bg: '#0E0F11', ink: '#F2F1EE', muted: '#9AA0A9', surface: '#18191C', line: '#2C2F34', soft: '#C9CDD3', dim: '#A9AEB6', faint: '#8D939C', photoBg: '#26282C', scrim: 'rgba(5,6,8,0.66)', barFade: 'linear-gradient(180deg, rgba(14,15,17,0) 0%, rgba(14,15,17,0.92) 40%)', bannerBase: '#17181B' };
+    }
+    return { bg: '#F5F4F1', ink: '#111213', muted: '#5E6168', surface: '#FFFFFF', line: '#DEDCD7', soft: '#3A3D42', dim: '#55585F', faint: '#6B6E75', photoBg: '#CFCAC2', scrim: 'rgba(17,18,19,0.45)', barFade: 'linear-gradient(180deg, rgba(245,244,241,0) 0%, rgba(245,244,241,0.92) 40%)', bannerBase: '#E7E4DE' };
+  }
+  fonts(pair) {
+    var map = {
+      'Vogue — Playfair Display + DM Sans': { head: "'Playfair Display', Georgia, serif", body: "'DM Sans', system-ui, sans-serif", weight: 800, stretch: 'normal', track: '-1px', size: '62px' },
+      'Tabloid — Anton + Work Sans': { head: "'Anton', Impact, sans-serif", body: "'Work Sans', system-ui, sans-serif", weight: 400, stretch: 'normal', track: '0px', size: '78px' },
+      'Indie — Fraunces + Manrope': { head: "'Fraunces', Georgia, serif", body: "'Manrope', system-ui, sans-serif", weight: 800, stretch: 'normal', track: '-1.2px', size: '62px' }
+    };
+    return map[pair] || { head: "'Archivo', system-ui, sans-serif", body: "'Archivo', system-ui, sans-serif", weight: 800, stretch: '72%', track: '-1.5px', size: '76px' };
+  }
+  hex(v, fallback) {
+    var s = String(v || '').trim();
+    if (s.charAt(0) !== '#') { s = '#' + s; }
+    return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(s) ? s : fallback;
+  }
+  rgb(hex) {
+    var n = String(hex || '#000000').replace('#', '');
+    if (n.length === 3) { n = n[0] + n[0] + n[1] + n[1] + n[2] + n[2]; }
+    return [parseInt(n.slice(0, 2), 16), parseInt(n.slice(2, 4), 16), parseInt(n.slice(4, 6), 16)];
+  }
+  lum(hex) {
+    var c = this.rgb(hex);
+    return (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255;
+  }
+  near(a, b) {
+    var x = this.rgb(a), y = this.rgb(b);
+    return Math.sqrt(Math.pow(x[0] - y[0], 2) + Math.pow(x[1] - y[1], 2) + Math.pow(x[2] - y[2], 2)) / 441.7 < 0.12;
+  }
+  rgba(hex, a) {
+    var c = this.rgb(hex);
+    return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+  }
+  mix(hex, toward, amt) {
+    var c = this.rgb(hex);
+    var m = function (v) { return Math.round(v + (toward - v) * amt); };
+    return 'rgb(' + m(c[0]) + ',' + m(c[1]) + ',' + m(c[2]) + ')';
+  }
+  // WCAG relative luminance + contrast ratio, used to keep the accent chip visible on the ink panel.
+  relLum(hex) {
+    var c = this.rgb(hex).map(function (v) { v = v / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  }
+  contrast(a, b) {
+    var x = this.relLum(a), y = this.relLum(b);
+    return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+  }
+  // Display host for a link: "https://www.youtube.com/watch?v=…" -> "youtube.com"
+  host(url) {
+    var m = String(url || '').match(/^[a-z][a-z0-9+.-]*:\/\/([^\/?#:]+)/i);
+    return m ? m[1].replace(/^www\./i, '').toLowerCase() : String(url || '');
+  }
+  // Badge initials from an org name: first letters of the first two significant words.
+  initials(name) {
+    var skip = { of: 1, the: 1, and: 1, 'for': 1, in: 1, at: 1, '&': 1, ng: 1, sa: 1 };
+    var words = String(name || '').split(/[\s\-–—]+/).filter(function (w) { return /[A-Za-z0-9]/.test(w) && !skip[w.toLowerCase()]; });
+    var out = words.slice(0, 2).map(function (w) { return w.replace(/[^A-Za-z0-9]/g, '').charAt(0).toUpperCase(); }).join('');
+    return out || '·';
+  }
+  rows(list, line, ink) {
+    return list.map(function (it, i) {
+      it.top = i === 0 ? '1.5px solid ' + ink : '1px solid ' + line;
+      it.bottom = i === list.length - 1 ? '1px solid ' + line : 'none';
+      return it;
+    });
+  }
+  renderVals() {
+    var self = this;
+    var s = this.state;
+    var mode = this.resolveTheme();
+    var t = this.palette(mode);
+    var dark = mode === 'dark';
+    var f = this.fonts(this.props.fontPair ?? 'Cover — Archivo Condensed');
+    var accent = s.accentPick || this.hex(this.props.accent, '#D7261E');
+    var accentInk = this.lum(accent) > 0.5 ? '#111213' : '#FFFFFF';
+    var accentText = (this.near(accent, t.bg) || (dark && this.lum(accent) < 0.18)) ? (dark ? this.mix(accent, 255, 0.55) : t.ink) : ((!dark && this.lum(accent) > 0.6) ? this.mix(accent, 0, 0.45) : accent);
+    // Accent chip on the ink panel (video play button, booking calendar). If the accent
+    // disappears into the panel (near-black accent in light mode, pale accent in dark mode),
+    // fall back to a bg-coloured chip with ink icon, like the Save bar's `clash` rule.
+    var chipClash = this.contrast(accent, t.ink) < 1.8;
+    var onInkChip = chipClash ? t.bg : accent;
+    var onInkChipInk = chipClash ? t.ink : accentInk;
+
+    // ---- Section data (shapes match the stored page data) ----
+    var video = { url: 'https://www.youtube.com/watch?v=XXXXXXXXXXX' };
+    var videoLong = { url: 'https://media.cavite-regional-learning-network.edu.ph/v/0000' };
+    var booking = { url: 'https://calendly.com/yourname' };
+    var bookingLong = { url: 'https://appointments.your-business-name-here.example.com.ph/book' };
+
+    var interestsFull = [
+      'Mechanical keyboards', 'Street photography', 'Coffee', 'Trail running', 'Board games',
+      'Open source', 'Lo-fi playlists', 'Basketball', 'Sci-fi novels', 'Home cooking',
+      'Restoring vintage film cameras & lenses', 'Chess', 'Travel', 'Anime', 'Hiking',
+      'Indie games', 'Podcasts', 'Cycling', 'Gardening', 'Volunteering'
+    ];
+    var interestsSparse = ['[Interest]'];
+    var orgsFull = [
+      { name: 'Regional Association of Software Developers, Designers and Tech Professionals PH', role: 'Member, Committee on Developer Education and Public Outreach' },
+      { name: 'Cavite Web Developers Circle PH', role: 'Volunteer organizer' },
+      { name: '[Organization name]', role: '[Role]' },
+      { name: '[Organization name]', role: '' },
+      { name: '[Organization name]', role: '[Role]' },
+      { name: '[Organization name]', role: '[Role]' },
+      { name: '[Organization name]', role: '' },
+      { name: '[Organization name]', role: '[Role]' },
+      { name: '[Organization name]', role: '[Role]' },
+      { name: '[Organization name]', role: '' },
+      { name: '[Organization name]', role: '[Role]' },
+      { name: '[Organization name]', role: '[Role]' }
+    ];
+    var orgsSparse = [{ name: '[Organization name]', role: '' }];
+    var songFull = { spotifyUrl: 'https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX', title: 'A Very Long Song Title That Keeps Going Past The Point Where Any Line Could Hold', artist: '[Artist name] feat. [Featured artist]' };
+    var songSparse = { spotifyUrl: 'https://open.spotify.com/track/XXXXXXXXXXXXXXXXXXXXXX', title: '', artist: '' };
+
+    var mapInterests = function (arr) { return arr.map(function (x, i) { return { label: x, sep: i < arr.length - 1, ws: x.length <= 24 ? 'nowrap' : 'normal' }; }); };
+    var mapOrgs = function (arr) {
+      return self.rows(arr.map(function (o, i) {
+        return { name: o.name, role: o.role || '', initials: self.initials(o.name), badgeInk: i === 0 ? accentText : t.ink };
+      }), t.line, t.ink);
+    };
+
+    return {
+      bg: t.bg, ink: t.ink, muted: t.muted, surface: t.surface, line: t.line, soft: t.soft, dim: t.dim, faint: t.faint,
+      photoBg: t.photoBg,
+      fHead: f.head, fBody: f.body, fMono: "'IBM Plex Mono', monospace",
+      headWeight: f.weight, headStretch: f.stretch, headTrack: f.track,
+      accent: accent, accentInk: accentInk, accentText: accentText,
+      onInkChip: onInkChip, onInkChipInk: onInkChipInk,
+      videoA: { url: video.url, host: this.host(video.url) },
+      videoB: { url: videoLong.url, host: this.host(videoLong.url) },
+      bookingA: { url: booking.url, host: this.host(booking.url) },
+      bookingB: { url: bookingLong.url, host: this.host(bookingLong.url) },
+      interestsFull: mapInterests(interestsFull),
+      interestsSparse: mapInterests(interestsSparse),
+      orgsFull: mapOrgs(orgsFull),
+      orgsSparse: mapOrgs(orgsSparse),
+      songFull: { spotifyUrl: songFull.spotifyUrl, title: songFull.title, artist: songFull.artist, noTitle: !songFull.title },
+      songSparse: { spotifyUrl: songSparse.spotifyUrl, title: songSparse.title, artist: songSparse.artist, noTitle: !songSparse.title },
+      isDark: dark,
+      isLight: !dark,
+      themeAria: dark ? 'Switch to light theme' : 'Switch to dark theme',
+      toggleTheme: function () { self.setState({ themeOverride: self.resolveTheme() === 'dark' ? 'light' : 'dark' }); }
+    };
+  }
+}
+</script>
+<script>(function(global,factory){typeof exports==="object"&&typeof module!=="undefined"?module.exports=factory():typeof define==="function"&&define.amd?define(factory):(global=global||self,global.morphdom=factory())})(this,function(){"use strict";var DOCUMENT_FRAGMENT_NODE=11;function morphAttrs(fromNode,toNode){var toNodeAttrs=toNode.attributes;var attr;var attrName;var attrNamespaceURI;var attrValue;var fromValue;if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE||fromNode.nodeType===DOCUMENT_FRAGMENT_NODE){return}for(var i=toNodeAttrs.length-1;i>=0;i--){attr=toNodeAttrs[i];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;attrValue=attr.value;if(attrNamespaceURI){attrName=attr.localName||attrName;fromValue=fromNode.getAttributeNS(attrNamespaceURI,attrName);if(fromValue!==attrValue){if(attr.prefix==="xmlns"){attrName=attr.name}fromNode.setAttributeNS(attrNamespaceURI,attrName,attrValue)}}else{fromValue=fromNode.getAttribute(attrName);if(fromValue!==attrValue){fromNode.setAttribute(attrName,attrValue)}}}var fromNodeAttrs=fromNode.attributes;for(var d=fromNodeAttrs.length-1;d>=0;d--){attr=fromNodeAttrs[d];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;if(attrNamespaceURI){attrName=attr.localName||attrName;if(!toNode.hasAttributeNS(attrNamespaceURI,attrName)){fromNode.removeAttributeNS(attrNamespaceURI,attrName)}}else{if(!toNode.hasAttribute(attrName)){fromNode.removeAttribute(attrName)}}}}var range;var NS_XHTML="http://www.w3.org/1999/xhtml";var doc=typeof document==="undefined"?undefined:document;var HAS_TEMPLATE_SUPPORT=!!doc&&"content"in doc.createElement("template");var HAS_RANGE_SUPPORT=!!doc&&doc.createRange&&"createContextualFragment"in doc.createRange();function createFragmentFromTemplate(str){var template=doc.createElement("template");template.innerHTML=str;return template.content.childNodes[0]}function createFragmentFromRange(str){if(!range){range=doc.createRange();range.selectNode(doc.body)}var fragment=range.createContextualFragment(str);return fragment.childNodes[0]}function createFragmentFromWrap(str){var fragment=doc.createElement("body");fragment.innerHTML=str;return fragment.childNodes[0]}function toElement(str){str=str.trim();if(HAS_TEMPLATE_SUPPORT){return createFragmentFromTemplate(str)}else if(HAS_RANGE_SUPPORT){return createFragmentFromRange(str)}return createFragmentFromWrap(str)}function compareNodeNames(fromEl,toEl){var fromNodeName=fromEl.nodeName;var toNodeName=toEl.nodeName;var fromCodeStart,toCodeStart;if(fromNodeName===toNodeName){return true}fromCodeStart=fromNodeName.charCodeAt(0);toCodeStart=toNodeName.charCodeAt(0);if(fromCodeStart<=90&&toCodeStart>=97){return fromNodeName===toNodeName.toUpperCase()}else if(toCodeStart<=90&&fromCodeStart>=97){return toNodeName===fromNodeName.toUpperCase()}else{return false}}function createElementNS(name,namespaceURI){return!namespaceURI||namespaceURI===NS_XHTML?doc.createElement(name):doc.createElementNS(namespaceURI,name)}function moveChildren(fromEl,toEl){var curChild=fromEl.firstChild;while(curChild){var nextChild=curChild.nextSibling;toEl.appendChild(curChild);curChild=nextChild}return toEl}function syncBooleanAttrProp(fromEl,toEl,name){if(fromEl[name]!==toEl[name]){fromEl[name]=toEl[name];if(fromEl[name]){fromEl.setAttribute(name,"")}else{fromEl.removeAttribute(name)}}}var specialElHandlers={OPTION:function(fromEl,toEl){var parentNode=fromEl.parentNode;if(parentNode){var parentName=parentNode.nodeName.toUpperCase();if(parentName==="OPTGROUP"){parentNode=parentNode.parentNode;parentName=parentNode&&parentNode.nodeName.toUpperCase()}if(parentName==="SELECT"&&!parentNode.hasAttribute("multiple")){if(fromEl.hasAttribute("selected")&&!toEl.selected){fromEl.setAttribute("selected","selected");fromEl.removeAttribute("selected")}parentNode.selectedIndex=-1}}syncBooleanAttrProp(fromEl,toEl,"selected")},INPUT:function(fromEl,toEl){syncBooleanAttrProp(fromEl,toEl,"checked");syncBooleanAttrProp(fromEl,toEl,"disabled");if(fromEl.value!==toEl.value){fromEl.value=toEl.value}if(!toEl.hasAttribute("value")){fromEl.removeAttribute("value")}},TEXTAREA:function(fromEl,toEl){var newValue=toEl.value;if(fromEl.value!==newValue){fromEl.value=newValue}var firstChild=fromEl.firstChild;if(firstChild){var oldValue=firstChild.nodeValue;if(oldValue==newValue||!newValue&&oldValue==fromEl.placeholder){return}firstChild.nodeValue=newValue}},SELECT:function(fromEl,toEl){if(!toEl.hasAttribute("multiple")){var selectedIndex=-1;var i=0;var curChild=fromEl.firstChild;var optgroup;var nodeName;while(curChild){nodeName=curChild.nodeName&&curChild.nodeName.toUpperCase();if(nodeName==="OPTGROUP"){optgroup=curChild;curChild=optgroup.firstChild}else{if(nodeName==="OPTION"){if(curChild.hasAttribute("selected")){selectedIndex=i;break}i++}curChild=curChild.nextSibling;if(!curChild&&optgroup){curChild=optgroup.nextSibling;optgroup=null}}}fromEl.selectedIndex=selectedIndex}}};var ELEMENT_NODE=1;var DOCUMENT_FRAGMENT_NODE$1=11;var TEXT_NODE=3;var COMMENT_NODE=8;function noop(){}function defaultGetNodeKey(node){if(node){return node.getAttribute&&node.getAttribute("id")||node.id}}function morphdomFactory(morphAttrs){return function morphdom(fromNode,toNode,options){if(!options){options={}}if(typeof toNode==="string"){if(fromNode.nodeName==="#document"||fromNode.nodeName==="HTML"||fromNode.nodeName==="BODY"){var toNodeHtml=toNode;toNode=doc.createElement("html");toNode.innerHTML=toNodeHtml}else{toNode=toElement(toNode)}}else if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE$1){toNode=toNode.firstElementChild}var getNodeKey=options.getNodeKey||defaultGetNodeKey;var onBeforeNodeAdded=options.onBeforeNodeAdded||noop;var onNodeAdded=options.onNodeAdded||noop;var onBeforeElUpdated=options.onBeforeElUpdated||noop;var onElUpdated=options.onElUpdated||noop;var onBeforeNodeDiscarded=options.onBeforeNodeDiscarded||noop;var onNodeDiscarded=options.onNodeDiscarded||noop;var onBeforeElChildrenUpdated=options.onBeforeElChildrenUpdated||noop;var skipFromChildren=options.skipFromChildren||noop;var addChild=options.addChild||function(parent,child){return parent.appendChild(child)};var childrenOnly=options.childrenOnly===true;var fromNodesLookup=Object.create(null);var keyedRemovalList=[];function addKeyedRemoval(key){keyedRemovalList.push(key)}function walkDiscardedChildNodes(node,skipKeyedNodes){if(node.nodeType===ELEMENT_NODE){var curChild=node.firstChild;while(curChild){var key=undefined;if(skipKeyedNodes&&(key=getNodeKey(curChild))){addKeyedRemoval(key)}else{onNodeDiscarded(curChild);if(curChild.firstChild){walkDiscardedChildNodes(curChild,skipKeyedNodes)}}curChild=curChild.nextSibling}}}function removeNode(node,parentNode,skipKeyedNodes){if(onBeforeNodeDiscarded(node)===false){return}if(parentNode){parentNode.removeChild(node)}onNodeDiscarded(node);walkDiscardedChildNodes(node,skipKeyedNodes)}function indexTree(node){if(node.nodeType===ELEMENT_NODE||node.nodeType===DOCUMENT_FRAGMENT_NODE$1){var curChild=node.firstChild;while(curChild){var key=getNodeKey(curChild);if(key){fromNodesLookup[key]=curChild}indexTree(curChild);curChild=curChild.nextSibling}}}indexTree(fromNode);function handleNodeAdded(el){onNodeAdded(el);var curChild=el.firstChild;while(curChild){var nextSibling=curChild.nextSibling;var key=getNodeKey(curChild);if(key){var unmatchedFromEl=fromNodesLookup[key];if(unmatchedFromEl&&compareNodeNames(curChild,unmatchedFromEl)){curChild.parentNode.replaceChild(unmatchedFromEl,curChild);morphEl(unmatchedFromEl,curChild)}else{handleNodeAdded(curChild)}}else{handleNodeAdded(curChild)}curChild=nextSibling}}function cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey){while(curFromNodeChild){var fromNextSibling=curFromNodeChild.nextSibling;if(curFromNodeKey=getNodeKey(curFromNodeChild)){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}}function morphEl(fromEl,toEl,childrenOnly){var toElKey=getNodeKey(toEl);if(toElKey){delete fromNodesLookup[toElKey]}if(!childrenOnly){var beforeUpdateResult=onBeforeElUpdated(fromEl,toEl);if(beforeUpdateResult===false){return}else if(beforeUpdateResult instanceof HTMLElement){fromEl=beforeUpdateResult;indexTree(fromEl)}morphAttrs(fromEl,toEl);onElUpdated(fromEl);if(onBeforeElChildrenUpdated(fromEl,toEl)===false){return}}if(fromEl.nodeName!=="TEXTAREA"){morphChildren(fromEl,toEl)}else{specialElHandlers.TEXTAREA(fromEl,toEl)}}function morphChildren(fromEl,toEl){var skipFrom=skipFromChildren(fromEl,toEl);var curToNodeChild=toEl.firstChild;var curFromNodeChild=fromEl.firstChild;var curToNodeKey;var curFromNodeKey;var fromNextSibling;var toNextSibling;var matchingFromEl;outer:while(curToNodeChild){toNextSibling=curToNodeChild.nextSibling;curToNodeKey=getNodeKey(curToNodeChild);while(!skipFrom&&curFromNodeChild){fromNextSibling=curFromNodeChild.nextSibling;if(curToNodeChild.isSameNode&&curToNodeChild.isSameNode(curFromNodeChild)){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}curFromNodeKey=getNodeKey(curFromNodeChild);var curFromNodeType=curFromNodeChild.nodeType;var isCompatible=undefined;if(curFromNodeType===curToNodeChild.nodeType){if(curFromNodeType===ELEMENT_NODE){if(curToNodeKey){if(curToNodeKey!==curFromNodeKey){if(matchingFromEl=fromNodesLookup[curToNodeKey]){if(fromNextSibling===matchingFromEl){isCompatible=false}else{fromEl.insertBefore(matchingFromEl,curFromNodeChild);if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=matchingFromEl;curFromNodeKey=getNodeKey(curFromNodeChild)}}else{isCompatible=false}}}else if(curFromNodeKey){isCompatible=false}isCompatible=isCompatible!==false&&compareNodeNames(curFromNodeChild,curToNodeChild);if(isCompatible){morphEl(curFromNodeChild,curToNodeChild)}}else if(curFromNodeType===TEXT_NODE||curFromNodeType==COMMENT_NODE){isCompatible=true;if(curFromNodeChild.nodeValue!==curToNodeChild.nodeValue){curFromNodeChild.nodeValue=curToNodeChild.nodeValue}}}if(isCompatible){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}if(curToNodeKey&&(matchingFromEl=fromNodesLookup[curToNodeKey])&&compareNodeNames(matchingFromEl,curToNodeChild)){if(!skipFrom){addChild(fromEl,matchingFromEl)}morphEl(matchingFromEl,curToNodeChild)}else{var onBeforeNodeAddedResult=onBeforeNodeAdded(curToNodeChild);if(onBeforeNodeAddedResult!==false){if(onBeforeNodeAddedResult){curToNodeChild=onBeforeNodeAddedResult}if(curToNodeChild.actualize){curToNodeChild=curToNodeChild.actualize(fromEl.ownerDocument||doc)}addChild(fromEl,curToNodeChild);handleNodeAdded(curToNodeChild)}}curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling}cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey);var specialElHandler=specialElHandlers[fromEl.nodeName];if(specialElHandler){specialElHandler(fromEl,toEl)}}var morphedNode=fromNode;var morphedNodeType=morphedNode.nodeType;var toNodeType=toNode.nodeType;if(!childrenOnly){if(morphedNodeType===ELEMENT_NODE){if(toNodeType===ELEMENT_NODE){if(!compareNodeNames(fromNode,toNode)){onNodeDiscarded(fromNode);morphedNode=moveChildren(fromNode,createElementNS(toNode.nodeName,toNode.namespaceURI))}}else{morphedNode=toNode}}else if(morphedNodeType===TEXT_NODE||morphedNodeType===COMMENT_NODE){if(toNodeType===morphedNodeType){if(morphedNode.nodeValue!==toNode.nodeValue){morphedNode.nodeValue=toNode.nodeValue}return morphedNode}else{morphedNode=toNode}}}if(morphedNode===toNode){onNodeDiscarded(fromNode)}else{if(toNode.isSameNode&&toNode.isSameNode(morphedNode)){return}morphEl(morphedNode,toNode,childrenOnly);if(keyedRemovalList){for(var i=0,len=keyedRemovalList.length;i<len;i++){var elToRemove=fromNodesLookup[keyedRemovalList[i]];if(elToRemove){removeNode(elToRemove,elToRemove.parentNode,false)}}}}if(!childrenOnly&&morphedNode!==fromNode&&fromNode.parentNode){if(morphedNode.actualize){morphedNode=morphedNode.actualize(fromNode.ownerDocument||doc)}fromNode.parentNode.replaceChild(morphedNode,fromNode)}return morphedNode}}var morphdom=morphdomFactory(morphAttrs);return morphdom});</script>
+<script>(function () {
+  function legacyCopy(t) { var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); }
+  var nativeWrite = navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText.bind(navigator.clipboard) : null;
+  var shim = function (t) { if (!nativeWrite) { legacyCopy(t); return Promise.resolve(); } return nativeWrite(t).catch(function () { legacyCopy(t); }); };
+  try { if (navigator.clipboard) { navigator.clipboard.writeText = shim; } else { Object.defineProperty(navigator, 'clipboard', { value: { writeText: shim } }); } } catch (e) {}
+})();
+(function () {
+  var C = JSON.parse(document.getElementById('dc-contact').textContent);
+  var photoB64 = '';
+  if (C.photo) {
+    fetch(C.photo).then(function (r) { return r.blob(); }).then(function (b) {
+      var fr = new FileReader(); fr.onload = function () { photoB64 = String(fr.result).split(',')[1] || ''; }; fr.readAsDataURL(b);
+    }).catch(function () {});
+  }
+  function esc(v) { return String(v || '').replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/([,;])/g, '\\$1'); }
+  function fold(line) { var out = []; while (line.length > 75) { out.push(line.slice(0, 75)); line = ' ' + line.slice(75); } out.push(line); return out.join('\r\n'); }
+  window.__dcSaveContact = function () {
+    var url = C.website || location.href;
+    var L = ['BEGIN:VCARD', 'VERSION:3.0',
+      'N:' + esc(C.lastName) + ';' + esc(C.firstName) + ';;;',
+      'FN:' + esc(C.fullName)];
+    if (C.title) { L.push('TITLE:' + esc(C.title)); }
+    if (C.org) { L.push('ORG:' + esc(C.org)); }
+    if (C.phone) { L.push('TEL;TYPE=CELL:' + C.phone); }
+    if (C.email) { L.push('EMAIL;TYPE=INTERNET:' + C.email); }
+    if (url) { L.push('URL:' + url); }
+    if (C.city || C.country) { L.push('ADR;TYPE=WORK:;;;' + esc(C.city) + ';;;' + esc(C.country)); }
+    if (C.note) { L.push('NOTE:' + esc(C.note)); }
+    if (photoB64) { L.push('PHOTO;ENCODING=b;TYPE=JPEG:' + photoB64); }
+    L.push('END:VCARD');
+    var text = L.map(fold).join('\r\n') + '\r\n';
+    var blob = new Blob([text], { type: 'text/vcard;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (C.fullName || 'contact').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.vcf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  };
+})();
+(function () {
+  var tpl = document.getElementById('dc-template');
+  var root = document.getElementById('app');
+  var PROPS = JSON.parse(document.getElementById('dc-props').textContent);
+  function DCLogic(props) { this.props = props || {}; this.state = {}; }
+  DCLogic.prototype.setState = function (p) {
+    var next = typeof p === 'function' ? p(this.state, this.props) : p;
+    this.state = Object.assign({}, this.state, next);
+    schedule();
+  };
+  var Component = new Function('DCLogic', document.getElementById('dc-logic').textContent + '\nreturn Component;')(DCLogic);
+  var comp = new Component(PROPS);
+  if (!comp.state) { comp.state = {}; }
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  function get(scope, path) {
+    if (path === 'true') { return true; }
+    if (path === 'false') { return false; }
+    return path.split('.').reduce(function (a, k) { return a == null ? a : a[k]; }, scope);
+  }
+  function sub(str, scope) {
+    return str.replace(HOLE, function (m, p) { var v = get(scope, p); return (v == null || typeof v === 'function') ? '' : String(v); });
+  }
+  function build(node, scope, parent) {
+    var kids = node.childNodes;
+    for (var i = 0; i < kids.length; i++) {
+      var ch = kids[i];
+      if (ch.nodeType === 3) { parent.appendChild(document.createTextNode(sub(ch.textContent, scope))); continue; }
+      if (ch.nodeType !== 1) { continue; }
+      var tag = ch.localName;
+      if (tag === 'sc-if') {
+        var m = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('value') || '');
+        if (m && get(scope, m[1])) { build(ch, scope, parent); }
+        continue;
+      }
+      if (tag === 'sc-for') {
+        var lm = /\{\{\s*([^}]+?)\s*\}\}/.exec(ch.getAttribute('list') || '');
+        var as = ch.getAttribute('as');
+        var list = (lm && get(scope, lm[1])) || [];
+        for (var j = 0; j < list.length; j++) { var sc = Object.create(scope); sc[as] = list[j]; build(ch, sc, parent); }
+        continue;
+      }
+      var el = ch.namespaceURI && ch.namespaceURI !== 'http://www.w3.org/1999/xhtml' ? document.createElementNS(ch.namespaceURI, ch.localName) : document.createElement(tag);
+      var attrs = ch.attributes;
+      for (var a = 0; a < attrs.length; a++) {
+        var at = attrs[a];
+        if (/^on[a-z]/i.test(at.name)) {
+          var hm = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/.exec(at.value);
+          var fn = hm ? get(scope, hm[1]) : null;
+          if (typeof fn === 'function') { el['on' + at.name.slice(2).toLowerCase()] = fn; }
+          continue;
+        }
+        if (at.name.indexOf('hint-') === 0) { continue; }
+        el.setAttribute(at.name, sub(at.value, scope));
+      }
+      build(ch.content || ch, scope, el);
+      parent.appendChild(el);
+    }
+  }
+  var EVTS = ['click', 'mousemove', 'mouseleave', 'touchmove', 'touchend', 'touchstart', 'input', 'change', 'keydown'];
+  function render() {
+    var vals = comp.renderVals();
+    if (typeof vals.save === 'function') { var origSave = vals.save; vals.save = function () { window.__dcSaveContact(); return origSave.apply(this, arguments); }; }
+    var next = document.createElement('div');
+    next.id = 'app';
+    build(tpl.content, vals, next);
+    morphdom(root, next, {
+      onBeforeElUpdated: function (from, to) {
+        for (var i = 0; i < EVTS.length; i++) { var k = 'on' + EVTS[i]; if (from[k] !== to[k]) { from[k] = to[k] || null; } }
+        return !from.isEqualNode(to);
+      }
+    });
+    var first = root.firstElementChild;
+    if (first) { document.body.style.background = getComputedStyle(first).backgroundColor; }
+  }
+  var queued = false;
+  function schedule() { if (queued) { return; } queued = true; requestAnimationFrame(function () { queued = false; render(); }); }
+  render();
+  if (comp.componentDidMount) { comp.componentDidMount(); }
+})();
+</script>
+</body>
+</html>
